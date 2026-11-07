@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-dark: #4338ca;
+  --accent: #0ea5e9;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Tenant app ("paper" system): flat surfaces, hairlines, ink text, one indigo accent */
+  --hr-canvas: #f2f2ee;
+  --hr-surface: #ffffff;
+  --hr-sunken: #f7f7f4;
+  --hr-line: #e4e3dc;
+  --hr-line-strong: #d3d2ca;
+  --hr-ink: #1b1b22;
+  --hr-muted: #696975;
+  --hr-faint: #a2a2ab;
+  --hr-rail: #16161d;
+  --hr-rail-ink: #b9b9c6;
+  --hr-accent-soft: #ecebfe;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--hr-canvas);
+  --color-surface: var(--hr-surface);
+  --color-sunken: var(--hr-sunken);
+  --color-line: var(--hr-line);
+  --color-line-strong: var(--hr-line-strong);
+  --color-ink: var(--hr-ink);
+  --color-muted: var(--hr-muted);
+  --color-faint: var(--hr-faint);
+  --color-rail: var(--hr-rail);
+  --color-rail-ink: var(--hr-rail-ink);
+  --color-primary-soft: var(--hr-accent-soft);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Indian scripts: the Latin font always comes first, so English words keep the same look in every
+   language; only the Malayalam, Hindi or Tamil characters fall through to the script font. Each
+   script font is loaded in every weight, so the thin (300) type matches the Latin text. */
+html[data-locale="ml"] { --hr-script-font: var(--font-noto-malayalam); }
+html[data-locale="hi"] { --hr-script-font: var(--font-noto-devanagari); }
+html[data-locale="ta"] { --hr-script-font: var(--font-noto-tamil); }
+
+html[data-locale="ml"] body,
+html[data-locale="hi"] body,
+html[data-locale="ta"] body {
+  font-family: var(--font-sans), var(--hr-script-font), Arial, Helvetica, sans-serif;
+}
+
+/* ── Tenant app: thin type, flat paper surfaces ───────────────────────── */
+.hr-app {
+  font-family: var(--font-outfit), var(--font-geist-sans), var(--hr-script-font, system-ui), system-ui, sans-serif;
+}
+.hr-app {
+  font-weight: 300;
+  color: var(--hr-ink);
+  letter-spacing: 0.005em;
+  font-feature-settings: "tnum" 0;
+}
+.hr-app h1, .hr-app h2, .hr-app h3, .hr-app h4, .hr-app strong, .hr-app b, .hr-app th { font-weight: 400; }
+/* No heavy weights anywhere inside the app, including older screens. */
+.hr-app .font-black, .hr-app .font-extrabold, .hr-app .font-bold, .hr-app .font-semibold { font-weight: 500 !important; }
+.hr-app .font-medium { font-weight: 400 !important; }
+/* Flat: no drop shadows on surfaces; floating menus keep a hairline instead. */
+.hr-app .shadow-sm, .hr-app .shadow, .hr-app .shadow-md { box-shadow: none !important; }
+.hr-app .shadow-lg, .hr-app .shadow-xl, .hr-app .shadow-2xl { box-shadow: 0 0 0 1px var(--hr-line), 0 12px 32px -16px rgb(27 27 34 / 0.18) !important; }
+.hr-app .tabular { font-variant-numeric: tabular-nums; }
+.hr-app :focus-visible { outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent); outline-offset: 2px; }
+.hr-scroll { scrollbar-width: thin; scrollbar-color: var(--hr-line-strong) transparent; }
+
+/* Animations */
+@keyframes scroll-masonry {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-up { animation: fade-up 0.7s ease-out both; }
+.animate-fade-in { animation: fade-in 0.6s ease-out both; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 4s ease-in-out infinite; }
+.animate-slide-in-right { animation: slide-in-right 0.7s ease-out both; }
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-700 { animation-delay: 700ms; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
+}
+
+/* One consistent dropdown arrow: the native one sits jammed against the edge.
+   Unlayered on purpose so it wins over padding utilities on any <select>. */
+select:not([multiple]):not([size]) {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 14px 14px;
+  padding-right: 2.1rem;
+}
+
+/* UI kit: indeterminate progress line on tables that are refreshing. */
+@keyframes kit-progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+/* UI kit controls draw their own focus ring (border + soft halo), so skip the outline. */
+.hr-app .kit-bare:focus-visible { outline: none; }

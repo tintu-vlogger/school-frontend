@@ -1,0 +1,545 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "staff": "Staff",
+    "departments": "Departments",
+    "designations": "Designations",
+    "roster": "Roster",
+    "whatsapp": "WhatsApp",
+    "settings": "Settings",
+    "auditLog": "Audit Log",
+    "overview": "Overview",
+    "finance": "Finance",
+    "manage": "Manage",
+    "system": "System",
+    "myClinic": "My company",
+    "staffDirectory": "Staff Directory",
+    "configure": "Configure"
+  },
+  "common": {
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "loading": "Loading...",
+    "noData": "No data found",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "upload": "Upload",
+    "download": "Download",
+    "print": "Print",
+    "view": "View",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "notes": "Notes",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "type": "Type",
+    "description": "Description",
+    "address": "Address",
+    "amount": "Amount",
+    "total": "Total",
+    "method": "Method",
+    "duration": "Duration",
+    "service": "Service",
+    "optional": "Optional",
+    "required": "Required",
+    "select": "Select",
+    "searchPlaceholder": "Search...",
+    "noResults": "No results found",
+    "comingSoon": "Coming soon",
+    "done": "Done",
+    "retry": "Retry",
+    "exportCsv": "Export CSV",
+    "copyLink": "Copy Link",
+    "share": "Share",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "profile": "Profile",
+    "logout": "Logout",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "saving": "Saving...",
+    "adding": "Adding...",
+    "updating": "Updating...",
+    "create": "Create",
+    "update": "Update",
+    "filters": "Filters",
+    "clearFilters": "Clear filters",
+    "noneRecorded": "None recorded",
+    "uploading": "Uploading...",
+    "importing": "Importing...",
+    "active": "Active",
+    "inactive": "Inactive",
+    "deactivate": "Deactivate",
+    "deleteConfirmMsg": "This action cannot be undone."
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "ongoing": "Ongoing",
+    "noShow": "No-Show",
+    "draft": "Draft",
+    "finalized": "Finalized",
+    "dispensed": "Dispensed",
+    "paid": "Paid",
+    "partial": "Partial",
+    "overdue": "Overdue",
+    "available": "Available",
+    "occupied": "Occupied",
+    "maintenance": "Maintenance",
+    "onLeave": "On Leave",
+    "refunded": "Refunded",
+    "sent": "Sent"
+  },
+  "calendar": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "staff": {
+    "addStaff": "Add Staff",
+    "editStaff": "Edit Staff",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "designation": "Designation",
+    "department": "Department",
+    "role": "Role",
+    "specialization": "Specialization",
+    "qualification": "Qualification",
+    "experience": "Experience",
+    "registrationNumber": "Registration Number",
+    "loginAs": "Login as",
+    "manageStaff": "Manage your company's employees",
+    "searchPlaceholder": "Search staff...",
+    "designationAll": "Designation: All",
+    "statusAll": "Status: All",
+    "noStaffFound": "No staff members found",
+    "noStaffHint": "Try adjusting your search or add new staff",
+    "addStaffMember": "Add staff member",
+    "noDesignation": "No designation"
+  },
+  "department": {
+    "organizeDesc": "Organise your company into departments",
+    "newDepartment": "New Department",
+    "editDepartment": "Edit Department",
+    "departmentName": "Department Name",
+    "code": "Code",
+    "headDoctor": "Department head",
+    "searchPlaceholder": "Search departments...",
+    "statusAll": "Status: All",
+    "noDepartmentsMatch": "No departments match",
+    "noDepartmentsYet": "No departments yet",
+    "createHint": "Create departments to organise your company",
+    "addDepartment": "Add department",
+    "staffMembers": "staff members",
+    "deactivateTitle": "Deactivate",
+    "deactivateMsg": "Staff and services will remain but the department will be hidden.",
+    "noCode": "No code",
+    "department": "Department"
+  },
+  "designation": {
+    "manageDesc": "Manage staff roles and designations",
+    "newDesignation": "New Designation",
+    "editDesignation": "Edit Designation",
+    "addDesignation": "Add Designation",
+    "searchPlaceholder": "Search designations...",
+    "typeAll": "Type: All",
+    "default": "Default",
+    "custom": "Custom",
+    "templates": "Templates",
+    "noDesignationsFound": "No designations found",
+    "noDesignationsYet": "No designations yet",
+    "noDesignationsHint": "Try adjusting your search or filters",
+    "staffAssigned": "staff assigned",
+    "customPlaceholder": "e.g. Senior Accountant",
+    "failedToLoad": "Failed to load",
+    "addedSuffix": "added",
+    "updated": "Updated",
+    "deleted": "Deleted",
+    "failed": "Failed"
+  },
+  "settings": {
+    "businessProfile": "Business Profile",
+    "holidays": "Holidays & Closures",
+    "notifications": "Notifications",
+    "integrations": "Integrations",
+    "experimental": "Experimental",
+    "account": "Account",
+    "headerText": "Header Text",
+    "tagline": "Tagline",
+    "footerText": "Footer Text",
+    "businessName": "Business Name",
+    "category": "Category",
+    "language": "Language",
+    "manageDesc": "Manage your business preferences and account",
+    "businessProfileHeading": "Business Profile",
+    "businessProfileDesc": "Update your business information visible to customers",
+    "defaultDuration": "Default Duration",
+    "bufferBetweenSlots": "Buffer Between Slots",
+    "cancellationNotice": "Cancellation Notice",
+    "operatingHours": "Operating Hours",
+    "open": "Open",
+    "closed": "Closed",
+    "selectOptional": "Select (optional)",
+    "selectCategoryPlaceholder": "Select category"
+  },
+  "documents": {
+    "uploadDocument": "Upload Document",
+    "title": "Title",
+    "imaging": "Imaging / Scan",
+    "consentForm": "Consent Form",
+    "other": "Other",
+    "consentForms": "Consent Forms",
+    "newConsent": "New Consent",
+    "selectTemplate": "Select a template",
+    "signAndSubmit": "Sign & Submit",
+    "signed": "Signed",
+    "notSigned": "Not signed",
+    "notesOptional": "Notes (optional)",
+    "file": "File",
+    "fileMax": "File * (max 5MB)",
+    "noConsentForms": "No consent forms signed yet",
+    "consentCheckboxText": "I have read and understand the above consent form. I voluntarily agree to the terms described.",
+    "typeFullNameToSign": "Type full name to sign",
+    "changeTemplate": "Change template",
+    "selectTemplatePrompt": "Select a template:"
+  },
+  "auth": {
+    "processing": "Processing...",
+    "redirecting": "Redirecting...",
+    "noToken": "No token found, redirecting to login...",
+    "errorRedirect": "Error occurred, redirecting to login..."
+  },
+  "audit": {
+    "title": "Audit Log",
+    "subtitle": "Track all changes and actions in your business",
+    "failedLoad": "Failed to load audit log",
+    "entityType": "Entity Type",
+    "allTypes": "All Types",
+    "from": "From",
+    "to": "To",
+    "clear": "Clear",
+    "noEntries": "No audit entries found.",
+    "timestamp": "Timestamp",
+    "actor": "Actor",
+    "action": "Action",
+    "entityLabel": "Entity",
+    "details": "Details",
+    "user": "user",
+    "showing": "Showing {start} to {end} of {total}",
+    "entity": {
+      "appointment": "Appointment",
+      "staff": "Staff",
+      "customer": "Customer",
+      "service": "Service"
+    }
+  },
+  "dashboard": {
+    "overviewTitle": "Workspace Overview",
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon",
+    "goodEvening": "Good Evening",
+    "systemActive": "System active",
+    "walkIn": "Walk-in",
+    "loadingWorkspace": "Loading your workspace…",
+    "retry": "Retry",
+    "updatesEvery30s": "Updates every 30s",
+    "waiting": "waiting",
+    "nowServing": "Now Serving",
+    "next": "Next",
+    "yourScheduleForToday": "Your schedule for today",
+    "viewAll": "View all",
+    "nothingOnCalendarToday": "Nothing on the calendar today",
+    "time": "Time",
+    "customer": "Customer",
+    "staff": "Staff",
+    "status": "Status",
+    "upcoming": "Upcoming",
+    "nextDays": "Next days",
+    "todaysRevenue": "Today's Revenue",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "revenueTrend30Days": "Revenue trend (30 days)",
+    "popularServices": "Popular Services",
+    "staffUtilization": "Staff Utilization",
+    "appts": "appts",
+    "peakHours": "Peak Hours",
+    "customerStats": "Customer Stats",
+    "total": "Total",
+    "new": "New",
+    "returning": "Returning",
+    "statusBreakdown": "Status Breakdown"
+  },
+  "dashboardLayout": {
+    "logout": "Logout",
+    "english": "English",
+    "notifications": "Notifications",
+    "noNotifications": "No notifications yet",
+    "notification": "Notification",
+    "myProfile": "My Profile",
+    "businessSettings": "Business Settings",
+    "activityLog": "Activity Log",
+    "signOut": "Sign Out",
+    "viewingAs": "You are viewing as:",
+    "switchBackToAdmin": "Switch Back to Admin"
+  },
+  "home": {
+    "nav": {
+      "specialties": "Specialties",
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "login": "Login",
+      "getStartedFree": "Get Started Free",
+      "selectLanguage": "Select language",
+      "toggleMenu": "Toggle menu",
+      "dashboard": "Dashboard",
+      "logout": "Logout"
+    },
+    "hero": {
+      "trusted": "Trusted by 500+ clinics across India",
+      "titlePrefix": "Smart Clinic Management,",
+      "titleHighlight": "Simplified",
+      "description": "Replace phone calls and paper registers with an intelligent booking system. Patients self-book via WhatsApp or your website. Doctors see organized schedules.",
+      "startFreeTrial": "Start Free Trial",
+      "seeHowItWorks": "See How It Works",
+      "noCreditCard": "No credit card",
+      "hipaaReady": "HIPAA Ready",
+      "setup5min": "5 min setup"
+    },
+    "stats": {
+      "clinicsOnboarded": "Clinics Onboarded",
+      "appointmentsBooked": "Appointments Booked",
+      "uptime": "Uptime",
+      "doctorRating": "Doctor Rating"
+    },
+    "specialties": {
+      "badge": "Built for Healthcare",
+      "title": "Every Specialty, One Platform",
+      "description": "Whether you run a small clinic or a multi-specialty hospital, Next Gen HRMS adapts to the way your practice works.",
+      "learnMore": "Learn more",
+      "cards": {
+        "clinicsHospitals": {
+          "title": "Clinics & Hospitals",
+          "description": "General clinics, multi-specialty hospitals and outpatient centers"
+        },
+        "specialistPractices": {
+          "title": "Specialist Practices",
+          "description": "Cardiology, dermatology, orthopedics and other specialist consultations"
+        },
+        "dentalClinics": {
+          "title": "Dental Clinics",
+          "description": "Dental offices, orthodontics and oral surgery practices"
+        },
+        "eyeCare": {
+          "title": "Eye Care",
+          "description": "Ophthalmology clinics, optometrists and vision centers"
+        },
+        "pediatricsMaternity": {
+          "title": "Pediatrics & Maternity",
+          "description": "Pediatric clinics, maternity hospitals and child wellness centers"
+        },
+        "mentalHealth": {
+          "title": "Mental Health",
+          "description": "Psychiatrists, psychologists, therapists and counseling centers"
+        }
+      }
+    },
+    "features": {
+      "badge": "Powerful Features",
+      "title": "Everything You Need to Run Your Clinic",
+      "description": "From doctor scheduling to WhatsApp reminders, Next Gen HRMS handles the heavy lifting so you can focus on your patients.",
+      "cards": {
+        "staffManagement": {
+          "title": "Doctor & Staff Management",
+          "description": "Manage doctors, nurses, and support staff. Assign departments, specializations, and keep schedules organized."
+        },
+        "smartBooking": {
+          "title": "Smart Patient Booking",
+          "description": "Intelligent booking engine that avoids conflicts, respects doctor availability, and lets patients self-book 24/7."
+        },
+        "whatsapp": {
+          "title": "WhatsApp Integration",
+          "description": "Send automated appointment confirmations, reminders, and follow-ups directly to patients via WhatsApp."
+        },
+        "roster": {
+          "title": "Doctor Roster Management",
+          "description": "Define consultation hours, breaks, holidays, and leave so your appointment calendar is always accurate."
+        },
+        "slots": {
+          "title": "Flexible Consultation Slots",
+          "description": "Set custom durations per consultation type, allow buffer times between patients, and handle walk-ins."
+        },
+        "multiDepartment": {
+          "title": "Multi-Department Support",
+          "description": "Manage multiple departments and specializations. Patients book by department and get matched to the right doctor."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "Up and Running in 3 Simple Steps",
+      "description": "Get your clinic booking page live in minutes, not days.",
+      "steps": {
+        "register": {
+          "title": "Register Your Clinic",
+          "description": "Create your free account in under a minute. No credit card required."
+        },
+        "addDoctors": {
+          "title": "Add Your Doctors",
+          "description": "Add doctors, define departments and consultation types, and set availability schedules."
+        },
+        "startSeeing": {
+          "title": "Start Seeing Patients",
+          "description": "Share your booking page with patients and let appointments flow in automatically."
+        }
+      }
+    },
+    "cta": {
+      "title": "Your Patients Are Waiting",
+      "description": "Join 500+ clinics already using Next Gen HRMS. Setup takes 5 minutes. No credit card needed. No commitments.",
+      "getStartedNow": "Get Started Now",
+      "fullFeatureAccess": "Full feature access",
+      "noCreditCardRequired": "No credit card required",
+      "cancelAnytime": "Cancel anytime"
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "description": "Start free, upgrade when you are ready. No hidden fees, ever.",
+      "mostPopular": "Most Popular",
+      "plans": {
+        "freeTrial": {
+          "name": "Free Trial",
+          "period": "7 days",
+          "description": "Try everything risk-free",
+          "cta": "Start Free Trial",
+          "features": {
+            "upTo3Doctors": "Up to 3 doctors",
+            "unlimitedBookings": "Unlimited patient bookings",
+            "whatsappNotifications": "WhatsApp notifications",
+            "basicAnalytics": "Basic analytics",
+            "emailSupport": "Email support"
+          }
+        },
+        "pro": {
+          "name": "Pro",
+          "period": "per month",
+          "description": "Everything your clinic needs",
+          "cta": "Get Started",
+          "features": {
+            "unlimitedStaff": "Unlimited doctors & staff",
+            "unlimitedBookings": "Unlimited patient bookings",
+            "whatsappBot": "WhatsApp bot integration",
+            "advancedAnalytics": "Advanced analytics",
+            "prioritySupport": "Priority support",
+            "customBranding": "Custom branding",
+            "publicBookingPage": "Public booking page"
+          }
+        },
+        "hospital": {
+          "name": "Hospital",
+          "period": "per month",
+          "description": "For multi-department hospitals",
+          "cta": "Contact Sales",
+          "features": {
+            "everythingInPro": "Everything in Pro",
+            "multipleDepartments": "Multiple departments",
+            "accountManager": "Dedicated account manager",
+            "queueSystem": "Queue management system",
+            "customIntegrations": "Custom integrations",
+            "sla": "SLA guarantee",
+            "onboarding": "On-boarding assistance"
+          }
+        }
+      }
+    },
+    "demo": {
+      "stepLabels": {
+        "department": "Department",
+        "doctor": "Doctor",
+        "date": "Date",
+        "timeSlot": "Time Slot",
+        "confirm": "Confirm",
+        "booked": "Booked"
+      },
+      "selectDepartment": "Select Department",
+      "department": {
+        "cardiology": "Cardiology",
+        "orthopedics": "Orthopedics",
+        "dermatology": "Dermatology",
+        "pediatrics": "Pediatrics"
+      },
+      "selectDoctor": "Select Doctor",
+      "experience": "experience",
+      "onLeave": "On leave",
+      "selectDate": "Select Date",
+      "full": "Full",
+      "slots": "slots",
+      "selectedDateLabel": "Fri, 11 Apr",
+      "selectTimeSlot": "Select Time Slot",
+      "selected": "Selected",
+      "confirmAppointment": "Confirm Appointment",
+      "field": {
+        "department": "Department",
+        "doctor": "Doctor",
+        "date": "Date",
+        "time": "Time",
+        "token": "Token"
+      },
+      "confirmBooking": "Confirm Booking",
+      "reviewing": "Reviewing...",
+      "bookingConfirmed": "Booking Confirmed!",
+      "processing": "Processing...",
+      "tokenLine": "Token #7 • 2:00 PM, Fri 11 Apr",
+      "doctorLine": "Dr. Priya Lakshmi • Orthopedics",
+      "whatsappConfirmationSent": "WhatsApp confirmation sent",
+      "whatsappSent": "WhatsApp Sent",
+      "reminderLine": "Reminder for 2:00 PM",
+      "tokenAssigned": "Token Assigned",
+      "queueThird": "Queue: 3rd",
+      "doctorName": "Dr. Priya Lakshmi"
+    },
+    "footer": {
+      "description": "The modern appointment booking platform trusted by clinics and hospitals across India.",
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "whatsappBot": "WhatsApp Bot",
+      "queueSystem": "Queue System",
+      "company": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "legal": "Legal",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy",
+      "allRightsReserved": "All rights reserved.",
+      "madeWith": "Made with",
+      "inIndia": "in India"
+    }
+  }
+}

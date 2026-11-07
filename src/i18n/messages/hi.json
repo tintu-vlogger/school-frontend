@@ -1,0 +1,549 @@
+{
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "analytics": "एनालिटिक्स",
+    "staff": "कर्मचारी",
+    "departments": "विभाग",
+    "designations": "पदनाम",
+    "roster": "रोस्टर",
+    "whatsapp": "व्हाट्सएप",
+    "settings": "सेटिंग्स",
+    "auditLog": "ऑडिट लॉग",
+    "overview": "अवलोकन",
+    "finance": "वित्त",
+    "manage": "प्रबंधन",
+    "system": "सिस्टम",
+    "myClinic": "मेरी कंपनी",
+    "staffDirectory": "कर्मचारी सूची",
+    "configure": "कॉन्फ़िगर"
+  },
+  "common": {
+    "save": "सेव",
+    "saveChanges": "बदलाव सेव करें",
+    "cancel": "रद्द करें",
+    "add": "जोड़ें",
+    "edit": "संपादित करें",
+    "delete": "हटाएँ",
+    "search": "खोजें",
+    "loading": "लोड हो रहा है...",
+    "noData": "कोई डेटा नहीं",
+    "confirm": "पुष्टि करें",
+    "close": "बंद करें",
+    "back": "वापस",
+    "next": "अगला",
+    "submit": "सबमिट",
+    "upload": "अपलोड",
+    "download": "डाउनलोड",
+    "print": "प्रिंट",
+    "view": "देखें",
+    "actions": "कार्य",
+    "status": "स्थिति",
+    "date": "तारीख",
+    "time": "समय",
+    "name": "नाम",
+    "phone": "फ़ोन",
+    "email": "ईमेल",
+    "notes": "नोट्स",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "all": "सभी",
+    "type": "प्रकार",
+    "description": "विवरण",
+    "address": "पता",
+    "amount": "राशि",
+    "total": "कुल",
+    "method": "तरीका",
+    "duration": "अवधि",
+    "service": "सेवा",
+    "optional": "वैकल्पिक",
+    "required": "आवश्यक",
+    "select": "चुनें",
+    "searchPlaceholder": "खोजें...",
+    "noResults": "कोई परिणाम नहीं",
+    "comingSoon": "जल्द आ रहा है",
+    "done": "हो गया",
+    "retry": "पुनः प्रयास",
+    "exportCsv": "CSV एक्सपोर्ट",
+    "copyLink": "लिंक कॉपी",
+    "share": "शेयर",
+    "today": "आज",
+    "tomorrow": "कल",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉगआउट",
+    "signIn": "साइन इन",
+    "signUp": "साइन अप",
+    "saving": "सेव हो रहा है...",
+    "adding": "जोड़ रहे हैं...",
+    "updating": "अपडेट हो रहा है...",
+    "create": "बनाएँ",
+    "update": "अपडेट",
+    "filters": "फ़िल्टर",
+    "clearFilters": "फ़िल्टर हटाएँ",
+    "noneRecorded": "कोई दर्ज नहीं",
+    "uploading": "अपलोड हो रहा है...",
+    "importing": "इम्पोर्ट हो रहा है...",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "deactivate": "निष्क्रिय करें",
+    "deleteConfirmMsg": "इस क्रिया को पूर्ववत नहीं किया जा सकता है।"
+  },
+  "status": {
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "pending": "लंबित",
+    "confirmed": "पुष्टि हुई",
+    "completed": "पूर्ण",
+    "cancelled": "रद्द",
+    "ongoing": "चल रहा है",
+    "noShow": "नहीं आया",
+    "draft": "ड्राफ्ट",
+    "finalized": "अंतिम",
+    "dispensed": "वितरित",
+    "paid": "भुगतान हुआ",
+    "partial": "आंशिक",
+    "overdue": "अतिदेय",
+    "available": "उपलब्ध",
+    "occupied": "व्यस्त",
+    "maintenance": "रखरखाव",
+    "onLeave": "छुट्टी पर",
+    "refunded": "वापसी",
+    "sent": "भेजा"
+  },
+  "calendar": {
+    "sun": "रवि",
+    "mon": "सोम",
+    "tue": "मंगल",
+    "wed": "बुध",
+    "thu": "गुरु",
+    "fri": "शुक्र",
+    "sat": "शनि"
+  },
+  "staff": {
+    "addStaff": "कर्मचारी जोड़ें",
+    "editStaff": "कर्मचारी संपादित करें",
+    "firstName": "पहला नाम",
+    "lastName": "अंतिम नाम",
+    "designation": "पदनाम",
+    "department": "विभाग",
+    "role": "भूमिका",
+    "specialization": "विशेषज्ञता",
+    "qualification": "योग्यता",
+    "experience": "अनुभव",
+    "registrationNumber": "पंजीकरण संख्या",
+    "loginAs": "के रूप में लॉगिन",
+    "manageStaff": "अपनी कंपनी के कर्मचारियों का प्रबंधन करें",
+    "searchPlaceholder": "कर्मचारी खोजें...",
+    "designationAll": "पदनाम: सभी",
+    "statusAll": "स्थिति: सभी",
+    "noStaffFound": "कोई कर्मचारी नहीं मिला",
+    "noStaffHint": "अपनी खोज समायोजित करें या नए कर्मचारी जोड़ें",
+    "addStaffMember": "कर्मचारी जोड़ें",
+    "noDesignation": "कोई पदनाम नहीं"
+  },
+  "department": {
+    "organizeDesc": "अपनी कंपनी को विभागों में व्यवस्थित करें",
+    "newDepartment": "नया विभाग",
+    "editDepartment": "विभाग संपादित करें",
+    "departmentName": "विभाग का नाम",
+    "code": "कोड",
+    "headDoctor": "विभाग प्रमुख",
+    "searchPlaceholder": "विभाग खोजें...",
+    "statusAll": "स्थिति: सभी",
+    "noDepartmentsMatch": "कोई विभाग मेल नहीं खाता",
+    "noDepartmentsYet": "अभी कोई विभाग नहीं",
+    "createHint": "अपनी कंपनी को व्यवस्थित करने के लिए विभाग बनाएं",
+    "addDepartment": "विभाग जोड़ें",
+    "staffMembers": "कर्मचारी सदस्य",
+    "deactivateTitle": "निष्क्रिय करें",
+    "deactivateMsg": "कर्मचारी और सेवाएँ बनी रहेंगी लेकिन विभाग छिपा दिया जाएगा।",
+    "noCode": "कोई कोड नहीं",
+    "department": "विभाग"
+  },
+  "designation": {
+    "manageDesc": "कर्मचारी भूमिकाएँ और पदनाम प्रबंधित करें",
+    "newDesignation": "नया पदनाम",
+    "editDesignation": "पदनाम संपादित करें",
+    "addDesignation": "पदनाम जोड़ें",
+    "searchPlaceholder": "पदनाम खोजें...",
+    "typeAll": "प्रकार: सभी",
+    "default": "डिफ़ॉल्ट",
+    "custom": "कस्टम",
+    "templates": "टेम्पलेट",
+    "noDesignationsFound": "कोई पदनाम नहीं मिला",
+    "noDesignationsYet": "अभी कोई पदनाम नहीं",
+    "noDesignationsHint": "अपनी खोज या फ़िल्टर समायोजित करें",
+    "staffAssigned": "कर्मचारी नियुक्त",
+    "customPlaceholder": "जैसे सीनियर अकाउंटेंट",
+    "failedToLoad": "लोड करने में विफल",
+    "addedSuffix": "जोड़ा गया",
+    "updated": "अपडेट किया गया",
+    "deleted": "हटाया गया",
+    "failed": "विफल"
+  },
+  "settings": {
+    "businessProfile": "बिज़नेस प्रोफ़ाइल",
+    "holidays": "छुट्टियाँ",
+    "notifications": "सूचनाएँ",
+    "integrations": "इंटीग्रेशन",
+    "experimental": "प्रयोगात्मक",
+    "account": "खाता",
+    "headerText": "हेडर टेक्स्ट",
+    "tagline": "टैगलाइन",
+    "footerText": "फूटर टेक्स्ट",
+    "businessName": "बिज़नेस का नाम",
+    "category": "श्रेणी",
+    "language": "भाषा",
+    "manageDesc": "अपनी बिज़नेस प्राथमिकताएँ और खाता प्रबंधित करें",
+    "businessProfileHeading": "बिज़नेस प्रोफ़ाइल",
+    "businessProfileDesc": "ग्राहकों को दिखाई देने वाली बिज़नेस जानकारी अपडेट करें",
+    "defaultDuration": "डिफ़ॉल्ट अवधि",
+    "bufferBetweenSlots": "स्लॉट के बीच बफ़र",
+    "cancellationNotice": "रद्दीकरण सूचना",
+    "operatingHours": "कार्य समय",
+    "open": "खुला",
+    "closed": "बंद",
+    "selectOptional": "चुनें (वैकल्पिक)",
+    "selectCategoryPlaceholder": "श्रेणी चुनें"
+  },
+  "documents": {
+    "uploadDocument": "दस्तावेज़ अपलोड",
+    "title": "शीर्षक",
+    "imaging": "इमेजिंग / स्कैन",
+    "consentForm": "सहमति पत्र",
+    "other": "अन्य",
+    "consentForms": "सहमति पत्र",
+    "newConsent": "नई सहमति",
+    "selectTemplate": "टेम्पलेट चुनें",
+    "signAndSubmit": "हस्ताक्षर और सबमिट",
+    "signed": "हस्ताक्षरित",
+    "notSigned": "हस्ताक्षर नहीं हुआ",
+    "notesOptional": "नोट्स (वैकल्पिक)",
+    "file": "फ़ाइल",
+    "fileMax": "फ़ाइल * (अधिकतम 5MB)",
+    "noConsentForms": "कोई सहमति पत्र हस्ताक्षरित नहीं",
+    "consentCheckboxText": "मैंने उपरोक्त सहमति पत्र पढ़ लिया है और समझ लिया है। मैं स्वेच्छा से वर्णित शर्तों से सहमत हूँ।",
+    "typeFullNameToSign": "हस्ताक्षर के लिए पूरा नाम टाइप करें",
+    "changeTemplate": "टेम्पलेट बदलें",
+    "selectTemplatePrompt": "एक टेम्पलेट चुनें:"
+  },
+  "auth": {
+    "processing": "प्रसंस्करण हो रहा है...",
+    "redirecting": "रीडायरेक्ट किया जा रहा है...",
+    "noToken": "कोई टोकन नहीं मिला, लॉगिन पर रीडायरेक्ट किया जा रहा है...",
+    "errorRedirect": "त्रुटि हुई, लॉगिन पर रीडायरेक्ट किया जा रहा है..."
+  },
+  "audit": {
+    "title": "ऑडिट लॉग",
+    "subtitle": "अपने व्यवसाय में सभी बदलाव और गतिविधियाँ ट्रैक करें",
+    "failedLoad": "ऑडिट लॉग लोड करने में विफल",
+    "entityType": "एंटिटी प्रकार",
+    "allTypes": "सभी प्रकार",
+    "from": "से",
+    "to": "तक",
+    "clear": "साफ करें",
+    "noEntries": "कोई ऑडिट प्रविष्टि नहीं मिली।",
+    "timestamp": "समय",
+    "actor": "कर्ता",
+    "action": "क्रिया",
+    "entityLabel": "एंटिटी",
+    "details": "विवरण",
+    "user": "यूज़र",
+    "showing": "{total} में से {start} से {end} तक दिखा रहा है",
+    "entity": {
+      "appointment": "अपॉइंटमेंट",
+      "staff": "कर्मचारी",
+      "customer": "मरीज़",
+      "service": "सेवा"
+    }
+  },
+  "dashboard": {
+    "overviewTitle": "कार्यस्थान अवलोकन",
+    "goodMorning": "सुप्रभात",
+    "goodAfternoon": "नमस्कार",
+    "goodEvening": "शुभ सन्ध्या",
+    "systemActive": "सक्रिय तंत्र",
+    "walkIn": "वॉक इन",
+    "totalStaff": "कुल कर्मचारी",
+    "totalPatients": "कुल रोगी",
+    "loadingWorkspace": "आपका वर्कस्पेस लोड हो रहा है…",
+    "retry": "फिर से कोशिश करें",
+    "updatesEvery30s": "हर 30 सेकंड में अपडेट",
+    "pending": "लंबित",
+    "waiting": "प्रतीक्षा में",
+    "nowServing": "अभी सेवा में",
+    "next": "अगला",
+    "yourScheduleForToday": "आज का आपका शेड्यूल",
+    "viewAll": "सभी देखें",
+    "nothingOnCalendarToday": "आज कैलेंडर में कुछ नहीं है",
+    "time": "समय",
+    "customer": "ग्राहक",
+    "staff": "कर्मचारी",
+    "status": "स्थिति",
+    "completed": "पूर्ण",
+    "upcoming": "आगामी",
+    "nextDays": "अगले दिन",
+    "todaysRevenue": "आज का राजस्व",
+    "thisWeek": "इस सप्ताह",
+    "thisMonth": "इस महीने",
+    "lastMonth": "पिछला महीना",
+    "revenueTrend30Days": "राजस्व रुझान (30 दिन)",
+    "popularServices": "लोकप्रिय सेवाएँ",
+    "staffUtilization": "कर्मचारी उपयोग",
+    "appts": "विज़िट",
+    "peakHours": "पीक समय",
+    "customerStats": "मरीज़ आँकड़े",
+    "total": "कुल",
+    "new": "नए",
+    "returning": "दोबारा आने वाले",
+    "statusBreakdown": "स्थिति विवरण"
+  },
+  "dashboardLayout": {
+    "logout": "लॉगआउट",
+    "english": "अंग्रेज़ी",
+    "notifications": "सूचनाएँ",
+    "noNotifications": "अभी तक कोई सूचना नहीं",
+    "notification": "सूचना",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "businessSettings": "बिज़नेस सेटिंग्स",
+    "activityLog": "गतिविधि लॉग",
+    "signOut": "साइन आउट",
+    "viewingAs": "आप देख रहे हैं:",
+    "switchBackToAdmin": "एडमिन पर वापस जाएँ"
+  },
+  "home": {
+    "nav": {
+      "specialties": "विशेषताएँ",
+      "features": "फीचर्स",
+      "howItWorks": "यह कैसे काम करता है",
+      "pricing": "मूल्य",
+      "login": "लॉगिन",
+      "getStartedFree": "मुफ्त शुरू करें",
+      "selectLanguage": "भाषा चुनें",
+      "toggleMenu": "मेन्यू टॉगल करें",
+      "dashboard": "डैशबोर्ड",
+      "logout": "लॉगआउट"
+    },
+    "hero": {
+      "trusted": "भारत भर में 500+ क्लीनिकों द्वारा भरोसेमंद",
+      "titlePrefix": "स्मार्ट क्लिनिक प्रबंधन,",
+      "titleHighlight": "आसान बनाया गया",
+      "description": "फोन कॉल और कागज़ी रजिस्टर की जगह एक स्मार्ट बुकिंग सिस्टम अपनाएँ। मरीज़ WhatsApp या आपकी वेबसाइट से खुद बुक करें, और डॉक्टर व्यवस्थित शेड्यूल देखें।",
+      "startFreeTrial": "फ्री ट्रायल शुरू करें",
+      "seeHowItWorks": "देखें कैसे काम करता है",
+      "noCreditCard": "क्रेडिट कार्ड की आवश्यकता नहीं",
+      "hipaaReady": "HIPAA तैयार",
+      "setup5min": "5 मिनट सेटअप"
+    },
+    "stats": {
+      "clinicsOnboarded": "ऑनबोर्डेड क्लीनिक",
+      "appointmentsBooked": "बुक की गई विज़िट",
+      "uptime": "अपटाइम",
+      "doctorRating": "डॉक्टर रेटिंग"
+    },
+    "specialties": {
+      "badge": "हेल्थकेयर के लिए बना",
+      "title": "हर स्पेशलिटी के लिए एक प्लेटफ़ॉर्म",
+      "description": "चाहे छोटा क्लीनिक हो या मल्टी-स्पेशलिटी अस्पताल, Next Gen HRMS आपके काम करने के तरीके के अनुसार ढल जाता है।",
+      "learnMore": "और जानें",
+      "cards": {
+        "clinicsHospitals": {
+          "title": "क्लीनिक और अस्पताल",
+          "description": "जनरल क्लीनिक, मल्टी-स्पेशलिटी अस्पताल और आउटपेशेंट सेंटर"
+        },
+        "specialistPractices": {
+          "title": "स्पेशलिस्ट प्रैक्टिस",
+          "description": "कार्डियोलॉजी, डर्मेटोलॉजी, ऑर्थोपेडिक्स और अन्य विशेषज्ञ परामर्श"
+        },
+        "dentalClinics": {
+          "title": "डेंटल क्लीनिक",
+          "description": "डेंटल क्लीनिक, ऑर्थोडॉन्टिक्स और ओरल सर्जरी प्रैक्टिस"
+        },
+        "eyeCare": {
+          "title": "नेत्र देखभाल",
+          "description": "ऑफ्थैल्मोलॉजी क्लीनिक, ऑप्टोमेट्रिस्ट और विज़न सेंटर"
+        },
+        "pediatricsMaternity": {
+          "title": "बाल रोग और मातृत्व",
+          "description": "बाल रोग क्लीनिक, मातृत्व अस्पताल और बाल स्वास्थ्य केंद्र"
+        },
+        "mentalHealth": {
+          "title": "मानसिक स्वास्थ्य",
+          "description": "मनोचिकित्सक, मनोवैज्ञानिक, थेरेपिस्ट और काउंसलिंग सेंटर"
+        }
+      }
+    },
+    "features": {
+      "badge": "शक्तिशाली फीचर्स",
+      "title": "आपके क्लीनिक के लिए जरूरी सब कुछ",
+      "description": "डॉक्टर शेड्यूलिंग से लेकर WhatsApp रिमाइंडर तक, Next Gen HRMS आपका काम आसान करता है ताकि आप मरीज़ों पर ध्यान दे सकें।",
+      "cards": {
+        "staffManagement": {
+          "title": "डॉक्टर और स्टाफ प्रबंधन",
+          "description": "डॉक्टरों, नर्सों और सपोर्ट स्टाफ को प्रबंधित करें। विभाग, विशेषज्ञता और शेड्यूल व्यवस्थित रखें।"
+        },
+        "smartBooking": {
+          "title": "स्मार्ट मरीज़ बुकिंग",
+          "description": "बुद्धिमान बुकिंग इंजन जो टकराव रोकता है, डॉक्टर उपलब्धता का पालन करता है और 24/7 सेल्फ-बुकिंग देता है।"
+        },
+        "whatsapp": {
+          "title": "व्हाट्सएप इंटीग्रेशन",
+          "description": "अपॉइंटमेंट पुष्टि, रिमाइंडर और फॉलो-अप संदेश मरीज़ों को सीधे व्हाट्सएप पर भेजें।"
+        },
+        "roster": {
+          "title": "डॉक्टर रोस्टर प्रबंधन",
+          "description": "परामर्श समय, ब्रेक, छुट्टियां और अवकाश तय करें ताकि आपका कैलेंडर हमेशा सटीक रहे।"
+        },
+        "slots": {
+          "title": "लचीले परामर्श स्लॉट",
+          "description": "परामर्श प्रकार के अनुसार अवधि तय करें, मरीज़ों के बीच बफ़र रखें और वॉक-इन संभालें।"
+        },
+        "multiDepartment": {
+          "title": "मल्टी-डिपार्टमेंट सपोर्ट",
+          "description": "कई विभाग और विशेषज्ञताएँ प्रबंधित करें। मरीज़ सही डॉक्टर से मैच होकर बुक करते हैं।"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "3 आसान चरणों में तैयार",
+      "description": "दिनों में नहीं, मिनटों में अपनी क्लीनिक बुकिंग पेज लाइव करें।",
+      "steps": {
+        "register": {
+          "title": "अपना क्लीनिक रजिस्टर करें",
+          "description": "एक मिनट से कम में मुफ्त अकाउंट बनाएं। क्रेडिट कार्ड की जरूरत नहीं।"
+        },
+        "addDoctors": {
+          "title": "अपने डॉक्टर जोड़ें",
+          "description": "डॉक्टर जोड़ें, विभाग और परामर्श प्रकार तय करें और उपलब्धता शेड्यूल सेट करें।"
+        },
+        "startSeeing": {
+          "title": "मरीज़ देखना शुरू करें",
+          "description": "अपना बुकिंग पेज मरीज़ों से साझा करें और अपॉइंटमेंट अपने आप आने दें।"
+        }
+      }
+    },
+    "cta": {
+      "title": "आपके मरीज़ इंतज़ार कर रहे हैं",
+      "description": "Next Gen HRMS इस्तेमाल कर रहे 500+ क्लीनिकों से जुड़ें। सेटअप में सिर्फ 5 मिनट लगते हैं। कोई क्रेडिट कार्ड नहीं चाहिए।",
+      "getStartedNow": "अभी शुरू करें",
+      "fullFeatureAccess": "सभी फीचर एक्सेस",
+      "noCreditCardRequired": "क्रेडिट कार्ड आवश्यक नहीं",
+      "cancelAnytime": "कभी भी रद्द करें"
+    },
+    "pricing": {
+      "title": "सरल और पारदर्शी मूल्य",
+      "description": "मुफ़्त शुरू करें, तैयार होने पर अपग्रेड करें। कोई छिपे शुल्क नहीं।",
+      "mostPopular": "सबसे लोकप्रिय",
+      "plans": {
+        "freeTrial": {
+          "name": "फ्री ट्रायल",
+          "period": "7 दिन",
+          "description": "बिना जोखिम सब कुछ आज़माएँ",
+          "cta": "फ्री ट्रायल शुरू करें",
+          "features": {
+            "upTo3Doctors": "अधिकतम 3 डॉक्टर",
+            "unlimitedBookings": "असीमित मरीज़ बुकिंग",
+            "whatsappNotifications": "व्हाट्सएप नोटिफिकेशन",
+            "basicAnalytics": "बेसिक एनालिटिक्स",
+            "emailSupport": "ईमेल सपोर्ट"
+          }
+        },
+        "pro": {
+          "name": "प्रो",
+          "period": "प्रति माह",
+          "description": "आपके क्लीनिक के लिए सब कुछ",
+          "cta": "शुरू करें",
+          "features": {
+            "unlimitedStaff": "असीमित डॉक्टर और स्टाफ",
+            "unlimitedBookings": "असीमित मरीज़ बुकिंग",
+            "whatsappBot": "व्हाट्सएप बॉट इंटीग्रेशन",
+            "advancedAnalytics": "एडवांस्ड एनालिटिक्स",
+            "prioritySupport": "प्राथमिकता सपोर्ट",
+            "customBranding": "कस्टम ब्रांडिंग",
+            "publicBookingPage": "पब्लिक बुकिंग पेज"
+          }
+        },
+        "hospital": {
+          "name": "हॉस्पिटल",
+          "period": "प्रति माह",
+          "description": "मल्टी-डिपार्टमेंट अस्पतालों के लिए",
+          "cta": "सेल्स से संपर्क करें",
+          "features": {
+            "everythingInPro": "प्रो की सभी सुविधाएँ",
+            "multipleDepartments": "एकाधिक विभाग",
+            "accountManager": "समर्पित अकाउंट मैनेजर",
+            "queueSystem": "क्यू प्रबंधन प्रणाली",
+            "customIntegrations": "कस्टम इंटीग्रेशन",
+            "sla": "SLA गारंटी",
+            "onboarding": "ऑनबोर्डिंग सहायता"
+          }
+        }
+      }
+    },
+    "demo": {
+      "stepLabels": {
+        "department": "विभाग",
+        "doctor": "डॉक्टर",
+        "date": "तारीख",
+        "timeSlot": "समय स्लॉट",
+        "confirm": "पुष्टि",
+        "booked": "बुक्ड"
+      },
+      "selectDepartment": "विभाग चुनें",
+      "department": {
+        "cardiology": "कार्डियोलॉजी",
+        "orthopedics": "ऑर्थोपेडिक्स",
+        "dermatology": "डर्मेटोलॉजी",
+        "pediatrics": "पीडियाट्रिक्स"
+      },
+      "selectDoctor": "डॉक्टर चुनें",
+      "experience": "अनुभव",
+      "onLeave": "छुट्टी पर",
+      "selectDate": "तारीख चुनें",
+      "full": "फुल",
+      "slots": "स्लॉट",
+      "selectedDateLabel": "शुक्र, 11 अप्रैल",
+      "selectTimeSlot": "समय स्लॉट चुनें",
+      "selected": "चयनित",
+      "confirmAppointment": "अपॉइंटमेंट पुष्टि करें",
+      "field": {
+        "department": "विभाग",
+        "doctor": "डॉक्टर",
+        "date": "तारीख",
+        "time": "समय",
+        "token": "टोकन"
+      },
+      "confirmBooking": "बुकिंग पुष्टि करें",
+      "reviewing": "समीक्षा हो रही है...",
+      "bookingConfirmed": "बुकिंग पुष्टि हो गई!",
+      "processing": "प्रोसेस हो रहा है...",
+      "tokenLine": "टोकन #7 • 2:00 PM, शुक्र 11 अप्रैल",
+      "doctorLine": "डॉ. प्रिया लक्ष्मी • ऑर्थोपेडिक्स",
+      "whatsappConfirmationSent": "व्हाट्सएप पुष्टि भेजी गई",
+      "whatsappSent": "व्हाट्सएप भेजा गया",
+      "reminderLine": "2:00 PM के लिए रिमाइंडर",
+      "tokenAssigned": "टोकन असाइन हुआ",
+      "queueThird": "क्यू: तीसरा",
+      "doctorName": "डॉ. प्रिया लक्ष्मी"
+    },
+    "footer": {
+      "description": "भारत भर के क्लीनिकों और अस्पतालों द्वारा भरोसेमंद आधुनिक विज़िट बुकिंग प्लेटफ़ॉर्म।",
+      "product": "प्रोडक्ट",
+      "features": "फीचर्स",
+      "pricing": "मूल्य",
+      "whatsappBot": "व्हाट्सएप बॉट",
+      "queueSystem": "क्यू सिस्टम",
+      "company": "कंपनी",
+      "about": "हमारे बारे में",
+      "blog": "ब्लॉग",
+      "careers": "करियर",
+      "contact": "संपर्क",
+      "legal": "कानूनी",
+      "privacyPolicy": "गोपनीयता नीति",
+      "termsOfService": "सेवा की शर्तें",
+      "cookiePolicy": "कुकी नीति",
+      "allRightsReserved": "सभी अधिकार सुरक्षित।",
+      "madeWith": "प्यार से बनाया गया",
+      "inIndia": "भारत में"
+    }
+  }
+}
