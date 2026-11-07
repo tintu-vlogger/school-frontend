@@ -30,6 +30,9 @@ export const HOME_MODULES: HomeModule[] = [
   { dir: "comms", module: "comms", perm: "comms" },
   { dir: "library", module: "library", perm: "library" },
   { dir: "transport", module: "transport", perm: "transport" },
+  { dir: "hostel", module: "hostel", perm: "hostel" },
+  { dir: "wellbeing", module: "wellbeing", perm: "wellbeing" },
+  { dir: "admissions", module: "admissions", perm: "admissions" },
 ];
 
 type CardProps = { studentId?: number };
