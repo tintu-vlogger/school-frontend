@@ -17,5 +17,5 @@ const NAV = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (pathname === "/admin/login") return <>{children}</>;
-  return <PlatformShell role="admin" nav={NAV} loginPath="/admin/login" title="Next Gen HRMS admin">{children}</PlatformShell>;
+  return <PlatformShell role="admin" nav={NAV} loginPath="/admin/login" title="Campusly admin">{children}</PlatformShell>;
 }

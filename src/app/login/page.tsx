@@ -9,7 +9,7 @@ import { useToast } from '@/lib/toast-context'
 import { API_BASE } from '@/lib/api'
 
 const ROOT_DOMAINS = (
-  process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost"
+  process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost"
 )
   .split(",")
   .map((s) => s.trim())
@@ -127,7 +127,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col">
       {/* Common top bar */}
       <div className="bg-white px-8 py-3 flex items-center justify-between border-b border-gray-100">
-        <Link href="/"><img src="/logo.svg" alt="Next Gen HRMS" className="h-10" /></Link>
+        <Link href="/"><img src="/logo.svg" alt="Campusly" className="h-10" /></Link>
         <span className="text-xs text-gray-400 hidden sm:block">HR and payroll for Indian companies</span>
       </div>
 
@@ -135,7 +135,7 @@ export default function LoginPage() {
       {/* Left panel */}
       <div className="hidden flex-col justify-between bg-[#16161d] p-12 lg:flex lg:w-1/2">
         <div>
-          <p className="text-[12px] uppercase tracking-[0.1em] text-indigo-300/80">Next Gen HRMS</p>
+          <p className="text-[12px] uppercase tracking-[0.1em] text-indigo-300/80">Campusly</p>
           <h2 className="mt-3 max-w-md text-[34px] font-extralight leading-tight text-white">Welcome back</h2>
           <p className="mt-3 max-w-sm text-[15px] font-light text-white/50">Sign in to manage your people, attendance, leave and payroll.</p>
         </div>
@@ -153,7 +153,7 @@ export default function LoginPage() {
             </li>
           ))}
         </ul>
-        <p className="text-[12px] font-light text-white/30">&copy; {new Date().getFullYear()} Next Gen HRMS</p>
+        <p className="text-[12px] font-light text-white/30">&copy; {new Date().getFullYear()} Campusly</p>
       </div>
 
       {/* Right form panel */}
@@ -162,7 +162,7 @@ export default function LoginPage() {
           <div className="mb-6">
             <h2 className="text-[28px] font-extralight text-gray-900">Sign in</h2>
             <p className="mt-1 text-sm text-gray-400">
-              Access your Next Gen HRMS dashboard
+              Access your Campusly dashboard
             </p>
           </div>
 

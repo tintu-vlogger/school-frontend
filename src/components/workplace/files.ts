@@ -10,7 +10,7 @@ export type FileRef = {
   uuid: string; name: string; size: number; content_type: string; url?: string | null; download_url?: string | null;
 };
 
-const ROOTS = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost").split(",").map((s) => s.trim()).filter(Boolean);
+const ROOTS = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost").split(",").map((s) => s.trim()).filter(Boolean);
 const RESERVED = new Set(["www", "api", "admin", "app"]);
 
 function companySlug(): string | null {

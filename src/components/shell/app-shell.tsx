@@ -30,6 +30,7 @@ import { topicForPath } from "@/components/help/help-index";
 import { MobileLoginModal } from "@/components/mobile-login-modal";
 import { ADMIN_SECTION, canOpen, findPage, visibleSections, type HrSection } from "@/lib/hr-nav";
 import { AccessProvider, useAccess } from "@/lib/access";
+import { InstitutionProvider } from "@/lib/institution";
 import { useServiceNav } from "@/components/custom_forms/use-service-nav";
 import { EmptyState, Paper, btn } from "@/components/shell/page";
 import { Lock } from "lucide-react";
@@ -73,7 +74,7 @@ function NoAccess() {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  return <AccessProvider><Shell>{children}</Shell></AccessProvider>;
+  return <InstitutionProvider><AccessProvider><Shell>{children}</Shell></AccessProvider></InstitutionProvider>;
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
@@ -84,7 +85,7 @@ function Shell({ children }: { children: React.ReactNode }) {
   const access = useAccess();
 
   const isAdmin = access.isAdmin;
-  const serviceNav = useServiceNav(!!user && access.ready);
+  const serviceNav = useServiceNav(!!user && access.ready && !access.portalRole);
   const sections = useMemo(() => visibleSections(access, serviceNav), [access, serviceNav]);
   const allowed = canOpen(pathname, access);
   const mainSections = sections.filter((s) => s.key !== ADMIN_SECTION.key);
@@ -182,7 +183,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="flex h-full w-[76px] shrink-0 flex-col items-center bg-rail px-2 py-3">
       <Link href="/dashboard" className="mb-4 flex h-10 w-10 items-center justify-center" aria-label="Home">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-small.svg" alt="Next Gen HRMS" className="h-9 w-9" />
+        <img src="/logo-small.svg" alt="Campusly" className="h-9 w-9" />
       </Link>
       <nav className="hr-scroll flex w-full flex-1 flex-col gap-1 overflow-y-auto" aria-label="Sections">
         {mainSections.map(railButton)}
@@ -273,7 +274,7 @@ function Shell({ children }: { children: React.ReactNode }) {
             <span className="hidden text-line-strong sm:inline">/</span>
             <span className="truncate text-ink">{current.label}</span>
           </>
-        ) : <span className="text-ink">Next Gen HRMS</span>}
+        ) : <span className="text-ink">Campusly</span>}
       </div>
 
       <div className="flex flex-1 justify-center"><UniversalSearch /></div>
@@ -381,7 +382,7 @@ function Shell({ children }: { children: React.ReactNode }) {
       <HelpPortal open={help} onClose={() => setHelp(false)} initial={help ? topicForPath(pathname) : undefined} />
       <MobileLoginModal open={mobileLogin} onClose={() => setMobileLogin(false)} />
       {avatarOn && <TalkingAvatar size={84} autoPlay={avatarAutoPlay} onReady={setAvatarReady} onHide={() => { setAvatarReady(false); setAvatarOn(false); }} hint={`Hi ${user?.full_name?.split(" ")[0] ?? "there"}! Tap me for a quick tour.`}
-        text={`Hello ${user?.full_name?.split(" ")[0] ?? ""}, welcome to Next Gen HRMS. Use the dark bar on the left to move between sections: Home, People, Time, Talent, Engage and Insights. ` +
+        text={`Hello ${user?.full_name?.split(" ")[0] ?? ""}, welcome to Campusly. Use the dark bar on the left to move between sections: Home, People, Time, Talent, Engage and Insights. ` +
           "Click a section to see its pages. Apply for leave, check your payslips and approve requests from your inbox. " +
           "Use Create at the top for quick actions, and Ask to get answers in plain words. Have a great day!"} />}
     </div>

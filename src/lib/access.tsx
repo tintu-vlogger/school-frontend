@@ -10,6 +10,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { api } from "./api";
 import { useAuth } from "./auth";
 import type { Access } from "./hr-nav";
+import { useInstitution } from "./institution";
 
 export type MyPermissions = {
   role: string;
@@ -56,6 +57,7 @@ const AccessContext = createContext<AccessState | null>(null);
 
 export function AccessProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  const { modules } = useInstitution();
   // One cache entry per signed-in identity (a role change needs a new sign-in or reload()).
   const key = user ? `${user.company_id}:${user.email}:${user.employee_id ?? "-"}:${user.role}` : "";
   // A reload draws the menu from the stored copy at once (the browser only; the server
@@ -82,7 +84,10 @@ export function AccessProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AccessState>(() => {
     const perms = new Set(data?.permissions ?? []);
     const isAdmin = (data?.role ?? user?.role) === "admin";
+    const roleNow = data?.role ?? user?.role ?? "employee";
     return {
+      portalRole: roleNow === "parent" || roleNow === "student" ? roleNow : null,
+      modules,
       ready: !!data,
       role: data?.role ?? user?.role ?? "employee",
       permissions: perms,
@@ -99,7 +104,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
         setTick((t) => t + 1);
       },
     };
-  }, [data, user]);
+  }, [data, user, modules]);
 
   return <AccessContext.Provider value={value}>{children}</AccessContext.Provider>;
 }

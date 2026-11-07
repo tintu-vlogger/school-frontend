@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Building2, Lock, Search, ArrowRight } from "lucide-react";
 
-const ROOT_DOMAINS = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost")
+const ROOT_DOMAINS = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost")
   .split(",").map((s) => s.trim()).filter(Boolean);
 
-/** The main Next Gen HRMS address (without the company subdomain). */
+/** The main Campusly address (without the company subdomain). */
 function homeFor(host: string, protocol = "https:"): string {
   const [h, port] = host.split(":");
   const root = ROOT_DOMAINS.find((r) => h === r || h.endsWith(`.${r}`));
@@ -31,7 +31,7 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
   }, []);
   const Icon = gone ? Building2 : Lock;
 
-  // Not-found address: count down from 10, then go to the main Next Gen HRMS page.
+  // Not-found address: count down from 10, then go to the main Campusly page.
   const REDIRECT_SECONDS = 10;
   const [left, setLeft] = useState(REDIRECT_SECONDS);
   useEffect(() => {
@@ -100,14 +100,14 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}>
           {gone
             ? "There's no company at this address. Check the spelling, or ask your HR team for the correct link."
-            : "This company has been switched off for now. Please contact Next Gen HRMS support."}
+            : "This company has been switched off for now. Please contact Campusly support."}
         </motion.p>
 
         <motion.div className="mt-8 flex flex-wrap items-center justify-center gap-3"
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }}>
           <motion.a href={home} whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
             className="group inline-flex h-11 items-center gap-2 rounded-full bg-gray-900 px-6 text-sm text-white">
-            Go to Next Gen HRMS
+            Go to Campusly
             <ArrowRight size={16} strokeWidth={1.75} className="transition-transform group-hover:translate-x-0.5" />
           </motion.a>
         </motion.div>
@@ -128,13 +128,13 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
                 {left}
               </motion.span>
             </span>
-            Taking you to Next Gen HRMS in {left} second{left === 1 ? "" : "s"}…
+            Taking you to Campusly in {left} second{left === 1 ? "" : "s"}…
           </motion.div>
         )}
 
         <motion.p className="mt-10 text-[12px] font-light text-gray-400"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }}>
-          Next Gen HRMS · HR and payroll for Indian companies
+          Campusly · HR and payroll for Indian companies
         </motion.p>
       </div>
     </div>

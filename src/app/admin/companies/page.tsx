@@ -550,7 +550,7 @@ function NewCompanyModal({ onClose, onDone }: { onClose: () => void; onDone: () 
     } catch (e: unknown) { setErr(e instanceof Error ? e.message : "Failed"); } finally { setBusy(false); }
   }
   const inp = inputCls;
-  const host = typeof window !== "undefined" ? window.location.host.replace(/^admin\./, "") : "nextgenhrms.com";
+  const host = typeof window !== "undefined" ? window.location.host.replace(/^admin\./, "") : "campusly.app";
   const loginText = made ? `${made.name}\nLogin: ${made.login_url}\nEmail: ${made.email}${made.password ? `\nPassword: ${made.password}` : ""}` : "";
 
   return (
@@ -566,7 +566,7 @@ function NewCompanyModal({ onClose, onDone }: { onClose: () => void; onDone: () 
                 <div className={`mt-1 flex items-center overflow-hidden rounded-xl border ${check.state === "bad" ? "border-red-300" : check.state === "ok" ? "border-green-300" : "border-gray-200"}`}>
                   <span className="bg-gray-50 px-2.5 py-2.5 text-xs text-gray-400">https://</span>
                   <input value={f.slug} onChange={(e) => { set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "")); setSlugEdited(true); }} placeholder="green-valley-foods" className="min-w-0 flex-1 px-2 py-2.5 text-sm outline-none" />
-                  <span className="bg-gray-50 px-2.5 py-2.5 text-xs text-gray-400">.{host.includes("nextgenhrms") ? "nextgenhrms.com" : host}</span>
+                  <span className="bg-gray-50 px-2.5 py-2.5 text-xs text-gray-400">.{host.includes("campusly") ? "campusly.app" : host}</span>
                 </div>
                 <span className={`mt-1 block min-h-[16px] text-[11px] ${check.state === "bad" ? "text-red-600" : check.state === "ok" ? "text-green-700" : "text-gray-400"}`}>
                   {check.state === "checking" ? "Checking…" : check.state === "ok" ? "✓ Available" : check.state === "bad" ? <>{check.msg}{check.suggestion && <> Try <button type="button" className="underline" onClick={() => { set("slug", check.suggestion!); setSlugEdited(true); }}>{check.suggestion}</button></>}</> : "Fills in from the company name"}

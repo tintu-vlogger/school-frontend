@@ -93,7 +93,7 @@ export default function SubscriptionPage() {
   const ready = !!payCode && payCode.key === `${plan}|${periodId}|${couponKey}`;
   const payAmount = ready ? Math.round(payCode!.amount) : price;
   const upiUrl = s.pay_to.upi_id && ready
-    ? `upi://pay?pa=${s.pay_to.upi_id.trim()}&pn=${encodeURIComponent(s.pay_to.name || "Next Gen HRMS")}&mc=0000&mode=02&purpose=00&am=${payAmount}.00&cu=INR&tn=${payCode!.code}`
+    ? `upi://pay?pa=${s.pay_to.upi_id.trim()}&pn=${encodeURIComponent(s.pay_to.name || "Campusly")}&mc=0000&mode=02&purpose=00&am=${payAmount}.00&cu=INR&tn=${payCode!.code}`
     : "";
   const copiedNote = copied === "note";
   const currentName = s.plan_name || s.plans.find((p) => p.id === s.plan)?.name || "Current";

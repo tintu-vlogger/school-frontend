@@ -87,9 +87,9 @@ export default function OnboardingPage() {
     return () => clearTimeout(t);
   }, [effectiveSlug]);
 
-  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? 'nextgenhrms.com,lvh.me,localhost').split(',').map((r) => r.trim()).filter(Boolean);
+  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? 'campusly.app,lvh.me,localhost').split(',').map((r) => r.trim()).filter(Boolean);
   const loc = typeof window !== 'undefined' ? window.location : null;
-  const root = loc ? roots.find((r) => loc.hostname === r || loc.hostname.endsWith('.' + r)) || loc.hostname : 'nextgenhrms.com';
+  const root = loc ? roots.find((r) => loc.hostname === r || loc.hostname.endsWith('.' + r)) || loc.hostname : 'campusly.app';
   const suffix = `.${root}${loc?.port ? ':' + loc.port : ''}`;
   const scheme = loc ? `${loc.protocol}//` : 'https://';
 
@@ -119,7 +119,7 @@ export default function OnboardingPage() {
         currency: 'INR',
         industry, employee_count_band: size,
       });
-      toast.success('Your company is set up. Welcome to Next Gen HRMS.');
+      toast.success('Your company is set up. Welcome to Campusly.');
       // The web address may have changed with the name: continue there.
       const tok = localStorage.getItem('hrms_token');
       const saved = tok ? await fetch(`${API_BASE}/company/profile`, { headers: { Authorization: `Bearer ${tok}` } }).then((r) => (r.ok ? r.json() : null)).catch(() => null) : null;
@@ -138,7 +138,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-xl">
         <div className="mb-8 flex items-center justify-between">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Next Gen HRMS" className="h-9" />
+          <img src="/logo.svg" alt="Campusly" className="h-9" />
           {me && (
             <div className="flex items-center gap-3 text-right">
               <div>

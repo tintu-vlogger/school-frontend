@@ -16,7 +16,7 @@ export function resolveImageUrl(url: string | null | undefined): string {
 }
 
 const ROOT_DOMAINS = (
-  process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost"
+  process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost"
 )
   .split(",")
   .map((s) => s.trim())

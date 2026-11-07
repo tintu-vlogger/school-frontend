@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
               <CalendarCheck className="w-6 h-6 text-primary" />
             </div>
-            <span className="text-white text-2xl font-bold">Next Gen HRMS</span>
+            <span className="text-white text-2xl font-bold">Campusly</span>
           </div>
         </div>
 
@@ -139,7 +139,7 @@ export default function ForgotPasswordPage() {
 
         <div className="relative z-10">
           <p className="text-indigo-300 text-sm">
-            &copy; {new Date().getFullYear()} Next Gen HRMS. All rights reserved.
+            &copy; {new Date().getFullYear()} Campusly. All rights reserved.
           </p>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function ForgotPasswordPage() {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <CalendarCheck className="w-6 h-6 text-white" />
             </div>
-            <span className="text-gray-900 text-2xl font-bold">Next Gen HRMS</span>
+            <span className="text-gray-900 text-2xl font-bold">Campusly</span>
           </div>
 
           {step === 1 ? (

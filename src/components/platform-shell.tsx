@@ -41,7 +41,7 @@ export function PlatformShell({ role, nav, loginPath, title, children }: { role:
       <aside className="hidden w-60 shrink-0 flex-col border-r border-gray-200 bg-white lg:flex">
         <div className="px-5 py-5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="Next Gen HRMS" className="h-7 w-auto" />
+          <img src="/logo.svg" alt="Campusly" className="h-7 w-auto" />
           <p className="mt-2 truncate text-xs text-gray-400">{role === "admin" ? "Admin" : "Partner"} · {user.name}</p>
         </div>
         <nav className="flex-1 space-y-0.5 px-3">
@@ -158,7 +158,7 @@ export function PlatformLogin({ role, title, afterLogin }: { role: "admin" | "ex
             ))}
           </ul>
         </div>
-        <p className="relative text-[12px] font-light text-gray-400">© {new Date().getFullYear()} Next Gen HRMS</p>
+        <p className="relative text-[12px] font-light text-gray-400">© {new Date().getFullYear()} Campusly</p>
       </div>
 
       {/* Form side */}

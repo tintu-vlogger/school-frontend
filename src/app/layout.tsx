@@ -38,7 +38,7 @@ const notoSansTamil = Noto_Sans_Tamil({
 });
 
 export const metadata: Metadata = {
-  title: "Next Gen HRMS - AI-first HR platform",
+  title: "Campusly - AI-first HR platform",
   description:
     "AI-first HR management: people, attendance, leave, payroll and hiring in one place.",
 };

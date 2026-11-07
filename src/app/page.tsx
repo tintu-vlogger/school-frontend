@@ -1,8 +1,8 @@
 "use client";
 
 /*
- * Main website (nextgenhrms.com): what the product does, Indian compliance, pricing and sign-up.
- * Company addresses (<slug>.nextgenhrms.com) never reach this page; they show the company's own site.
+ * Main website (campusly.app): what the product does, Indian compliance, pricing and sign-up.
+ * Company addresses (<slug>.campusly.app) never reach this page; they show the company's own site.
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const P = "#4f46e5"; // brand indigo
 const S = 1.4; // icon stroke
 
 const INTRO =
-  "Hello, and welcome to Next Gen HRMS. We help Indian companies run HR and payroll in one simple place. " +
+  "Hello, and welcome to Campusly. We help Indian companies run HR and payroll in one simple place. " +
   "Leave, attendance, payroll with P F, E S I, professional tax and T D S, hiring, onboarding, performance and exits all work together. " +
   "Every request follows your own approval flow, and every change is recorded. " +
   "Your company also gets its own website and careers page. Start your free trial today, no card needed.";
@@ -223,7 +223,7 @@ export default function Home() {
           flip
           eyebrow="Your own website"
           title="Your company address opens your own website."
-          body="Every company gets yourname.nextgenhrms.com with an organisation website and careers page: about you, your values, life at work, leadership, offices and open jobs. Pick one of four designs and edit it in minutes. Employees sign in from the same address."
+          body="Every company gets yourname.campusly.app with an organisation website and careers page: about you, your values, life at work, leadership, offices and open jobs. Pick one of four designs and edit it in minutes. Employees sign in from the same address."
           points={["Four designs: Classic, Modern, Serene and Pulse", "Open jobs appear on their own", "Employee sign-in on every page"]}
           art={<SitesArt />}
         />
@@ -322,7 +322,7 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo-small.svg" alt="" className="h-8 w-8" />
-              <span className="text-[16px]">Next Gen HRMS</span>
+              <span className="text-[16px]">Campusly</span>
             </div>
             <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-[#5b6170]">HR and payroll for Indian companies, from the first hire to the thousandth.</p>
           </div>
@@ -340,7 +340,7 @@ export default function Home() {
           ))}
         </div>
         <div className="border-t border-[#ebedf2]">
-          <p className="mx-auto max-w-7xl px-5 py-6 text-[13px] text-[#8a90a0] lg:px-8">© {new Date().getFullYear()} Next Gen HRMS. Made in India.</p>
+          <p className="mx-auto max-w-7xl px-5 py-6 text-[13px] text-[#8a90a0] lg:px-8">© {new Date().getFullYear()} Campusly. Made in India.</p>
         </div>
       </footer>
 

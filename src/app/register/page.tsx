@@ -95,7 +95,7 @@ function RegisterForm() {
     <div className="flex min-h-screen flex-col bg-white">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-3 sm:px-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <Link href="/"><img src="/logo.svg" alt="Next Gen HRMS" className="h-9" /></Link>
+        <Link href="/"><img src="/logo.svg" alt="Campusly" className="h-9" /></Link>
         <span className="hidden text-[12.5px] text-gray-400 sm:block">HR and payroll for Indian companies</span>
       </div>
 
@@ -103,7 +103,7 @@ function RegisterForm() {
         {/* Left panel */}
         <div className="relative hidden flex-col justify-between bg-[#16161d] p-12 lg:flex lg:w-1/2">
           <div>
-            <p className="text-[12px] uppercase tracking-[0.1em] text-indigo-300/80">Next Gen HRMS</p>
+            <p className="text-[12px] uppercase tracking-[0.1em] text-indigo-300/80">Campusly</p>
             <h2 className="mt-3 max-w-md text-[34px] font-extralight leading-tight text-white">
               {companyName ? <>Set up HR for <span className="text-indigo-300">{companyName}</span></> : <>Run HR and payroll in one place</>}
             </h2>
@@ -118,7 +118,7 @@ function RegisterForm() {
               </li>
             ))}
           </ul>
-          <p className="text-[12px] font-light text-white/30">&copy; {new Date().getFullYear()} Next Gen HRMS</p>
+          <p className="text-[12px] font-light text-white/30">&copy; {new Date().getFullYear()} Campusly</p>
         </div>
 
         {/* Form */}
@@ -190,7 +190,7 @@ function RegisterForm() {
 
               <div>
                 <label htmlFor="refCode" className="mb-1 block text-[12.5px] font-light text-gray-500">Partner code <span className="text-gray-300">(optional)</span></label>
-                <input id="refCode" type="text" value={refCode} maxLength={12} autoCapitalize="characters" placeholder="From the partner who introduced you to Next Gen HRMS"
+                <input id="refCode" type="text" value={refCode} maxLength={12} autoCapitalize="characters" placeholder="From the partner who introduced you to Campusly"
                   className={`h-11 w-full rounded-lg border bg-white px-3 font-mono text-[14px] tracking-wider text-gray-900 outline-none placeholder:font-sans placeholder:tracking-normal placeholder:text-gray-300 ${fieldErrors.refCode || refState === 'invalid' ? 'border-rose-300' : 'border-gray-200 focus:border-primary/60'}`}
                   onChange={(e) => { setRefCode(e.target.value.toUpperCase()); setFieldErrors((p) => ({ ...p, refCode: '' })) }} />
                 {refState === 'valid' && <p className="mt-1 text-[12px] text-emerald-700">Introduced by {refName}.</p>}

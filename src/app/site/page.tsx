@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * The company's own address (<slug>.nextgenhrms.com/) shows its organisation website.
+ * The company's own address (<slug>.campusly.app/) shows its organisation website.
  * The proxy rewrites "/" here on company addresses. If the website is switched off,
  * people go straight to sign-in.
  */

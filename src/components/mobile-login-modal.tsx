@@ -77,7 +77,7 @@ export function MobileLoginModal({ open, onClose }: MobileLoginModalProps) {
           ) : code ? (
             <>
               <p className="text-sm text-gray-500 text-center">
-                Open the Next Gen HRMS mobile app and scan this QR code to login
+                Open the Campusly mobile app and scan this QR code to login
               </p>
 
               <div className="flex justify-center rounded-xl border border-primary/10 bg-primary/5 p-6">
@@ -111,7 +111,7 @@ export function MobileLoginModal({ open, onClose }: MobileLoginModalProps) {
 
           <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
             <p className="text-[11px] text-gray-400 leading-relaxed">
-              1. Open the Next Gen HRMS app on your phone<br />
+              1. Open the Campusly app on your phone<br />
               2. Tap "Scan QR Code" on the login screen<br />
               3. Point your camera at this QR code<br />
               4. You'll be logged in automatically

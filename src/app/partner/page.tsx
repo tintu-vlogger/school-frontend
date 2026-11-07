@@ -31,7 +31,7 @@ export default function PartnerHome() {
   }
   function copy() { navigator.clipboard?.writeText(s!.share_url); setMsg("Link copied. Share it on WhatsApp or ask the company to type the code at sign-up."); }
   function share() {
-    if (navigator.share) navigator.share({ title: "Next Gen HRMS", text: `HR and payroll for Indian companies. Sign up with my code ${s!.ref_code}`, url: s!.share_url }).catch(() => {});
+    if (navigator.share) navigator.share({ title: "Campusly", text: `HR and payroll for Indian companies. Sign up with my code ${s!.ref_code}`, url: s!.share_url }).catch(() => {});
     else copy();
   }
 

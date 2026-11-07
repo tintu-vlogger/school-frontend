@@ -263,10 +263,10 @@ function WebAddress() {
   if (!data) return <Paper><Loading /></Paper>;
 
   const host = typeof window !== "undefined" ? window.location.host : "";
-  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost").split(",").map((r) => r.trim()).filter(Boolean);
+  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost").split(",").map((r) => r.trim()).filter(Boolean);
   const hostname = host.split(":")[0];
   const port = host.includes(":") ? `:${host.split(":")[1]}` : "";
-  const root = roots.find((r) => hostname === r || hostname.endsWith(`.${r}`)) || "nextgenhrms.com";
+  const root = roots.find((r) => hostname === r || hostname.endsWith(`.${r}`)) || "campusly.app";
   const changed = original !== null && data.slug !== original;
 
   async function save() {

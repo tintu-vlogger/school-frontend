@@ -4,6 +4,9 @@
  * app/dashboard/[...slug] from the description here.
  */
 import type { LucideIcon } from "lucide-react";
+import { School, BookMarked, UserCog, Replace, NotebookPen, ArrowBigUpDash, Award, IdCard, Presentation, CalendarX2,
+  ClipboardPen, Video, FileSpreadsheet, PencilLine, ScrollText, ChartColumnBig, Sigma, IndianRupee, ReceiptText, Bus,
+  BedDouble, BookOpen, CalendarCheck, Wallet2, Bell } from "lucide-react";
 import { AppWindow, FolderOpen, Shapes, LayoutTemplate } from "lucide-react";
 import { Armchair, Compass, GitFork } from "lucide-react";
 import { ArchiveRestore, Luggage, PlaneTakeoff, TicketsPlane } from "lucide-react";
@@ -46,6 +49,12 @@ export type HrPage = {
   /** The access rule covers this exact address only, not the pages below it
    *  (e.g. an employee's profile under the employee list). */
   exactOnly?: boolean;
+  /** Institution module this page belongs to; hidden when the institution switches it off
+   *  (Settings > Institution profile). Keys: admissions, attendance, timetable, exams, lms,
+   *  online_classes, fees, library, transport, hostel, wellbeing, comms, staff_payroll. */
+  module?: string;
+  /** Portal pages: which portal sign-ins see it. */
+  who?: ("parent" | "student")[];
 };
 
 export type HrSection = {
@@ -63,10 +72,17 @@ export type Access = {
   isOwner: boolean;
   hasEmployee: boolean;
   isManager: boolean;
+  /** "parent" or "student" for portal sign-ins, null for staff. */
+  portalRole?: "parent" | "student" | null;
+  /** Institution modules switched on (missing = on). */
+  modules?: Record<string, boolean>;
 };
 
 /** Whether a navigation page is open to this person. */
 export function canUse(page: HrPage, a: Access): boolean {
+  if (page.module && a.modules && a.modules[page.module] === false) return false;
+  if (a.portalRole) return !!page.who?.includes(a.portalRole);
+  if (page.who) return false;
   if (page.self && !a.hasEmployee) return false;
   if (page.notOwner && a.isOwner) return false;
   if (!page.need || page.need.length === 0 || a.isAdmin) return true;
@@ -81,7 +97,6 @@ export const HR_SECTIONS: HrSection[] = [
     icon: LayoutGrid,
     pages: [
       { label: "Overview", href: "/dashboard", icon: Home },
-      { label: "Assistant", href: "/dashboard/assistant", icon: Sparkles },
       { label: "Approvals", href: "/dashboard/inbox", icon: Inbox },
       { label: "My notifications", href: "/dashboard/notifications", icon: BellRing },
       { label: "Tasks", href: "/dashboard/tasks", icon: ListChecks },
@@ -89,46 +104,140 @@ export const HR_SECTIONS: HrSection[] = [
       { label: "Services", href: "/dashboard/services", icon: Shapes },
       { label: "My assets", href: "/dashboard/assets/mine", icon: Laptop, self: true },
       { label: "My pay", href: "/dashboard/payroll/me", icon: Wallet, self: true },
-      { label: "My benefits", href: "/dashboard/benefits/me", icon: ShieldPlus, self: true },
-      { label: "My trips", href: "/dashboard/travel", icon: PlaneTakeoff, self: true, exactOnly: true },
-      { label: "Team trips", href: "/dashboard/travel/team", icon: Luggage, need: ["payroll.travel.manage"], team: true },
+    ],
+  },
+  {
+    key: "academics",
+    label: "Academics",
+    icon: School,
+    pages: [
+      { label: "Classes & sections", href: "/dashboard/academics", icon: School, need: ["academics.view"], exactOnly: true },
+      { label: "Subjects", href: "/dashboard/academics/subjects", icon: BookMarked, need: ["academics.view"] },
+      { label: "Curriculum", href: "/dashboard/academics/curriculum", icon: ListTree, need: ["academics.view"] },
+      { label: "Teacher allocation", href: "/dashboard/academics/allocation", icon: UserCog, need: ["academics.view"] },
+      { label: "Sessions & terms", href: "/dashboard/academics/sessions", icon: CalendarRange, need: ["academics.view"] },
+      { label: "Rooms & houses", href: "/dashboard/academics/rooms", icon: DoorOpen, need: ["academics.view"] },
+      { label: "Timetable", href: "/dashboard/timetable", icon: CalendarClock, need: ["timetable.view"], module: "timetable", intro: "Build clash-free timetables for every section, teacher and room.", features: ["Periods and bell schedules", "Drag-and-drop timetable builder", "Teacher and room clash checks", "Substitutions for absent teachers", "Printable timetables"] },
+      { label: "Substitutions", href: "/dashboard/timetable/substitutions", icon: Replace, need: ["timetable.manage"], module: "timetable", intro: "Cover classes of absent teachers.", features: ["Free teachers by period", "One-click substitute assignment", "Substitution register"] },
+      { label: "Syllabus & lesson plans", href: "/dashboard/lms/lesson-plans", icon: NotebookPen, need: ["lms.view"], module: "lms", intro: "Plan lessons and track syllabus coverage.", features: ["Units and topics per subject", "Lesson plans by week", "Coverage tracking"] },
+    ],
+  },
+  {
+    key: "students",
+    label: "Students",
+    icon: GraduationCap,
+    pages: [
+      { label: "Students", href: "/dashboard/students", icon: GraduationCap, need: ["students.view"], exactOnly: true },
+      { label: "Parents & guardians", href: "/dashboard/students/guardians", icon: UsersRound, need: ["students.view"] },
+      { label: "Admissions", href: "/dashboard/admissions", icon: FilePlus2, need: ["admissions.view"], module: "admissions", intro: "Enquiries, applications and admission decisions.", features: ["Enquiry pipeline", "Online application form on your website", "Entrance tests and interviews", "Admission offers and seat allocation"] },
+      { label: "Promotion", href: "/dashboard/students/promotion", icon: ArrowBigUpDash, need: ["students.promote"] },
+      { label: "Certificates", href: "/dashboard/certificates", icon: Award, need: ["students.manage"], module: "admissions", intro: "Transfer, bonafide and character certificates.", features: ["Certificate templates", "Issue with number series", "Print and download"] },
+      { label: "ID cards", href: "/dashboard/students/id-cards", icon: IdCard, need: ["students.view"] },
+      { label: "Portal sign-ins", href: "/dashboard/students/accounts", icon: KeyRound, need: ["students.portal.manage"] },
+    ],
+  },
+  {
+    key: "learning",
+    label: "Teaching",
+    icon: Presentation,
+    pages: [
+      { label: "Student attendance", href: "/dashboard/student-attendance", icon: UserCheck, need: ["attendance.view", "attendance.mark"], module: "attendance", intro: "Mark and track learner attendance by day or by period.", features: ["Quick class register", "Period-wise attendance", "Leave requests from parents", "Absence alerts to parents", "Attendance reports"] },
+      { label: "Leave requests", href: "/dashboard/student-attendance/leave", icon: CalendarX2, need: ["attendance.view", "attendance.mark"], module: "attendance" },
+      { label: "Homework & assignments", href: "/dashboard/lms/homework", icon: ClipboardPen, need: ["lms.view"], module: "lms", intro: "Set homework, collect submissions and grade them.", features: ["Homework by section and subject", "Online submissions", "Grading and feedback"] },
+      { label: "Study materials", href: "/dashboard/lms/materials", icon: FolderOpen, need: ["lms.view"], module: "lms", intro: "Notes, files, videos and links for learners.", features: ["Materials by subject and topic", "Files, videos and links"] },
+      { label: "Online classes", href: "/dashboard/lms/online-classes", icon: Video, need: ["lms.view"], module: "online_classes", intro: "Live classes with built-in video rooms or Zoom/Meet/Teams links.", features: ["Schedule live classes", "Built-in video room", "Attendance from joins", "Recordings"] },
+      { label: "Quizzes & tests", href: "/dashboard/lms/quizzes", icon: ListChecks, need: ["lms.view"], module: "lms", intro: "Online quizzes and tests with auto-marking.", features: ["Question bank", "Timed tests", "Auto-marking", "Results"] },
+    ],
+  },
+  {
+    key: "exams",
+    label: "Exams",
+    icon: FileSpreadsheet,
+    pages: [
+      { label: "Exams", href: "/dashboard/exams", icon: FileSpreadsheet, need: ["exams.view"], module: "exams", intro: "Plan exams and assessments.", features: ["Exam types and terms", "Exam timetable", "Hall tickets", "Seating"] },
+      { label: "Marks entry", href: "/dashboard/exams/marks", icon: PencilLine, need: ["exams.marks", "exams.view"], module: "exams" },
+      { label: "Report cards", href: "/dashboard/exams/report-cards", icon: ScrollText, need: ["exams.view"], module: "exams" },
+      { label: "Results analysis", href: "/dashboard/exams/analysis", icon: ChartColumnBig, need: ["exams.view"], module: "exams" },
+      { label: "Grading schemes", href: "/dashboard/exams/grading", icon: Sigma, need: ["exams.manage"], module: "exams" },
+    ],
+  },
+  {
+    key: "fees",
+    label: "Fees",
+    icon: IndianRupee,
+    pages: [
+      { label: "Fees overview", href: "/dashboard/fees", icon: IndianRupee, need: ["fees.view"], module: "fees", intro: "Collections, dues and finance at a glance.", features: ["Collected today and this month", "Dues by class", "Defaulters"] },
+      { label: "Collect fees", href: "/dashboard/fees/collect", icon: HandCoins, need: ["fees.collect"], module: "fees" },
+      { label: "Invoices", href: "/dashboard/fees/invoices", icon: Receipt, need: ["fees.view"], module: "fees" },
+      { label: "Payments & receipts", href: "/dashboard/fees/payments", icon: ReceiptText, need: ["fees.view"], module: "fees" },
+      { label: "Fee structures", href: "/dashboard/fees/structures", icon: Layers, need: ["fees.manage"], module: "fees" },
+      { label: "Concessions & scholarships", href: "/dashboard/fees/concessions", icon: TicketPercent, need: ["fees.manage"], module: "fees" },
+      { label: "Dues & reminders", href: "/dashboard/fees/dues", icon: BellRing, need: ["fees.view"], module: "fees" },
+      { label: "Expenses & income", href: "/dashboard/fees/ledger", icon: Landmark, need: ["fees.manage"], module: "fees" },
+    ],
+  },
+  {
+    key: "campus",
+    label: "Campus",
+    icon: Building2,
+    pages: [
+      { label: "Library", href: "/dashboard/library", icon: Library, need: ["library.view"], module: "library", intro: "Catalogue, issue and return with fines.", features: ["Catalogue with barcodes", "Issue, renew, return", "Fines", "Members"] },
+      { label: "Transport", href: "/dashboard/transport", icon: Bus, need: ["transport.view"], module: "transport", intro: "Routes, stops, vehicles and riders.", features: ["Routes and stops", "Vehicles and drivers", "Rider allocation", "Transport fees"] },
+      { label: "Hostel", href: "/dashboard/hostel", icon: BedDouble, need: ["hostel.view"], module: "hostel", intro: "Blocks, rooms and allocation.", features: ["Rooms and beds", "Allocation", "Hostel attendance", "Visitors"] },
+      { label: "Health & infirmary", href: "/dashboard/wellbeing/health", icon: HeartPulse, need: ["wellbeing.view"], module: "wellbeing", intro: "Health records and infirmary visits.", features: ["Health checkups", "Infirmary visits", "Immunisation"] },
+      { label: "Discipline", href: "/dashboard/wellbeing/discipline", icon: ShieldAlert, need: ["wellbeing.view"], module: "wellbeing", intro: "Behaviour incidents and merits.", features: ["Incidents and actions", "Merit points", "Parent notes"] },
+      { label: "Visitors & gate pass", href: "/dashboard/wellbeing/visitors", icon: DoorClosed, need: ["wellbeing.view"], module: "wellbeing", intro: "Visitor log and early pickup passes.", features: ["Visitor log", "Gate passes", "Pickup verification"] },
+      { label: "Inventory & assets", href: "/dashboard/assets", icon: Laptop, need: ["workplace.assets.manage"] },
+    ],
+  },
+  {
+    key: "comms",
+    label: "Communicate",
+    icon: MessagesSquare,
+    pages: [
+      { label: "Notices & circulars", href: "/dashboard/comms/notices", icon: Megaphone, need: ["comms.view"], module: "comms", intro: "Send notices to classes, parents and staff.", features: ["Audience by class, role or person", "Attachments", "Read receipts", "Email, SMS and WhatsApp"] },
+      { label: "Messages", href: "/dashboard/comms/messages", icon: MessagesSquare, module: "comms", intro: "Private messages between teachers and parents.", features: ["Teacher-parent threads", "Class broadcasts"] },
+      { label: "Events calendar", href: "/dashboard/comms/events", icon: CalendarDays, module: "comms", intro: "Holidays, exams, events and meetings in one calendar.", features: ["Institution calendar", "Event invitations"] },
+      { label: "Parent-teacher meetings", href: "/dashboard/comms/ptm", icon: Handshake, need: ["comms.view"], module: "comms", intro: "Schedule PTM slots and let parents book.", features: ["Slots per teacher", "Parent booking", "Meeting notes"] },
+      { label: "Staff room (Buzz)", href: "/dashboard/buzz", icon: Rss },
+      { label: "Kudos", href: "/dashboard/kudos", icon: Heart },
+      { label: "Staff announcements", href: "/dashboard/announcements", icon: Megaphone },
+      { label: "Surveys", href: "/dashboard/surveys", icon: ClipboardList },
+      { label: "Help desk", href: "/dashboard/helpdesk", icon: LifeBuoy },
+      { label: "Grievances", href: "/dashboard/grievances", icon: ShieldAlert },
     ],
   },
   {
     key: "people",
-    label: "People",
+    label: "Staff",
     icon: Users,
     pages: [
-      { label: "Employees", href: "/dashboard/staff", icon: UserRound, need: ["people.employees.view"], exactOnly: true },
+      { label: "Staff directory", href: "/dashboard/staff", icon: UserRound, need: ["people.employees.view"], exactOnly: true },
       { label: "Org chart", href: "/dashboard/org-chart", icon: Network },
       { label: "Departments", href: "/dashboard/departments", icon: Building2, need: ["people.departments.view"] },
       { label: "Designations", href: "/dashboard/designations", icon: BadgeCheck, need: ["people.designations.view"] },
       { label: "Teams", href: "/dashboard/teams", icon: UsersRound },
       { label: "Skills", href: "/dashboard/skills", icon: Lightbulb },
       { label: "Tags", href: "/dashboard/tags", icon: Tags },
-      { label: "Employee documents", href: "/dashboard/employee-documents", icon: FileCheck2, need: ["people.documents.verify"] },
+      { label: "Staff documents", href: "/dashboard/employee-documents", icon: FileCheck2, need: ["people.documents.verify"] },
       { label: "Letters", href: "/dashboard/documents/letters", icon: FileText, need: ["workplace.letters.manage"] },
-      { label: "HR processes", href: "/dashboard/hr-processes", icon: ArrowRightLeft, need: ["people.processes.manage"] },
-      { label: "Assets", href: "/dashboard/assets", icon: Laptop, need: ["workplace.assets.manage"] },
+      { label: "Staff processes", href: "/dashboard/hr-processes", icon: ArrowRightLeft, need: ["people.processes.manage"] },
     ],
   },
   {
     key: "time",
-    label: "Time",
+    label: "Staff time",
     icon: Clock,
     pages: [
-      { label: "Attendance", href: "/dashboard/attendance", icon: Fingerprint },
+      { label: "Staff attendance", href: "/dashboard/attendance", icon: Fingerprint },
       { label: "Team attendance", href: "/dashboard/attendance/team", icon: UserCheck, need: ["time.attendance.manage", "time.roster.manage"], team: true },
       { label: "Attendance admin", href: "/dashboard/attendance/admin", icon: ClipboardCheck, need: ["time.attendance.manage"] },
       { label: "Attendance reports", href: "/dashboard/attendance/reports", icon: FileClock, need: ["time.attendance.manage"] },
-      { label: "Timesheets", href: "/dashboard/timesheets", icon: Timer },
-      { label: "Leave", href: "/dashboard/leave", icon: Plane },
+      { label: "Staff leave", href: "/dashboard/leave", icon: Plane },
       { label: "Team leave", href: "/dashboard/leave/team", icon: CalendarCheck2, need: ["time.leave.approve", "time.leave.manage"], team: true },
       { label: "Leave admin", href: "/dashboard/leave/admin", icon: ShieldCheck, need: ["time.leave.manage"] },
       { label: "Leave reports", href: "/dashboard/leave/reports", icon: FileBarChart, need: ["time.leave.manage"] },
-      { label: "Shifts & roster", href: "/dashboard/roster", icon: CalendarRange, need: ["time.roster.manage"] },
       { label: "Holidays", href: "/dashboard/holidays", icon: CalendarDays },
-      { label: "Devices", href: "/dashboard/devices", icon: Router, need: ["time.attendance.settings"] },
       { label: "Face attendance", href: "/dashboard/face-attendance", icon: ScanFace, need: ["time.face.manage"] },
     ],
   },
@@ -147,60 +256,31 @@ export const HR_SECTIONS: HrSection[] = [
       { label: "Statutory", href: "/dashboard/statutory", icon: Landmark, need: ["payroll.view", "payroll.statutory.manage"] },
       { label: "Expenses", href: "/dashboard/expenses", icon: Receipt, need: ["expenses.manage"] },
       { label: "Loans & advances", href: "/dashboard/loans", icon: HandCoins, need: ["loans.manage"] },
-      { label: "Travel desk", href: "/dashboard/travel/desk", icon: TicketsPlane, need: ["payroll.travel.manage"] },
-      { label: "Travel policy", href: "/dashboard/travel/policy", icon: Luggage, need: ["payroll.travel.policy"] },
-      { label: "Flexible benefits", href: "/dashboard/payroll/flexible-benefits", icon: TicketPercent, need: ["payroll.tax.manage"] },
-      { label: "Benefits & insurance", href: "/dashboard/benefits", icon: HeartPulse, need: ["benefits.manage"] },
-      { label: "Payroll budgets", href: "/dashboard/payroll/budgets", icon: PiggyBank, need: ["payroll.view"] },
       { label: "Final settlements", href: "/dashboard/settlements", icon: FileSignature, need: ["payroll.view", "payroll.settlements.manage"] },
     ],
   },
   {
     key: "talent",
-    label: "Talent",
+    label: "HR",
     icon: Sprout,
     pages: [
-      { label: "Hiring", href: "/dashboard/recruitment", icon: Briefcase, need: ["talent.hiring.manage"] },
-      { label: "Hiring requests", href: "/dashboard/recruitment/requisitions", icon: FilePlus2 },
+      { label: "Staff hiring", href: "/dashboard/recruitment", icon: Briefcase, need: ["talent.hiring.manage"] },
       { label: "Candidates", href: "/dashboard/recruitment/candidates", icon: UserSearch, need: ["talent.hiring.manage"] },
       { label: "Interviews", href: "/dashboard/recruitment/interviews", icon: CalendarClock },
       { label: "Offers", href: "/dashboard/recruitment/offers", icon: FileSignature, need: ["talent.offers.manage", "talent.hiring.manage"] },
-      { label: "Refer a friend", href: "/dashboard/recruitment/referrals", icon: Gift },
       { label: "Onboarding", href: "/dashboard/onboarding", icon: DoorOpen, need: ["talent.onboarding.manage"] },
       { label: "Probation", href: "/dashboard/probation", icon: Hourglass },
-      { label: "Goals & OKRs", href: "/dashboard/goals", icon: Target },
       { label: "Reviews", href: "/dashboard/performance", icon: ClipboardCheck },
-      { label: "Calibration", href: "/dashboard/performance/calibration", icon: Scale, need: ["talent.performance.admin"] },
-      { label: "Nine-box", href: "/dashboard/performance/nine-box", icon: Grid3x3, need: ["talent.performance.admin"] },
       { label: "One-to-ones", href: "/dashboard/performance/one-on-ones", icon: Handshake },
       { label: "Feedback", href: "/dashboard/performance/feedback", icon: MessageSquareHeart },
       { label: "Improvement plans", href: "/dashboard/performance/pip", icon: LifeBuoy },
       { label: "Promotions & pay", href: "/dashboard/promotions", icon: TrendingUp, need: ["talent.increments.manage"], team: true },
-      { label: "Learning", href: "/dashboard/learning", icon: GraduationCap },
-      { label: "My learning", href: "/dashboard/learning/my", icon: BookOpenCheck },
-      { label: "Learning admin", href: "/dashboard/learning/admin", icon: Library, need: ["talent.learning.manage"] },
-      { label: "Positions", href: "/dashboard/positions", icon: Armchair, need: ["talent.positions.view", "talent.positions.manage"], exactOnly: true },
-      { label: "Position chart", href: "/dashboard/positions/chart", icon: GitFork, need: ["talent.positions.view", "talent.positions.manage"] },
-      { label: "Succession", href: "/dashboard/succession", icon: Layers, need: ["talent.succession.manage"] },
-      { label: "Internal jobs", href: "/dashboard/internal-jobs", icon: Compass, exactOnly: true },
-      { label: "My applications", href: "/dashboard/internal-jobs/my", icon: ClipboardList, self: true },
+      { label: "Staff training", href: "/dashboard/learning", icon: GraduationCap },
+      { label: "My training", href: "/dashboard/learning/my", icon: BookOpenCheck },
+      { label: "Training admin", href: "/dashboard/learning/admin", icon: Library, need: ["talent.learning.manage"] },
       { label: "Exits", href: "/dashboard/exits", icon: LogOut, need: ["talent.exits.manage"] },
       { label: "Clearances", href: "/dashboard/exits/clearances", icon: ClipboardCheck },
       { label: "My resignation", href: "/dashboard/exits/me", icon: DoorClosed, self: true, notOwner: true },
-    ],
-  },
-  {
-    key: "engage",
-    label: "Engage",
-    icon: MessagesSquare,
-    pages: [
-      { label: "Buzz", href: "/dashboard/buzz", icon: Rss },
-      { label: "Kudos", href: "/dashboard/kudos", icon: Heart },
-      { label: "Announcements", href: "/dashboard/announcements", icon: Megaphone },
-      { label: "Surveys", href: "/dashboard/surveys", icon: ClipboardList },
-      { label: "Kiosk screens", href: "/dashboard/kiosk", icon: MonitorPlay, need: ["engage.settings.manage"] },
-      { label: "Help desk", href: "/dashboard/helpdesk", icon: LifeBuoy },
-      { label: "Grievances", href: "/dashboard/grievances", icon: ShieldAlert },
     ],
   },
   {
@@ -208,6 +288,7 @@ export const HR_SECTIONS: HrSection[] = [
     label: "Insights",
     icon: ChartNoAxesColumn,
     pages: [
+
       { label: "Reports", href: "/dashboard/reports", icon: FileBarChart },
       { label: "Dashboards", href: "/dashboard/dashboards", icon: PieChart },
       { label: "Compliance", href: "/dashboard/compliance", icon: ShieldCheck, need: ["insights.compliance.view"] },
@@ -219,12 +300,10 @@ export const HR_SECTIONS: HrSection[] = [
     label: "Settings",
     icon: Settings2,
     pages: [
-      { label: "Company", href: "/dashboard/settings", icon: Building, need: ["settings.company.manage"] },
-      { label: "Company website", href: "/dashboard/settings/website", icon: AppWindow, need: ["settings.company.manage"] },
-      { label: "Legal entities", href: "/dashboard/entities", icon: Landmark, need: ["settings.organization.manage"] },
-      { label: "Regions & locations", href: "/dashboard/locations", icon: MapPin, need: ["settings.organization.manage"] },
-      { label: "Grades", href: "/dashboard/grades", icon: Layers3, need: ["settings.organization.manage"] },
-      { label: "Cost centres", href: "/dashboard/cost-centres", icon: Coins, need: ["settings.organization.manage"] },
+      { label: "Institution profile", href: "/dashboard/settings/institution", icon: School, need: ["academics.profile.manage"] },
+      { label: "Institution", href: "/dashboard/settings", icon: Building, need: ["settings.company.manage"] },
+      { label: "Website", href: "/dashboard/settings/website", icon: AppWindow, need: ["settings.company.manage"] },
+      { label: "Campuses & locations", href: "/dashboard/locations", icon: MapPin, need: ["settings.organization.manage"] },
       { label: "Masters", href: "/dashboard/masters", icon: ListTree, need: ["settings.masters.manage"] },
       { label: "Engagement", href: "/dashboard/engage-settings", icon: PartyPopper, need: ["engage.settings.manage"] },
       { label: "Roles & access", href: "/dashboard/roles", icon: KeyRound, need: ["settings.roles.manage"] },
@@ -232,11 +311,8 @@ export const HR_SECTIONS: HrSection[] = [
       { label: "Approval flows", href: "/dashboard/workflows", icon: Workflow, need: ["settings.workflows.manage"] },
       { label: "Automation", href: "/dashboard/automation", icon: Zap, need: ["settings.automation.manage"] },
       { label: "Notifications", href: "/dashboard/settings/notifications", icon: BellRing, need: ["settings.notifications.manage"] },
-      { label: "Performance settings", href: "/dashboard/performance/settings", icon: Gauge, need: ["talent.performance.admin"] },
       { label: "Hiring and careers page", href: "/dashboard/recruitment/settings", icon: Globe, need: ["talent.hiring.manage"] },
       { label: "Onboarding settings", href: "/dashboard/onboarding/settings", icon: DoorOpen, need: ["talent.onboarding.manage"] },
-      { label: "Probation settings", href: "/dashboard/probation/settings", icon: Hourglass, need: ["talent.probation.manage"] },
-      { label: "Exit settings", href: "/dashboard/exits/settings", icon: LogOut, need: ["talent.exits.manage"] },
       { label: "Shifts & attendance", href: "/dashboard/attendance/settings", icon: Clock3, need: ["time.attendance.settings"] },
       { label: "Payroll settings", href: "/dashboard/payroll/settings", icon: Wallet, need: ["payroll.settings"] },
       { label: "Leave types", href: "/dashboard/leave/types", icon: Plane, need: ["settings.leave.manage"] },
@@ -254,11 +330,44 @@ export const HR_SECTIONS: HrSection[] = [
   },
 ];
 
+/*
+ * The parent and student portal. Pages live under /dashboard/my/<area>; each module owns
+ * its own page there (attendance, timetable, homework, results, fees …).
+ */
+const BOTH: ("parent" | "student")[] = ["parent", "student"];
+export const PORTAL_SECTIONS: HrSection[] = [
+  {
+    key: "portal",
+    label: "My school",
+    icon: LayoutGrid,
+    pages: [
+      { label: "Home", href: "/dashboard", icon: Home, who: BOTH },
+      { label: "Profile", href: "/dashboard/my/profile", icon: UserRound, who: BOTH },
+      { label: "Attendance", href: "/dashboard/my/attendance", icon: CalendarCheck, who: BOTH, module: "attendance" },
+      { label: "Timetable", href: "/dashboard/my/timetable", icon: CalendarClock, who: BOTH, module: "timetable" },
+      { label: "Homework", href: "/dashboard/my/homework", icon: ClipboardPen, who: BOTH, module: "lms" },
+      { label: "Online classes", href: "/dashboard/my/classes", icon: Video, who: BOTH, module: "online_classes" },
+      { label: "Study materials", href: "/dashboard/my/materials", icon: BookOpen, who: BOTH, module: "lms" },
+      { label: "Quizzes & tests", href: "/dashboard/my/quizzes", icon: ListChecks, who: BOTH, module: "lms" },
+      { label: "Exams & results", href: "/dashboard/my/results", icon: ScrollText, who: BOTH, module: "exams" },
+      { label: "Fees", href: "/dashboard/my/fees", icon: Wallet2, who: BOTH, module: "fees" },
+      { label: "Notices", href: "/dashboard/my/notices", icon: Megaphone, who: BOTH, module: "comms" },
+      { label: "Messages", href: "/dashboard/my/messages", icon: MessagesSquare, who: ["parent"], module: "comms" },
+      { label: "Events", href: "/dashboard/my/events", icon: CalendarDays, who: BOTH, module: "comms" },
+      { label: "Meetings", href: "/dashboard/my/meetings", icon: Handshake, who: ["parent"], module: "comms" },
+      { label: "Leave requests", href: "/dashboard/my/leave", icon: CalendarX2, who: BOTH, module: "attendance" },
+      { label: "Library", href: "/dashboard/my/library", icon: Library, who: BOTH, module: "library" },
+      { label: "Transport", href: "/dashboard/my/transport", icon: Bus, who: BOTH, module: "transport" },
+      { label: "Notifications", href: "/dashboard/notifications", icon: Bell, who: BOTH },
+    ],
+  },
+];
+
 /** Section rail order: everything except Settings, which sits at the bottom. */
 export const MAIN_SECTIONS = HR_SECTIONS.filter((s) => s.key !== "admin");
 export const ADMIN_SECTION = HR_SECTIONS.find((s) => s.key === "admin")!;
 
-const ALL_PAGES = HR_SECTIONS.flatMap((s) => s.pages.map((p) => ({ ...p, section: s })));
+const ALL_PAGES = [...HR_SECTIONS, ...PORTAL_SECTIONS].flatMap((s) => s.pages.map((p) => ({ ...p, section: s })));
 
 /** Pages added at run time (custom services), each placed in a section by key. */
 export type ExtraPage = HrPage & { sectionKey: string };
@@ -285,6 +394,9 @@ export function findPage(pathname: string, extra?: ExtraPage[]) {
 
 /** Sections and pages a person may see; `extra` pages are already filtered by the API. */
 export function visibleSections(a: Access, extra?: ExtraPage[]) {
+  if (a.portalRole) {
+    return PORTAL_SECTIONS.map((s) => ({ ...s, pages: s.pages.filter((p) => canUse(p, a)) })).filter((s) => s.pages.length > 0);
+  }
   return HR_SECTIONS
     .map((s) => ({ ...s, pages: [...s.pages.filter((p) => canUse(p, a)), ...(extra ?? []).filter((p) => p.sectionKey === s.key)] }))
     .filter((s) => s.pages.length > 0);
@@ -293,6 +405,15 @@ export function visibleSections(a: Access, extra?: ExtraPage[]) {
 /** Whether this person may open `pathname`. Addresses outside the navigation map are open
  *  (the page itself decides); an address under a page follows that page's rule. */
 export function canOpen(pathname: string, a: Access): boolean {
+  if (a.portalRole) {
+    // Parents and students only use the portal pages (and their own settings pages).
+    if (pathname === "/dashboard" || pathname.startsWith("/dashboard/my/") || pathname === "/dashboard/notifications"
+        || pathname.startsWith("/dashboard/profile")) {
+      const p = findPage(pathname);
+      return !p || !p.who || canUse(p, a);
+    }
+    return false;
+  }
   const page = findPage(pathname);
   if (!page) return true;
   if (page.exactOnly && page.href !== pathname) return true;

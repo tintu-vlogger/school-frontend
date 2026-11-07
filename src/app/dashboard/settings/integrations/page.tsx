@@ -62,7 +62,7 @@ export default function IntegrationsPage() {
         title="Integrations"
         description={denied
           ? "Connect the assistants you use to your HR data with a personal token."
-          : "Connect the services Next Gen HRMS works with. Keys and passwords are stored encrypted."}
+          : "Connect the services Campusly works with. Keys and passwords are stored encrypted."}
       />
 
       <div className="space-y-10">

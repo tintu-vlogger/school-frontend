@@ -1,5 +1,5 @@
 /*
- * Next Gen HRMS web UI kit. Import everything from "@/components/ui-kit".
+ * Campusly web UI kit. Import everything from "@/components/ui-kit".
  * Rule: Add, Edit and View-details open in a centered <Modal> (sizes sm/md/lg/xl/full),
  * never a separate page and never a side drawer. Lists use <FilterBar> + <DataTable>;
  * row click opens a detail modal; confirmations use useConfirm() / <ConfirmDialog>.

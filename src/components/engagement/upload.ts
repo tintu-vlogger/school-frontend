@@ -7,7 +7,7 @@ import { API_BASE } from "@/lib/api";
 import type { FileCard } from "./types";
 
 function companySlug(): string | null {
-  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "nextgenhrms.com,lvh.me,localhost").split(",").map((s) => s.trim());
+  const roots = (process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost").split(",").map((s) => s.trim());
   const host = window.location.hostname.toLowerCase();
   for (const root of roots) {
     if (host !== root && host.endsWith(`.${root}`)) {

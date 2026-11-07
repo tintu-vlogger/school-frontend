@@ -9,5 +9,5 @@ const NAV = [{ label: "My companies", href: "/partner", icon: LayoutDashboard }]
 export default function PartnerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (pathname === "/partner/login") return <>{children}</>;
-  return <PlatformShell role="executive" nav={NAV} loginPath="/partner/login" title="Next Gen HRMS partner">{children}</PlatformShell>;
+  return <PlatformShell role="executive" nav={NAV} loginPath="/partner/login" title="Campusly partner">{children}</PlatformShell>;
 }

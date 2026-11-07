@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * MCP: let outside assistants (desktop chat apps, IDEs, agents) use Next Gen HRMS data with a
+ * MCP: let outside assistants (desktop chat apps, IDEs, agents) use Campusly data with a
  * personal access token. Tokens see only what their owner may see. Admins can list everyone's.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -104,7 +104,7 @@ export function McpSection({ isAdmin, mcpPath = "/api/v1/mcp", ssePath = "/api/v
     { key: "uses", header: "Uses", align: "right", hideBelow: "lg", cell: (r) => <span className="tabular text-[13px] text-muted">{r.use_count.toLocaleString("en-IN")}</span> },
   ];
 
-  const json = JSON.stringify({ mcpServers: { "next-gen-hrms": { type: "http", url, headers: { Authorization: "Bearer ngh_pat_…" } } } }, null, 2);
+  const json = JSON.stringify({ mcpServers: { "campusly": { type: "http", url, headers: { Authorization: "Bearer ngh_pat_…" } } } }, null, 2);
   const remote = `npx mcp-remote ${url} --header "Authorization: Bearer ngh_pat_…"`;
 
   return (
