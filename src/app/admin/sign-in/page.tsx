@@ -25,7 +25,7 @@ export default function SignInAppsPage() {
   useEffect(() => { api.get<Out>("/admin/sso").then(setData).catch((e) => setMsg(e.message)); }, []);
   return (
     <div className="space-y-6">
-      <PageHeader icon={KeyRound} title="Sign-in apps" sub="Google and Microsoft sign-in for every company. Each company switches them on in its own settings." />
+      <PageHeader icon={KeyRound} title="Sign-in apps" sub="Google and Microsoft sign-in for every institution. Each institution switches them on in its own settings." />
       <Flash msg={msg} onClose={() => setMsg("")} />
       {!data ? <Loading /> : (["google", "microsoft"] as const).map((p) => (
         <ProviderPanel key={p} id={p} p={data[p]} onSaved={(o, m) => { if (o) setData(o); setMsg(m); }} />

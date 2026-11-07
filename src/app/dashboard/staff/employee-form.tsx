@@ -65,10 +65,14 @@ export function backgroundOf(e: Pick<EmployeeRecord, "config"> | null | undefine
 }
 
 export const ROLE_OPTIONS: SelectOption[] = [
-  { value: "employee", label: "Employee", description: "Their own profile, leave and attendance" },
-  { value: "manager", label: "Manager", description: "Also approves for their team" },
-  { value: "hr", label: "HR", description: "Manages people records" },
-  { value: "admin", label: "HR admin", description: "Full access, including settings" },
+  { value: "teacher", label: "Teacher / Faculty", description: "Own classes: attendance, homework, marks and messages" },
+  { value: "employee", label: "Staff", description: "Their own profile, leave and attendance" },
+  { value: "manager", label: "Head of department", description: "Also approves for their team" },
+  { value: "principal", label: "Principal / Head", description: "Runs academics across the institution" },
+  { value: "accountant", label: "Accountant", description: "Fees, receipts and refunds" },
+  { value: "librarian", label: "Librarian", description: "Library catalogue and circulation" },
+  { value: "hr", label: "Office / HR", description: "Manages staff and student records" },
+  { value: "admin", label: "Administrator", description: "Full access, including settings" },
 ];
 
 export function defaultWeek(): WorkWeek {

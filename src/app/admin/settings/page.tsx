@@ -7,7 +7,7 @@ import { platformApi } from "@/lib/platform-api";
 import { PageHeader, Panel, Flash, Loading, Switch, Field, Pill, Empty, inputCls, btn } from "@/components/admin-ui";
 
 const api = platformApi("/admin/login");
-type Plan = { id: string; name: string; tagline: string; price: number; features: string[]; whatsapp: boolean; active: boolean; order: number; trial?: boolean; trial_days?: number; badge?: string };
+type Plan = { id: string; name: string; tagline: string; price: number; per_learner?: number; max_learners?: number; features: string[]; whatsapp: boolean; active: boolean; order: number; trial?: boolean; trial_days?: number; badge?: string };
 type Period = { id: string; label: string; months: number; discount: number; coupons: boolean; active: boolean; order: number };
 type UpiAccount = { id: string; label: string; upi_id: string; upi_name: string };
 type Coupon = { code: string; percent: number; applies_to: "yearly"; starts_on?: string; expires_on: string; active: boolean };
@@ -18,7 +18,7 @@ const TABS = [
   { id: "plans", label: "Plans", icon: Layers, keys: ["plans"] },
   { id: "periods", label: "Payment choices", icon: CalendarRange, keys: ["periods"] },
   { id: "coupons", label: "Coupons", icon: Ticket, keys: ["coupons"] },
-  { id: "payto", label: "Companies pay to", icon: Landmark, keys: ["upi_accounts", "active_upi", "upi_id", "upi_name", "support_phone"] },
+  { id: "payto", label: "Institutions pay to", icon: Landmark, keys: ["upi_accounts", "active_upi", "upi_id", "upi_name", "support_phone"] },
   { id: "commission", label: "Commission", icon: HandCoins, keys: ["first_payment_bonus", "percent", "percent_months", "min_payout"] },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
@@ -54,7 +54,7 @@ export default function AdminSettingsPage() {
       const r = await api.put<S>("/admin/settings", { ...saved, ...mine });
       setSaved(r);
       setS((d) => (d ? { ...d, ...pick(r, cur.keys) } : r));
-      setMsg(`${cur.label} saved.${tab === "plans" || tab === "periods" ? " New prices and choices apply to new payments; companies already paid keep their deal." : ""}`);
+      setMsg(`${cur.label} saved.${tab === "plans" || tab === "periods" ? " New prices and choices apply to new payments; institutions already paid keep their deal." : ""}`);
     } catch (e: unknown) { setMsg(e instanceof Error ? e.message : "Failed"); } finally { setBusy(false); }
   }
   const reset = () => setS({ ...s, ...pick(saved, cur.keys) });
@@ -76,7 +76,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader icon={Settings} title="Settings" sub="Prices companies see, how they pay, coupons, and how partners earn. Each tab saves on its own." />
+      <PageHeader icon={Settings} title="Settings" sub="Prices institutions see, how they pay, coupons, and how partners earn. Each tab saves on its own." />
 
       {/* tabs (same flat underline tabs as the company app) */}
       <div className="flex gap-6 overflow-x-auto overflow-y-hidden border-b border-gray-200/80 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -112,10 +112,10 @@ type TabProps = { s: S; setS: (s: S) => void };
 
 /* ── Plans ─────────────────────────────────────────────────────────── */
 function PlansTab({ s, setS }: TabProps) {
-  const add = () => setS({ ...s, plans: [...s.plans, { id: `plan_${Date.now().toString(36)}`, name: "", tagline: "", price: 0, features: [], whatsapp: false, active: false, order: s.plans.length + 1, trial: false, trial_days: 0, badge: "" }] });
+  const add = () => setS({ ...s, plans: [...s.plans, { id: `plan_${Date.now().toString(36)}`, name: "", tagline: "", price: 0, per_learner: 0, max_learners: 0, features: [], whatsapp: false, active: false, order: s.plans.length + 1, trial: false, trial_days: 0, badge: "" }] });
   return (
     <Panel icon={Layers} title="Plans" pad={false}
-      sub="What companies can buy, and the free trial. Switched-off plans are hidden. New companies start on the free trial plan for its number of days (companies already registered keep their dates). Companies on a paid plan keep what they paid for until their period ends."
+      sub="What institutions can buy, and the free trial. Plans are learner tiers: set the learner limit, the rate per learner and the monthly price billed for the tier. Switched-off plans are hidden. New institutions start on the free trial plan for its number of days (institutions already registered keep their dates). Institutions on a paid plan keep what they paid for until their period ends."
       action={<button type="button" onClick={add} className={btn.ghost}><Plus size={14} strokeWidth={1.5} /> Add plan</button>}>
       <div className="divide-y divide-gray-100">
         {s.plans.map((pl, i) => {
@@ -127,27 +127,37 @@ function PlansTab({ s, setS }: TabProps) {
               <div className="mb-4 flex flex-wrap items-center gap-2">
                 <GripVertical size={14} className="text-gray-300" />
                 <span className="text-[15px] font-normal text-gray-900">{pl.name || "Untitled plan"}</span>
-                {pl.trial ? <Pill tone="green" dot>Free trial · new companies start here</Pill> : pl.active ? <Pill tone="green" dot>On sale</Pill> : <Pill tone="gray" dot>Off</Pill>}
+                {pl.trial ? <Pill tone="green" dot>Free trial · new institutions start here</Pill> : pl.active ? <Pill tone="green" dot>On sale</Pill> : <Pill tone="gray" dot>Off</Pill>}
                 {pl.whatsapp && <Pill tone="blue"><MessageCircle size={11} />WhatsApp</Pill>}
                 {pl.badge && <Pill tone="amber"><Sparkles size={11} />{pl.badge}</Pill>}
                 <span className="ml-auto font-mono text-[10.5px] text-gray-300">{pl.id}</span>
               </div>
               <div className="grid gap-3 sm:grid-cols-[1.2fr_1.6fr_120px_140px]">
-                <Field label="Name"><input value={pl.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. Standard" className={inputCls} /></Field>
+                <Field label="Name"><input value={pl.name} onChange={(e) => set({ name: e.target.value })} placeholder="e.g. Growth" className={inputCls} /></Field>
                 <Field label="Short line"><input value={pl.tagline} onChange={(e) => set({ tagline: e.target.value })} placeholder="Shown under the name" className={inputCls} /></Field>
                 {pl.trial
                   ? <Field label="Trial days"><input type="number" min={1} max={365} value={pl.trial_days || 0} onChange={(e) => set({ trial_days: Number(e.target.value) })} className={inputCls} /></Field>
                   : <Field label="₹ per month"><input type="number" min={0} value={pl.price} onChange={(e) => set({ price: Number(e.target.value) })} className={inputCls} /></Field>}
                 <Field label="Badge"><input value={pl.badge || ""} onChange={(e) => set({ badge: e.target.value })} placeholder="e.g. Most popular" className={inputCls} /></Field>
               </div>
+              {!pl.trial && (
+                <div className="mt-3 grid gap-3 sm:grid-cols-[140px_140px_1fr]">
+                  <Field label="Up to (learners)"><input type="number" min={0} value={pl.max_learners || 0} onChange={(e) => set({ max_learners: Number(e.target.value) })} className={inputCls} /></Field>
+                  <Field label="₹ per learner a month"><input type="number" min={0} value={pl.per_learner || 0} onChange={(e) => set({ per_learner: Number(e.target.value) })} className={inputCls} /></Field>
+                  <div className="flex items-end pb-2.5 text-[12px] font-light text-gray-400">
+                    {pl.per_learner && pl.max_learners ? <>Full tier at this rate: ₹{(pl.per_learner * pl.max_learners).toLocaleString("en-IN")} a month.{" "}
+                      <button type="button" className="underline" onClick={() => set({ price: (pl.per_learner || 0) * (pl.max_learners || 0) })}>Use as price</button></> : "Learner limit 0 means no limit."}
+                  </div>
+                </div>
+              )}
               <Field label="Features (one per line)" className="mt-3">
                 <textarea rows={Math.max(2, pl.features.length)} value={pl.features.join("\n")} onChange={(e) => set({ features: e.target.value.split("\n") })}
                   className={`${inputCls} h-auto py-2.5 leading-relaxed`} />
               </Field>
               <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-                <Switch on={pl.active} onChange={(v) => set({ active: v })} label="On (companies can buy it)" />
-                <Switch on={pl.whatsapp} onChange={(v) => set({ whatsapp: v })} label="Includes WhatsApp self-service" />
-                <Switch on={!!pl.trial} onChange={setTrial} label="Free trial plan" hint="New companies start on this plan for its number of days" />
+                <Switch on={pl.active} onChange={(v) => set({ active: v })} label="On (institutions can buy it)" />
+                <Switch on={pl.whatsapp} onChange={(v) => set({ whatsapp: v })} label="Includes WhatsApp notices and reminders" />
+                <Switch on={!!pl.trial} onChange={setTrial} label="Free trial plan" hint="New institutions start on this plan for its number of days" />
                 <label className="flex items-center gap-2 text-[12.5px] font-light text-gray-600">Order
                   <input type="number" value={pl.order} onChange={(e) => set({ order: Number(e.target.value) })} className="h-8 w-14 rounded-lg border border-gray-200 px-2 text-[13px] outline-none focus:border-[#5b9e8f]" />
                 </label>
@@ -173,7 +183,7 @@ function PeriodsTab({ s, setS }: TabProps) {
   };
   return (
     <Panel icon={CalendarRange} title="Payment choices" pad={false}
-      sub="How long companies can pay for at once, the discount for it, and whether coupon codes work. Switch a choice on or off any time."
+      sub="How long institutions can pay for at once, the discount for it, and whether coupon codes work. Switch a choice on or off any time."
       action={<button type="button" onClick={add} className={btn.ghost}><Plus size={14} strokeWidth={1.5} /> Add choice</button>}>
       <div className="hidden grid-cols-[1.4fr_100px_100px_120px_90px_36px] gap-3 border-b border-gray-100 px-5 py-2.5 text-[11px] font-normal uppercase tracking-[0.06em] text-gray-400 sm:grid">
         <span>Label</span><span>Months</span><span>% off</span><span>Coupons</span><span>Status</span><span />
@@ -203,9 +213,9 @@ function CouponsTab({ s, setS }: TabProps) {
   const today = new Date().toISOString().slice(0, 10);
   return (
     <Panel icon={Ticket} title="Coupon codes" pad={false}
-      sub={<>Extra % off a company gets by entering the code on its Subscription page. Works only on payment choices where Coupons is Allowed, on top of that choice&apos;s discount.</>}
+      sub={<>Extra % off an institution gets by entering the code on its Subscription page. Works only on payment choices where Coupons is Allowed, on top of that choice&apos;s discount.</>}
       action={<button type="button" onClick={() => setS({ ...s, coupons: [...list, { code: "", percent: 10, applies_to: "yearly", starts_on: "", expires_on: "", active: true }] })} className={btn.ghost}><Plus size={14} strokeWidth={1.5} /> Add coupon</button>}>
-      {list.length === 0 ? <Empty icon={Ticket} title="No coupons yet" sub="Add one to give companies an extra discount on the payment choices that allow it." /> : (
+      {list.length === 0 ? <Empty icon={Ticket} title="No coupons yet" sub="Add one to give institutions an extra discount on the payment choices that allow it." /> : (
         <div className="grid gap-3 p-5 sm:grid-cols-2">
           {list.map((c, i) => {
             const set = (patch: Partial<Coupon>) => setS({ ...s, coupons: list.map((x, j) => (j === i ? { ...x, ...patch } : x)) });
@@ -254,8 +264,8 @@ function PayToTab({ s, setS }: TabProps) {
   };
   return (
     <div className="space-y-5">
-      <Panel icon={Landmark} title="Companies pay to" pad={false}
-        sub={<>Your bank accounts. The one marked <b className="font-normal text-gray-700">In use</b> is the QR companies see on their Subscription page.</>}
+      <Panel icon={Landmark} title="Institutions pay to" pad={false}
+        sub={<>Your bank accounts. The one marked <b className="font-normal text-gray-700">In use</b> is the QR institutions see on their Subscription page.</>}
         action={<button type="button" onClick={add} className={btn.ghost}><Plus size={14} strokeWidth={1.5} /> Add account</button>}>
         {accounts.length === 0 ? (
           <div className="grid gap-3 p-5 sm:grid-cols-2">
@@ -290,7 +300,7 @@ function PayToTab({ s, setS }: TabProps) {
           </div>
         )}
       </Panel>
-      <Panel title="Support" sub="Shown to companies when they need help with a payment.">
+      <Panel title="Support" sub="Shown to institutions when they need help with a payment.">
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Support phone"><input value={s.support_phone} onChange={(e) => setS({ ...s, support_phone: e.target.value })} className={inputCls} /></Field>
         </div>
@@ -303,15 +313,15 @@ function PayToTab({ s, setS }: TabProps) {
 function CommissionTab({ s, setS }: TabProps) {
   const num = (k: keyof S) => ({ type: "number" as const, value: s[k] as number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => setS({ ...s, [k]: Number(e.target.value) }), className: inputCls });
   return (
-    <Panel icon={HandCoins} title="Partner commission" sub="What a marketing partner earns from the companies they bring in.">
+    <Panel icon={HandCoins} title="Partner commission" sub="What a marketing partner earns from the institutions they bring in.">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Bonus on a company's first payment (₹)"><input {...num("first_payment_bonus")} /></Field>
+        <Field label="Bonus on an institution's first payment (₹)"><input {...num("first_payment_bonus")} /></Field>
         <Field label="Share of each payment (%)"><input {...num("percent")} /></Field>
         <Field label="For the first N months of paid service"><input {...num("percent_months")} /></Field>
         <Field label="Minimum payout (₹)"><input {...num("min_payout")} /></Field>
       </div>
       <div className="mt-5 rounded-2xl bg-gray-50 px-4 py-3 text-[12.5px] font-light leading-relaxed text-gray-600">
-        Example: a company pays ₹1,250. The partner earns <b className="font-normal text-gray-900">₹{s.first_payment_bonus}</b> bonus on the first payment, plus{" "}
+        Example: an institution pays ₹1,250. The partner earns <b className="font-normal text-gray-900">₹{s.first_payment_bonus}</b> bonus on the first payment, plus{" "}
         <b className="font-normal text-gray-900">{s.percent}%</b> (₹{Math.round(1250 * (s.percent || 0) / 100)}) of each payment for the first {s.percent_months} months. They can withdraw once they have ₹{s.min_payout}.
       </div>
     </Panel>

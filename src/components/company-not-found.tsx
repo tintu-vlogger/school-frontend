@@ -57,7 +57,7 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
       ))}
 
       <div className="relative w-full max-w-md text-center">
-        {/* illustration: the company, with a magnifier circling it */}
+        {/* illustration: the institution, with a magnifier circling it */}
         <motion.div className="relative mx-auto h-40 w-40"
           initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
           <motion.div className="absolute inset-0 rounded-full border border-dashed border-[#5b9e8f]/40"
@@ -85,7 +85,7 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
 
         <motion.h1 className="mt-8 text-[30px] font-light tracking-[-0.02em] text-gray-900"
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}>
-          {gone ? "Company not found" : "Company disabled"}
+          {gone ? "Institution not found" : "Institution unavailable"}
         </motion.h1>
 
         {address && (
@@ -99,8 +99,8 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
         <motion.p className="mx-auto mt-4 max-w-sm text-[15px] font-light leading-relaxed text-gray-500"
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}>
           {gone
-            ? "There's no company at this address. Check the spelling, or ask your HR team for the correct link."
-            : "This company has been switched off for now. Please contact Campusly support."}
+            ? "There's no school, college or institute at this address. Check the spelling, or ask your institution's office for the correct link."
+            : "This institution's account is switched off for now. Staff can contact Campusly support; parents and students, please contact the institution's office."}
         </motion.p>
 
         <motion.div className="mt-8 flex flex-wrap items-center justify-center gap-3"
@@ -134,7 +134,7 @@ export default function CompanyNotFound({ variant = "gone", host = "" }: { varia
 
         <motion.p className="mt-10 text-[12px] font-light text-gray-400"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.6 }}>
-          Campusly · HR and payroll for Indian companies
+          Campusly · One platform for schools, colleges and institutes
         </motion.p>
       </div>
     </div>

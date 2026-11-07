@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * Company settings: company profile, the company's web address (its own subdomain)
+ * Institution settings: institution profile, its web address (its own subdomain)
  * and the signed-in person's account. Saved through /company/profile and
  * /auth/change-password; logo through /company/profile/logo.
  */
@@ -20,14 +20,15 @@ import { Select } from "@/components/ui-kit";
 type Tab = "company" | "address" | "account";
 
 const TABS: { id: Tab; label: string; icon: React.ElementType; sub: string }[] = [
-  { id: "company", label: "Company profile", icon: Building2, sub: "Your company's name, logo, registrations and contact details." },
-  { id: "address", label: "Web address", icon: Globe, sub: "The address your employees use to sign in." },
+  { id: "company", label: "Institution profile", icon: Building2, sub: "Your institution's name, logo, registrations and contact details." },
+  { id: "address", label: "Web address", icon: Globe, sub: "The address your staff, parents and students use to sign in." },
   { id: "account", label: "Account", icon: ShieldCheck, sub: "Your password and sign-in security." },
 ];
 
+// Who runs the institution (kept in the profile's "industry" field).
 const INDUSTRIES = [
-  "IT and software services", "Manufacturing", "Retail and e-commerce", "Healthcare", "Education", "Banking and financial services",
-  "Construction and real estate", "Logistics and transport", "Hospitality", "Professional services", "Non-profit", "Other",
+  "Private (unaided)", "Private (aided)", "Government", "Trust or society", "International", "Franchise",
+  "Religious or minority institution", "Education", "Other",
 ];
 const SIZES = ["1–10", "11–50", "51–200", "201–500", "501–1,000", "1,000+"];
 const STATES = [
@@ -106,7 +107,7 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Settings" title="Company settings" description={current.sub} />
+      <PageHeader eyebrow="Settings" title="Institution settings" description={current.sub} />
 
       <div className="mb-5 flex gap-6 overflow-x-auto border-b border-line [scrollbar-width:none]">
         {TABS.map((t) => {
@@ -141,7 +142,7 @@ function CompanyProfile() {
 
   async function save() {
     if (!data) return;
-    if (!data.company_name.trim()) { toast.error("Company name is required"); return; }
+    if (!data.company_name.trim()) { toast.error("Institution name is required"); return; }
     setSaving(true);
     try {
       await api.put("/company/profile", {
@@ -152,7 +153,7 @@ function CompanyProfile() {
         industry: data.industry, employee_count_band: data.employee_band,
         config: { address_line_2: data.address_line_2, description: data.description },
       });
-      toast.success("Company profile saved");
+      toast.success("Institution profile saved");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not save. Please try again.");
     } finally {
@@ -192,12 +193,12 @@ function CompanyProfile() {
 
   return (
     <Paper>
-      <Section title="Company" hint="How your company appears to employees, on letters and on payslips.">
+      <Section title="Institution" hint="How your institution appears to staff, parents and students, on report cards, receipts and letters.">
         <div className="flex items-center gap-4 sm:col-span-2">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-sunken">
             {data.logo_url
               // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={data.logo_url} alt="Company logo" className="h-full w-full object-contain" />
+              ? <img src={data.logo_url} alt="Institution logo" className="h-full w-full object-contain" />
               : <span className="text-[22px] font-extralight text-faint">{(data.company_name || "C").charAt(0).toUpperCase()}</span>}
           </div>
           <div className="flex flex-wrap gap-2">
@@ -211,14 +212,14 @@ function CompanyProfile() {
             )}
           </div>
         </div>
-        <Field label="Company name"><input id="company-name" className={inp} value={data.company_name} onChange={(e) => set("company_name", e.target.value)} /></Field>
-        <Field label="Industry">
+        <Field label="Institution name"><input id="company-name" className={inp} value={data.company_name} onChange={(e) => set("company_name", e.target.value)} /></Field>
+        <Field label="Management">
           <Select id="company-industry" value={data.industry || null} onChange={(v) => set("industry", v ?? "")} options={INDUSTRIES.map((i) => ({ value: i, label: i }))} placeholder="Choose…" clearable />
         </Field>
-        <Field label="Number of employees">
+        <Field label="Number of staff">
           <Select id="company-size" value={data.employee_band || null} onChange={(v) => set("employee_band", v ?? "")} options={SIZES.map((x) => ({ value: x, label: x }))} placeholder="Choose…" clearable />
         </Field>
-        <Field label="About the company" wide>
+        <Field label="About the institution" wide>
           <textarea id="company-about" rows={3} className={`${inp} h-auto resize-none py-2.5`} value={data.description}
             onChange={(e) => set("description", e.target.value)} placeholder="A short description shown to new joiners" />
         </Field>
@@ -228,10 +229,10 @@ function CompanyProfile() {
         <Field label="PAN" hint="10 characters, e.g. AAACN1234F"><input id="company-pan" className={`${inp} uppercase`} maxLength={10} value={data.pan} onChange={(e) => set("pan", e.target.value)} /></Field>
         <Field label="TAN" hint="Needed to deduct income tax from salaries"><input id="company-tan" className={`${inp} uppercase`} maxLength={10} value={data.tan} onChange={(e) => set("tan", e.target.value)} /></Field>
         <Field label="GSTIN"><input id="company-gstin" className={`${inp} uppercase`} maxLength={15} value={data.gstin} onChange={(e) => set("gstin", e.target.value)} /></Field>
-        <Field label="CIN" hint="Company Identification Number, if registered with MCA"><input id="company-cin" className={`${inp} uppercase`} maxLength={21} value={data.cin} onChange={(e) => set("cin", e.target.value)} /></Field>
+        <Field label="CIN" hint="Corporate Identification Number, if the trust or society runs a registered company"><input id="company-cin" className={`${inp} uppercase`} maxLength={21} value={data.cin} onChange={(e) => set("cin", e.target.value)} /></Field>
       </Section>
 
-      <Section title="Contact" hint="The main contact for HR and payroll questions.">
+      <Section title="Contact" hint="The main contact for the office, admissions and fee questions.">
         <Field label="Sign-in email"><input id="company-email" type="email" className={inp} value={data.email} readOnly disabled /></Field>
         <Field label="Phone"><input id="company-phone" type="tel" className={inp} value={data.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
       </Section>
@@ -291,7 +292,7 @@ function WebAddress() {
 
   return (
     <Paper>
-      <Section title="Sign-in address" hint="Employees open this address to sign in. Share it with your team.">
+      <Section title="Sign-in address" hint="Staff, parents and students open this address to sign in. Share it with them.">
         <Field label="Web address" wide hint="Letters, numbers and hyphens only.">
           <div className="flex h-10 items-center overflow-hidden rounded-lg border border-line bg-surface focus-within:border-primary/50">
             <span className="pl-3 text-[14px] text-faint">https://</span>
@@ -305,7 +306,7 @@ function WebAddress() {
         </div>
         {changed && (
           <p className="sm:col-span-2 rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[13px] text-amber-800">
-            The old address will stop working. Employees will need the new one, and saved bookmarks will break.
+            The old address will stop working. Staff, parents and students will need the new one, and saved bookmarks will break.
           </p>
         )}
       </Section>

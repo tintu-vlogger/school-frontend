@@ -123,16 +123,16 @@ export default function ForgotPasswordPage() {
           </p>
           <div className="flex gap-8 pt-4">
             <div>
-              <p className="text-3xl font-bold text-white">PF · ESI</p>
-              <p className="text-indigo-200 text-sm">Built in</p>
+              <p className="text-3xl font-bold text-white">Staff</p>
+              <p className="text-indigo-200 text-sm">Teachers and office</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-white">TDS</p>
-              <p className="text-indigo-200 text-sm">Calculated monthly</p>
+              <p className="text-3xl font-bold text-white">Parents</p>
+              <p className="text-indigo-200 text-sm">And students</p>
             </div>
             <div>
               <p className="text-3xl font-bold text-white">24/7</p>
-              <p className="text-indigo-200 text-sm">Self-service</p>
+              <p className="text-indigo-200 text-sm">Any time</p>
             </div>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function ForgotPasswordPage() {
               <div className="text-center lg:text-left">
                 <h2 className="text-3xl font-bold text-gray-900">Forgot password?</h2>
                 <p className="mt-2 text-gray-500">
-                  Enter your email and we&apos;ll send you a reset code
+                  Enter the email you sign in with and we&apos;ll send you a reset code. Signed in with a username? Ask your institution&apos;s office to reset it.
                 </p>
               </div>
 

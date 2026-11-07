@@ -29,9 +29,9 @@ export default function PartnerHome() {
     try { const r = await api.post<{ amount: number }>("/me/payouts", { upi_id: upi }); setMsg(`Requested ${rupee(r.amount)}. You will be paid to ${upi} and it will show as paid here.`); await load(); }
     catch (e: unknown) { setMsg(e instanceof Error ? e.message : "Failed"); } finally { setBusy(false); }
   }
-  function copy() { navigator.clipboard?.writeText(s!.share_url); setMsg("Link copied. Share it on WhatsApp or ask the company to type the code at sign-up."); }
+  function copy() { navigator.clipboard?.writeText(s!.share_url); setMsg("Link copied. Share it on WhatsApp or ask the institution to type the code at sign-up."); }
   function share() {
-    if (navigator.share) navigator.share({ title: "Campusly", text: `HR and payroll for Indian companies. Sign up with my code ${s!.ref_code}`, url: s!.share_url }).catch(() => {});
+    if (navigator.share) navigator.share({ title: "Campusly", text: `One platform to run your school, college or institute. Sign up with my code ${s!.ref_code}`, url: s!.share_url }).catch(() => {});
     else copy();
   }
 
@@ -49,11 +49,11 @@ export default function PartnerHome() {
           <button onClick={copy} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-gray-200 px-3 text-xs text-gray-700"><Copy size={13} /> Copy link</button>
           <button onClick={share} className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-medium text-white"><Share2 size={13} /> Share</button>
         </div>
-        <p className="mt-2 text-xs text-gray-500">Companies enter this code when they register. You earn {rupee(s.rules.first_payment_bonus)} when a company makes its first payment and {s.rules.percent}% of every payment for its first {s.rules.percent_months} months. Plans: Standard {rupee(s.prices.standard)}/mo, with WhatsApp {rupee(s.prices.standard_whatsapp)}/mo.</p>
+        <p className="mt-2 text-xs text-gray-500">Institutions enter this code when they sign up. You earn {rupee(s.rules.first_payment_bonus)} when an institution makes its first payment and {s.rules.percent}% of every payment for its first {s.rules.percent_months} months. Plans start at Starter {rupee(s.prices.standard)}/mo; Growth is {rupee(s.prices.standard_whatsapp)}/mo.</p>
       </section>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {[{ l: "Companies signed up", v: s.leads + s.converted, i: Building2 }, { l: "Paying companies", v: s.converted, i: IndianRupee }, { l: "Earned so far", v: rupee(s.balances.earned), i: Wallet }, { l: "Ready to redeem", v: rupee(s.balances.pending), i: Clock }].map((t) => (
+        {[{ l: "Institutions signed up", v: s.leads + s.converted, i: Building2 }, { l: "Paying institutions", v: s.converted, i: IndianRupee }, { l: "Earned so far", v: rupee(s.balances.earned), i: Wallet }, { l: "Ready to redeem", v: rupee(s.balances.pending), i: Clock }].map((t) => (
           <div key={t.l} className="rounded-xl border border-gray-200 bg-white p-4"><t.i size={16} className="text-gray-400" /><p className="mt-2 text-xl font-semibold text-gray-900 tabular-nums">{t.v}</p><p className="text-xs text-gray-500">{t.l}</p></div>
         ))}
       </div>
@@ -68,12 +68,12 @@ export default function PartnerHome() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-medium text-gray-700">Your companies</h2>
+        <h2 className="mb-2 text-sm font-medium text-gray-700">Your institutions</h2>
         <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white"><table className="w-full text-sm">
-          <thead className="bg-gray-50 text-left text-xs font-medium text-gray-500"><tr><th className="px-4 py-2.5">Company</th><th className="px-3 py-2.5">Joined</th><th className="px-3 py-2.5">Status</th><th className="px-3 py-2.5">First paid</th><th className="px-4 py-2.5 text-right">You earned</th></tr></thead>
+          <thead className="bg-gray-50 text-left text-xs font-medium text-gray-500"><tr><th className="px-4 py-2.5">Institution</th><th className="px-3 py-2.5">Joined</th><th className="px-3 py-2.5">Status</th><th className="px-3 py-2.5">First paid</th><th className="px-4 py-2.5 text-right">You earned</th></tr></thead>
           <tbody className="divide-y divide-gray-100">
             {companies.map((c) => <tr key={c.id}><td className="px-4 py-2.5 font-medium text-gray-900">{c.name}{c.city ? <span className="ml-1 text-xs font-normal text-gray-400">· {c.city}</span> : null}</td><td className="px-3 py-2.5 text-xs text-gray-500">{c.joined_at}</td><td className="px-3 py-2.5 text-xs">{c.status === "active" ? <span className="text-green-700">paying · {c.plan === "standard_whatsapp" ? "with WhatsApp" : "standard"}</span> : c.status === "trial" ? <span className="text-blue-700">on trial</span> : <span className="text-gray-500">{c.status}</span>}</td><td className="px-3 py-2.5 text-xs text-gray-500">{c.first_paid_at || "—"}</td><td className="px-4 py-2.5 text-right tabular-nums">{rupee(c.earned)}</td></tr>)}
-            {companies.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-xs text-gray-400">No companies yet. Share your code to get started.</td></tr>}
+            {companies.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-xs text-gray-400">No institutions yet. Share your code to get started.</td></tr>}
           </tbody></table></div>
       </section>
 

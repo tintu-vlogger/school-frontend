@@ -4,8 +4,9 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import {
-  Logo, Paragraphs, SignIn, Socials, aboutImage, heroImage, initials, jobMeta, lifeImages, navLinks, on, year,
-  type ThemeProps,
+  AdmissionsBlock, Logo, NoticesBlock, Paragraphs, ProgramsBlock, SIGN_IN_LABEL, SignIn, Socials, aboutImage, admissionHref,
+  admissionLabel, heroImage, highlightsTitle, initials, jobMeta, lifeImages, navLinks, on, showsAdmissions, word, year,
+  type Skin, type ThemeProps,
 } from "./shared";
 
 const BG = "#eceef1", INK = "#0b0d12", MUTED = "#5d6270";
@@ -16,6 +17,13 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
   const a = site.accent;
   const links = navLinks(data);
   const tile = "rounded-[28px] bg-white p-7";
+  const skin: Skin = {
+    tone: "light", accent: a, muted: MUTED, line: BG,
+    heading: `${GROT} mt-5 text-[38px] font-bold leading-[1] tracking-[-0.035em] lg:text-[48px]`,
+    card: "rounded-[22px] p-6", cardBg: BG,
+    wrap: `${tile} lg:p-10`,
+    label: (c) => <Tag>{c}</Tag>,
+  };
 
   return (
     <div className="min-h-screen font-[family-name:var(--font-outfit)] font-light antialiased" style={{ background: BG, color: INK }}>
@@ -38,8 +46,9 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
               <h1 className={`${GROT} mt-10 text-[46px] font-bold leading-[0.95] tracking-[-0.045em] sm:text-[68px] lg:text-[82px]`}>{site.hero.headline}</h1>
               <p className="mt-6 max-w-lg text-[17px] leading-relaxed text-white/70">{site.hero.subline}</p>
               <div className="mt-8 flex flex-wrap gap-2">
-                {on(site, "jobs") && <a href="#careers" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] text-[#0b0d12] hover:opacity-90">Open roles <ArrowRight size={16} strokeWidth={1.8} /></a>}
-                {on(site, "about") && <a href="#about" className="inline-flex items-center rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">About us</a>}
+                {showsAdmissions(site) && <a href={admissionHref(data)} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] text-[#0b0d12] hover:opacity-90">{admissionLabel(data)} <ArrowRight size={16} strokeWidth={1.8} /></a>}
+                {on(site, "programs") ? <a href="#programs" className="inline-flex items-center rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">Explore {word(data, "programs").toLowerCase()}</a>
+                  : on(site, "about") && <a href="#about" className="inline-flex items-center rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">About us</a>}
               </div>
             </div>
           </div>
@@ -77,8 +86,11 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
           </section>
         )}
 
+        {on(site, "programs") && <ProgramsBlock data={data} skin={skin} />}
+
         {on(site, "values") && site.values.length > 0 && (
           <section id="values" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <h2 className="sr-only">{highlightsTitle(data)}</h2>
             {site.values.map((v, i) => (
               <div key={i} className="flex min-h-[220px] flex-col justify-between rounded-[28px] p-7" style={{ background: i % 4 === 1 ? INK : i % 4 === 2 ? `${a}1f` : "#fff", color: i % 4 === 1 ? "#fff" : INK }}>
                 <span className={`${GROT} text-[15px] font-semibold opacity-50`}>0{i + 1}</span>
@@ -91,7 +103,7 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
         {on(site, "life") && (
           <section id="life" className="grid gap-3 lg:grid-cols-12">
             <div className={`${tile} lg:col-span-5 lg:p-10`}>
-              <Tag>Life here</Tag>
+              <Tag>Campus life</Tag>
               <h2 className={`${GROT} mt-5 text-[38px] font-bold leading-none tracking-[-0.035em]`}>{site.life.title}</h2>
               <p className="mt-4 text-[16px] leading-relaxed" style={{ color: MUTED }}>{site.life.body}</p>
               <div className="mt-7 flex flex-wrap gap-2">
@@ -125,11 +137,17 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
           </section>
         )}
 
+        {on(site, "notices") && <NoticesBlock data={data} skin={{ ...skin, cardBg: BG }} />}
+
+        {showsAdmissions(site) && (
+          <AdmissionsBlock data={data} skin={skin} className="rounded-[28px] p-8 text-white lg:p-12" style={{ background: `linear-gradient(135deg, ${a}, ${INK} 150%)` }} />
+        )}
+
         {on(site, "jobs") && (
           <section id="careers" className="rounded-[28px] p-7 text-white lg:p-10" style={{ background: INK }}>
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className={`${GROT} text-[44px] font-bold leading-none tracking-[-0.04em] lg:text-[60px]`}>{jobs.length ? <>We&apos;re hiring<span style={{ color: a }}>.</span></> : "No openings right now."}</h2>
-              <Link href="/careers" className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 text-[14px] hover:bg-white/20">All openings <ArrowUpRight size={15} strokeWidth={1.6} /></Link>
+              <h2 className={`${GROT} text-[44px] font-bold leading-none tracking-[-0.04em] lg:text-[60px]`}>{jobs.length ? <>Join our staff<span style={{ color: a }}>.</span></> : "No vacancies right now."}</h2>
+              <Link href="/careers" className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 text-[14px] hover:bg-white/20">All vacancies <ArrowUpRight size={15} strokeWidth={1.6} /></Link>
             </div>
             <div className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {jobs.map((j) => (
@@ -138,7 +156,7 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
                   <p className="mt-6 text-[13.5px] text-white/60">{jobMeta(j)}</p>
                 </Link>
               ))}
-              {!jobs.length && <p className="text-[16px] text-white/60">Follow us to hear when new roles open.</p>}
+              {!jobs.length && <p className="text-[16px] text-white/60">Please check back soon.</p>}
             </div>
           </section>
         )}
@@ -160,7 +178,7 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
               <div className="grid content-start gap-3 sm:grid-cols-2 lg:col-span-7">
                 {site.offices.filter((o) => o.city).map((o, i) => (
                   <div key={i} className={tile}>
-                    <p className="text-[13px]" style={{ color: MUTED }}>{o.head_office ? "Head office" : "Office"}</p>
+                    <p className="text-[13px]" style={{ color: MUTED }}>{o.head_office ? "Main campus" : "Campus"}</p>
                     <p className={`${GROT} mt-1 text-[26px] font-bold tracking-[-0.03em]`}>{o.city}</p>
                     {o.address && <p className="mt-2 text-[14px] leading-relaxed" style={{ color: MUTED }}>{o.address}</p>}
                     {o.phone && <p className="mt-1 text-[14px]" style={{ color: MUTED }}>{o.phone}</p>}
@@ -173,7 +191,7 @@ export default function Pulse({ data, signedIn }: ThemeProps) {
 
         <footer className="flex flex-col gap-3 rounded-[28px] bg-white px-7 py-6 text-[13.5px] sm:flex-row sm:items-center sm:justify-between" style={{ color: MUTED }}>
           <p>© {year()} {company.name}</p>
-          <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-[#0b0d12]">Careers</Link>}<Link href="/login" className="hover:text-[#0b0d12]">Employee sign in</Link></div>
+          <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-[#0b0d12]">Careers</Link>}<Link href="/login" className="hover:text-[#0b0d12]">{SIGN_IN_LABEL}</Link></div>
         </footer>
       </main>
     </div>

@@ -6,7 +6,7 @@ import { PlatformShell } from "@/components/platform-shell";
 
 const NAV = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Companies", href: "/admin/companies", icon: Building2 },
+  { label: "Institutions", href: "/admin/companies", icon: Building2 },
   { label: "Find payment", href: "/admin/payments", icon: ScanSearch },
   { label: "Team", href: "/admin/executives", icon: Users },
   { label: "Payouts", href: "/admin/payouts", icon: Wallet },

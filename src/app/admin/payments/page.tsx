@@ -21,7 +21,7 @@ type CodeView = {
   subscription: { status: string } | null;
 };
 
-const planName = (p: string, name?: string) => name || (p === "standard_whatsapp" ? "Standard + WhatsApp" : "Standard");
+const planName = (p: string, name?: string) => name || ({ standard_whatsapp: "Growth", campus: "Campus" } as Record<string, string>)[p] || "Starter";
 
 /** Type the code from the UPI payment note (seen in PhonePe) to see exactly which company
  *  paid, how much and for which period, then confirm it in one click. */
@@ -71,7 +71,7 @@ export default function FindPaymentPage() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <PageHeader icon={ScanSearch} title="Find payment" sub="Type the code from the payment note in PhonePe. It tells you which company paid, how much and for which period." />
+      <PageHeader icon={ScanSearch} title="Find payment" sub="Type the code from the payment note in PhonePe. It tells you which institution paid, how much and for which period." />
 
       {/* Search */}
       <form onSubmit={(e) => { e.preventDefault(); find(); }} className="flex gap-2">
@@ -95,7 +95,7 @@ export default function FindPaymentPage() {
             <div className="flex items-start gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200"><Building2 size={18} strokeWidth={1.5} className="text-[#3a4557]" /></span>
               <div>
-                <div className="text-lg font-light text-gray-900">{found.company?.name ?? "Unknown company"}</div>
+                <div className="text-lg font-light text-gray-900">{found.company?.name ?? "Unknown institution"}</div>
                 <div className="text-xs text-gray-500">{[found.company?.slug, found.company?.city, found.company?.phone].filter(Boolean).join(" · ")}</div>
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function FindPaymentPage() {
             <div className="border-t border-gray-100 bg-gray-50/60 px-6 py-5">
               {found.already_covered && (
                 <div className="mb-3 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-                  <AlertTriangle size={13} strokeWidth={1.5} />This company is already paid past this period. Confirm only if you really received this money.
+                  <AlertTriangle size={13} strokeWidth={1.5} />This institution is already paid past this period. Confirm only if you really received this money.
                 </div>
               )}
               <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
@@ -163,7 +163,7 @@ export default function FindPaymentPage() {
           ))}
         </div>
         {list.length === 0 ? (
-          <p className="px-5 py-8 text-center text-sm text-gray-400">{tab === "pending" ? "No company is waiting to pay." : "Nothing confirmed yet."}</p>
+          <p className="px-5 py-8 text-center text-sm text-gray-400">{tab === "pending" ? "No institution is waiting to pay." : "Nothing confirmed yet."}</p>
         ) : (
           <div className="divide-y divide-gray-100">
             {list.map((r) => (

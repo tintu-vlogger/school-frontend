@@ -13,7 +13,7 @@
     "finance": "Finance",
     "manage": "Manage",
     "system": "System",
-    "myClinic": "My company",
+    "myClinic": "My institution",
     "staffDirectory": "Staff Directory",
     "configure": "Configure"
   },
@@ -131,7 +131,7 @@
     "experience": "Experience",
     "registrationNumber": "Registration Number",
     "loginAs": "Login as",
-    "manageStaff": "Manage your company's employees",
+    "manageStaff": "Manage your institution's staff",
     "searchPlaceholder": "Search staff...",
     "designationAll": "Designation: All",
     "statusAll": "Status: All",
@@ -141,7 +141,7 @@
     "noDesignation": "No designation"
   },
   "department": {
-    "organizeDesc": "Organise your company into departments",
+    "organizeDesc": "Organise your institution into departments",
     "newDepartment": "New Department",
     "editDepartment": "Edit Department",
     "departmentName": "Department Name",
@@ -151,7 +151,7 @@
     "statusAll": "Status: All",
     "noDepartmentsMatch": "No departments match",
     "noDepartmentsYet": "No departments yet",
-    "createHint": "Create departments to organise your company",
+    "createHint": "Create departments to organise your institution",
     "addDepartment": "Add department",
     "staffMembers": "staff members",
     "deactivateTitle": "Deactivate",
@@ -257,12 +257,12 @@
     }
   },
   "dashboard": {
-    "overviewTitle": "Workspace Overview",
+    "overviewTitle": "Institution overview",
     "goodMorning": "Good Morning",
     "goodAfternoon": "Good Afternoon",
     "goodEvening": "Good Evening",
     "systemActive": "System active",
-    "walkIn": "Walk-in",
+    "walkIn": "Visitor",
     "loadingWorkspace": "Loading your workspace…",
     "retry": "Retry",
     "updatesEvery30s": "Updates every 30s",
@@ -273,7 +273,7 @@
     "viewAll": "View all",
     "nothingOnCalendarToday": "Nothing on the calendar today",
     "time": "Time",
-    "customer": "Customer",
+    "customer": "Student",
     "staff": "Staff",
     "status": "Status",
     "upcoming": "Upcoming",
@@ -287,7 +287,7 @@
     "staffUtilization": "Staff Utilization",
     "appts": "appts",
     "peakHours": "Peak Hours",
-    "customerStats": "Customer Stats",
+    "customerStats": "Student stats",
     "total": "Total",
     "new": "New",
     "returning": "Returning",
@@ -308,11 +308,11 @@
   },
   "home": {
     "nav": {
-      "specialties": "Specialties",
-      "features": "Features",
+      "specialties": "Who it's for",
+      "features": "Modules",
       "howItWorks": "How It Works",
       "pricing": "Pricing",
-      "login": "Login",
+      "login": "Sign in",
       "getStartedFree": "Get Started Free",
       "selectLanguage": "Select language",
       "toggleMenu": "Toggle menu",
@@ -320,154 +320,154 @@
       "logout": "Logout"
     },
     "hero": {
-      "trusted": "Trusted by 500+ clinics across India",
-      "titlePrefix": "Smart Clinic Management,",
-      "titleHighlight": "Simplified",
-      "description": "Replace phone calls and paper registers with an intelligent booking system. Patients self-book via WhatsApp or your website. Doctors see organized schedules.",
-      "startFreeTrial": "Start Free Trial",
-      "seeHowItWorks": "See How It Works",
+      "trusted": "For schools, colleges, universities and institutes",
+      "titlePrefix": "Run your whole institution,",
+      "titleHighlight": "in one place",
+      "description": "Admissions, attendance, timetable, exams and report cards, fees, learning and live classes, transport, hostel and staff payroll, with an app for parents and students.",
+      "startFreeTrial": "Start free trial",
+      "seeHowItWorks": "See how it works",
       "noCreditCard": "No credit card",
-      "hipaaReady": "HIPAA Ready",
-      "setup5min": "5 min setup"
+      "hipaaReady": "Data kept separate per institution",
+      "setup5min": "Set up in a day"
     },
     "stats": {
-      "clinicsOnboarded": "Clinics Onboarded",
-      "appointmentsBooked": "Appointments Booked",
+      "clinicsOnboarded": "Institutions",
+      "appointmentsBooked": "Learners",
       "uptime": "Uptime",
-      "doctorRating": "Doctor Rating"
+      "doctorRating": "Parent rating"
     },
     "specialties": {
-      "badge": "Built for Healthcare",
-      "title": "Every Specialty, One Platform",
-      "description": "Whether you run a small clinic or a multi-specialty hospital, Campusly adapts to the way your practice works.",
+      "badge": "Built for education",
+      "title": "Every kind of institution, one platform",
+      "description": "Whether you run a preschool, a K-12 school, a college, a university or a coaching centre, Campusly uses your words and fits the way you work.",
       "learnMore": "Learn more",
       "cards": {
         "clinicsHospitals": {
-          "title": "Clinics & Hospitals",
-          "description": "General clinics, multi-specialty hospitals and outpatient centers"
+          "title": "Schools (K-12)",
+          "description": "Classes and sections, CBSE, ICSE, state boards and IB, report cards and parent app"
         },
         "specialistPractices": {
-          "title": "Specialist Practices",
-          "description": "Cardiology, dermatology, orthopedics and other specialist consultations"
+          "title": "Colleges",
+          "description": "Programmes, semesters, credits, period attendance and GPA"
         },
         "dentalClinics": {
-          "title": "Dental Clinics",
-          "description": "Dental offices, orthodontics and oral surgery practices"
+          "title": "Universities",
+          "description": "Several faculties and campuses, electives, enrolment and results"
         },
         "eyeCare": {
-          "title": "Eye Care",
-          "description": "Ophthalmology clinics, optometrists and vision centers"
+          "title": "Preschools",
+          "description": "Groups, activity areas, descriptive progress reports and daily updates for parents"
         },
         "pediatricsMaternity": {
-          "title": "Pediatrics & Maternity",
-          "description": "Pediatric clinics, maternity hospitals and child wellness centers"
+          "title": "Coaching centres",
+          "description": "Courses and batches, tests and rank lists, fee instalments"
         },
         "mentalHealth": {
-          "title": "Mental Health",
-          "description": "Psychiatrists, psychologists, therapists and counseling centers"
+          "title": "Training institutes",
+          "description": "Short courses, intakes, competency assessment and certificates"
         }
       }
     },
     "features": {
-      "badge": "Powerful Features",
-      "title": "Everything You Need to Run Your Clinic",
-      "description": "From doctor scheduling to WhatsApp reminders, Campusly handles the heavy lifting so you can focus on your patients.",
+      "badge": "Modules",
+      "title": "Everything you need to run your institution",
+      "description": "From admissions to report cards and fees, Campusly handles the paperwork so your staff can focus on teaching.",
       "cards": {
         "staffManagement": {
-          "title": "Doctor & Staff Management",
-          "description": "Manage doctors, nurses, and support staff. Assign departments, specializations, and keep schedules organized."
+          "title": "Staff, HR and payroll",
+          "description": "Teachers and staff records, leave, attendance and payroll with statutory deductions."
         },
         "smartBooking": {
-          "title": "Smart Patient Booking",
-          "description": "Intelligent booking engine that avoids conflicts, respects doctor availability, and lets patients self-book 24/7."
+          "title": "Admissions",
+          "description": "Online application forms, enquiries, entrance tests and admission in a few clicks."
         },
         "whatsapp": {
-          "title": "WhatsApp Integration",
-          "description": "Send automated appointment confirmations, reminders, and follow-ups directly to patients via WhatsApp."
+          "title": "Parent communication",
+          "description": "Notices, homework, fee reminders and results on the parent app, SMS and WhatsApp."
         },
         "roster": {
-          "title": "Doctor Roster Management",
-          "description": "Define consultation hours, breaks, holidays, and leave so your appointment calendar is always accurate."
+          "title": "Timetable",
+          "description": "Build the timetable, handle substitutions and show each teacher and class their day."
         },
         "slots": {
-          "title": "Flexible Consultation Slots",
-          "description": "Set custom durations per consultation type, allow buffer times between patients, and handle walk-ins."
+          "title": "Exams and report cards",
+          "description": "Any grading system: marks, grades, GPA, descriptive or competency based."
         },
         "multiDepartment": {
-          "title": "Multi-Department Support",
-          "description": "Manage multiple departments and specializations. Patients book by department and get matched to the right doctor."
+          "title": "Several campuses",
+          "description": "Run several branches under one account with reports across all of them."
         }
       }
     },
     "howItWorks": {
-      "title": "Up and Running in 3 Simple Steps",
-      "description": "Get your clinic booking page live in minutes, not days.",
+      "title": "Up and running in 3 simple steps",
+      "description": "Get your institution online in a day, not months.",
       "steps": {
         "register": {
-          "title": "Register Your Clinic",
+          "title": "Sign up your institution",
           "description": "Create your free account in under a minute. No credit card required."
         },
         "addDoctors": {
-          "title": "Add Your Doctors",
-          "description": "Add doctors, define departments and consultation types, and set availability schedules."
+          "title": "Set up classes and staff",
+          "description": "Pick your institution type and Campusly suggests classes, sections and subjects. Invite your staff."
         },
         "startSeeing": {
-          "title": "Start Seeing Patients",
-          "description": "Share your booking page with patients and let appointments flow in automatically."
+          "title": "Invite parents and students",
+          "description": "Share sign-ins with families and start taking attendance and collecting fees."
         }
       }
     },
     "cta": {
-      "title": "Your Patients Are Waiting",
-      "description": "Join 500+ clinics already using Campusly. Setup takes 5 minutes. No credit card needed. No commitments.",
+      "title": "Your institution, simpler from tomorrow",
+      "description": "Set-up takes a day. No credit card needed. No commitments.",
       "getStartedNow": "Get Started Now",
       "fullFeatureAccess": "Full feature access",
       "noCreditCardRequired": "No credit card required",
       "cancelAnytime": "Cancel anytime"
     },
     "pricing": {
-      "title": "Simple, Transparent Pricing",
-      "description": "Start free, upgrade when you are ready. No hidden fees, ever.",
+      "title": "Simple pricing per learner",
+      "description": "Start free and pay by the number of learners when you are ready. No hidden fees.",
       "mostPopular": "Most Popular",
       "plans": {
         "freeTrial": {
           "name": "Free Trial",
-          "period": "7 days",
-          "description": "Try everything risk-free",
+          "period": "30 days",
+          "description": "Try everything with your own learners",
           "cta": "Start Free Trial",
           "features": {
-            "upTo3Doctors": "Up to 3 doctors",
-            "unlimitedBookings": "Unlimited patient bookings",
-            "whatsappNotifications": "WhatsApp notifications",
-            "basicAnalytics": "Basic analytics",
+            "upTo3Doctors": "Every module switched on",
+            "unlimitedBookings": "Parent and student app",
+            "whatsappNotifications": "WhatsApp notices",
+            "basicAnalytics": "Reports",
             "emailSupport": "Email support"
           }
         },
         "pro": {
-          "name": "Pro",
-          "period": "per month",
-          "description": "Everything your clinic needs",
+          "name": "Growth",
+          "period": "per learner a month",
+          "description": "Everything a growing institution needs",
           "cta": "Get Started",
           "features": {
-            "unlimitedStaff": "Unlimited doctors & staff",
-            "unlimitedBookings": "Unlimited patient bookings",
-            "whatsappBot": "WhatsApp bot integration",
-            "advancedAnalytics": "Advanced analytics",
+            "unlimitedStaff": "Unlimited staff accounts",
+            "unlimitedBookings": "Parent and student app",
+            "whatsappBot": "WhatsApp notices and fee reminders",
+            "advancedAnalytics": "Learning and live classes",
             "prioritySupport": "Priority support",
-            "customBranding": "Custom branding",
-            "publicBookingPage": "Public booking page"
+            "customBranding": "Your logo on report cards and receipts",
+            "publicBookingPage": "Institution website and online admissions"
           }
         },
         "hospital": {
-          "name": "Hospital",
-          "period": "per month",
-          "description": "For multi-department hospitals",
+          "name": "Campus",
+          "period": "per learner a month",
+          "description": "For groups with several campuses",
           "cta": "Contact Sales",
           "features": {
-            "everythingInPro": "Everything in Pro",
-            "multipleDepartments": "Multiple departments",
+            "everythingInPro": "Everything in Growth",
+            "multipleDepartments": "Several campuses",
             "accountManager": "Dedicated account manager",
-            "queueSystem": "Queue management system",
+            "queueSystem": "Group-level reports",
             "customIntegrations": "Custom integrations",
             "sla": "SLA guarantee",
             "onboarding": "On-boarding assistance"
@@ -477,57 +477,57 @@
     },
     "demo": {
       "stepLabels": {
-        "department": "Department",
-        "doctor": "Doctor",
+        "department": "Class",
+        "doctor": "Section",
         "date": "Date",
-        "timeSlot": "Time Slot",
+        "timeSlot": "Period",
         "confirm": "Confirm",
-        "booked": "Booked"
+        "booked": "Saved"
       },
-      "selectDepartment": "Select Department",
+      "selectDepartment": "Select class",
       "department": {
-        "cardiology": "Cardiology",
-        "orthopedics": "Orthopedics",
-        "dermatology": "Dermatology",
-        "pediatrics": "Pediatrics"
+        "cardiology": "Grade 6",
+        "orthopedics": "Grade 7",
+        "dermatology": "Grade 8",
+        "pediatrics": "Grade 9"
       },
-      "selectDoctor": "Select Doctor",
+      "selectDoctor": "Select section",
       "experience": "experience",
       "onLeave": "On leave",
       "selectDate": "Select Date",
       "full": "Full",
       "slots": "slots",
       "selectedDateLabel": "Fri, 11 Apr",
-      "selectTimeSlot": "Select Time Slot",
+      "selectTimeSlot": "Select period",
       "selected": "Selected",
-      "confirmAppointment": "Confirm Appointment",
+      "confirmAppointment": "Confirm attendance",
       "field": {
-        "department": "Department",
-        "doctor": "Doctor",
+        "department": "Class",
+        "doctor": "Section",
         "date": "Date",
         "time": "Time",
-        "token": "Token"
+        "token": "Present"
       },
-      "confirmBooking": "Confirm Booking",
+      "confirmBooking": "Save attendance",
       "reviewing": "Reviewing...",
-      "bookingConfirmed": "Booking Confirmed!",
+      "bookingConfirmed": "Attendance saved!",
       "processing": "Processing...",
-      "tokenLine": "Token #7 • 2:00 PM, Fri 11 Apr",
-      "doctorLine": "Dr. Priya Lakshmi • Orthopedics",
-      "whatsappConfirmationSent": "WhatsApp confirmation sent",
-      "whatsappSent": "WhatsApp Sent",
-      "reminderLine": "Reminder for 2:00 PM",
-      "tokenAssigned": "Token Assigned",
-      "queueThird": "Queue: 3rd",
-      "doctorName": "Dr. Priya Lakshmi"
+      "tokenLine": "38 present • 2 absent, Fri 11 Apr",
+      "doctorLine": "Grade 8 - A • Divya Menon",
+      "whatsappConfirmationSent": "Parents of absent students informed",
+      "whatsappSent": "Parents informed",
+      "reminderLine": "Absence alert sent",
+      "tokenAssigned": "Marked",
+      "queueThird": "Period 1",
+      "doctorName": "Divya Menon"
     },
     "footer": {
-      "description": "The modern appointment booking platform trusted by clinics and hospitals across India.",
+      "description": "One platform to run schools, colleges, universities and institutes.",
       "product": "Product",
       "features": "Features",
       "pricing": "Pricing",
-      "whatsappBot": "WhatsApp Bot",
-      "queueSystem": "Queue System",
+      "whatsappBot": "Parent app",
+      "queueSystem": "Online admissions",
       "company": "Company",
       "about": "About",
       "blog": "Blog",

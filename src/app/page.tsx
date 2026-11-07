@@ -1,611 +1,805 @@
 "use client";
 
 /*
- * Main website (campusly.app): what the product does, Indian compliance, pricing and sign-up.
- * Company addresses (<slug>.campusly.app) never reach this page; they show the company's own site.
+ * Main website (campusly.app): what Campusly does for schools, colleges, universities, coaching and
+ * training institutes, who it is for, pricing per learner and sign-up.
+ * Institution addresses (<slug>.campusly.app) never reach this page; they show the institution's own site.
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Outfit } from "next/font/google";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowRight, BadgeIndianRupee, BarChart3, BookOpen, Briefcase, CalendarCheck2, Check, ChevronDown, Clock3, FileCheck2,
-  FileText, Fingerprint, Globe2, GraduationCap, HeartHandshake, Languages, LifeBuoy, Lock, Menu, MessageSquareText,
-  ScrollText, ShieldCheck, Sparkles, Target, UserPlus, Users, Workflow, X,
+  ArrowRight, Baby, Banknote, BellRing, BookMarked, BookOpen, Building2, Bus, CalendarCheck2, CalendarClock, Check,
+  ChevronDown, ClipboardCheck, CreditCard, FileClock, Fingerprint, GraduationCap, KeyRound, Landmark, Layers3,
+  Lock, Menu, MessageCircle, MonitorPlay, Network, NotebookPen, School, ShieldCheck, Smartphone, Sparkles, Trophy,
+  UserPlus, Users, BedDouble, Wrench, X,
 } from "lucide-react";
 import { API_BASE } from "@/lib/api";
-import { TalkingAvatar } from "@/components/talking-avatar";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["200", "300", "400", "500"], variable: "--font-outfit" });
 
-/** The talking avatar was an experiment on the website; switch on again when it is ready. */
-const SHOW_AVATAR = false;
-
 const P = "#4f46e5"; // brand indigo
+const INK = "#16161d";
+const MUTED = "#62626e";
+const PAPER = "#f6f5f0";
 const S = 1.4; // icon stroke
 
-const INTRO =
-  "Hello, and welcome to Campusly. We help Indian companies run HR and payroll in one simple place. " +
-  "Leave, attendance, payroll with P F, E S I, professional tax and T D S, hiring, onboarding, performance and exits all work together. " +
-  "Every request follows your own approval flow, and every change is recorded. " +
-  "Your company also gets its own website and careers page. Start your free trial today, no card needed.";
-
 const NAV = [
-  { href: "#product", label: "Product" },
-  { href: "#payroll", label: "Payroll" },
-  { href: "#compliance", label: "Compliance" },
+  { href: "#who", label: "Who it's for" },
+  { href: "#modules", label: "Modules" },
+  { href: "#portal", label: "Parent app" },
+  { href: "#security", label: "Security" },
   { href: "#pricing", label: "Pricing" },
   { href: "#faq", label: "FAQ" },
 ];
 
-const MODULES = [
-  { icon: Users, title: "People", body: "Employee records, org chart, documents and custom fields." },
-  { icon: CalendarCheck2, title: "Leave & holidays", body: "Any leave type, accruals, carry forward, comp off and holiday lists by location." },
-  { icon: Clock3, title: "Attendance & shifts", body: "Web, mobile, kiosk and biometric clock-in, shifts, rosters and overtime." },
-  { icon: BadgeIndianRupee, title: "Payroll", body: "Salary structures, arrears, loans, reimbursements, payslips and bank files." },
-  { icon: Briefcase, title: "Hiring", body: "Requisitions, careers page, pipeline, interviews, offers and e-sign." },
-  { icon: UserPlus, title: "Onboarding & exits", body: "Pre-joining portal, probation, clearances and full and final settlement." },
-  { icon: Target, title: "Performance", body: "Goals and OKRs, reviews, calibration, nine-box, 1:1s and pay reviews." },
-  { icon: GraduationCap, title: "Learning", body: "Courses, mandatory training like POSH, quizzes and certificates." },
-  { icon: HeartHandshake, title: "Buzz & engagement", body: "Company feed, kudos, birthdays, announcements and surveys." },
-  { icon: LifeBuoy, title: "Help desk & POSH", body: "Employee tickets, grievances and a confidential POSH process." },
-  { icon: FileText, title: "Letters & documents", body: "Templates, numbered letters, e-sign and an employee document locker." },
-  { icon: BarChart3, title: "Reports & assistant", body: "Ready reports, dashboards and questions answered in plain words." },
+/* ── Content ─────────────────────────────────────────────────────── */
+
+type Kind = { key: string; label: string; icon: typeof School; title: string; body: string; words: [string, string][]; points: string[] };
+
+const KINDS: Kind[] = [
+  {
+    key: "school", label: "Schools", icon: School,
+    title: "From the morning bell to the report card.",
+    body: "Classes and sections, class teachers, period timetables, term exams with CBSE, ICSE or state board grading, fee instalments and a parent app that keeps every family in the loop.",
+    words: [["Class", "Grade 8"], ["Section", "A"], ["Term", "Term 2"], ["Parent", "Mother / Father"]],
+    points: ["Daily or period-wise attendance", "Report cards with co-scholastic grades", "Transport routes with pick-up alerts", "Promotion to the next class in one step"],
+  },
+  {
+    key: "preschool", label: "Preschools", icon: Baby,
+    title: "Warm, simple and made for little ones.",
+    body: "Groups instead of sections, activity areas instead of subjects, and descriptive progress notes instead of marks. Parents see photos, notes and pick-up times on their phone.",
+    words: [["Class", "Nursery"], ["Group", "Sunflowers"], ["Activity area", "Motor skills"], ["Parent", "Guardian"]],
+    points: ["Descriptive progress reports", "Authorised pick-up list", "Daily diary for parents", "Fee reminders on the parent app"],
+  },
+  {
+    key: "college", label: "Colleges", icon: Landmark,
+    title: "Programmes, semesters and credits, done right.",
+    body: "Programmes with batches, semester terms, course credits and a 10-point GPA, period attendance with shortage alerts, internal assessments and university exam forms.",
+    words: [["Programme", "B.Com"], ["Batch", "2025-28"], ["Semester", "Sem 3"], ["Course", "Accountancy"]],
+    points: ["SGPA and CGPA worked out for you", "Attendance shortage warnings", "Elective choice per batch", "Hall tickets and mark sheets"],
+  },
+  {
+    key: "university", label: "Universities", icon: GraduationCap,
+    title: "Many departments, many campuses, one system.",
+    body: "Departments and faculties across campuses, enrolment numbers, credit-based programmes, hostel and library at scale, with one owner view across the whole university.",
+    words: [["Programme", "M.Sc Physics"], ["Batch", "2026 intake"], ["Semester", "Sem 1"], ["Faculty", "Dr. Iyer"]],
+    points: ["Multi-campus with shared settings", "Credit-based grading of your choice", "Hostel allotment and mess", "Faculty workload and payroll"],
+  },
+  {
+    key: "coaching", label: "Coaching centres", icon: Trophy,
+    title: "Batches that start every month. Fees that come in on time.",
+    body: "Courses with rolling batches, tutors, test series with ranks, online live classes and instalment fees with UPI links. Parents get scores the same evening.",
+    words: [["Course", "JEE 2027"], ["Batch", "Evening 2"], ["Module", "Mechanics"], ["Tutor", "Arjun sir"]],
+    points: ["Weekly tests with rank lists", "Live and recorded classes", "Instalments with auto reminders", "Enquiry to admission in one flow"],
+  },
+  {
+    key: "training", label: "Training institutes", icon: Wrench,
+    title: "Short courses, intakes and competency sign-offs.",
+    body: "Intakes instead of academic years, units and competencies, trainers and learners, attendance for each session and certificates the moment a learner is signed off.",
+    words: [["Course", "Electrician L3"], ["Intake", "March 2027"], ["Unit", "Wiring safety"], ["Learner", "Ravi K."]],
+    points: ["Competent / not yet competent grading", "Certificates with QR verification", "Employer and sponsor contacts", "Online modules with quizzes"],
+  },
 ];
 
-const LAWS = [
-  "EPF, EPS & EDLI", "ESI", "Professional tax · 21 states", "Labour welfare fund · 16 states", "TDS · old & new regime",
-  "Form 16 & 24Q", "Gratuity", "Bonus Act", "Minimum wages", "50% wage rule", "Maternity benefit", "DPDP Act consent",
+const MODULES = [
+  { icon: UserPlus, title: "Admissions", body: "Online application form, enquiries, documents, entrance tests and offer letters." },
+  { icon: CalendarCheck2, title: "Attendance", body: "Daily or period-wise, by teacher phone or face scan, with an instant note to parents." },
+  { icon: CalendarClock, title: "Timetable", body: "Clash-free timetables for classes, teachers and rooms, with substitutions." },
+  { icon: ClipboardCheck, title: "Exams & report cards", body: "Marks, grades, GPA or competencies: any grading system, any report card layout." },
+  { icon: MonitorPlay, title: "Learning & live classes", body: "Courses, assignments, quizzes and online classes, with recordings for later." },
+  { icon: CreditCard, title: "Fees & online payments", body: "Fee plans, concessions, instalments, receipts, and UPI or card payment from the app." },
+  { icon: MessageCircle, title: "Communication", body: "Notices, circulars, messages and SMS, WhatsApp or app alerts to the right people." },
+  { icon: BookMarked, title: "Library", body: "Catalogue, issue and return by barcode, fines and a search for learners." },
+  { icon: Bus, title: "Transport", body: "Routes, stops, vehicles and drivers, with fees per stop and pick-up notices." },
+  { icon: BedDouble, title: "Hostel", body: "Rooms and beds, allotment, mess, visitors and leave requests from parents." },
+  { icon: Banknote, title: "Staff HR & payroll", body: "Staff records, leave, attendance and payroll with PF, ESI, PT and TDS built in." },
+  { icon: NotebookPen, title: "Reports & insights", body: "Ready reports and dashboards for the principal, office and management." },
 ];
 
 const FAQ = [
-  { q: "Is it only for Indian companies?", a: "Yes. Everything from payroll to leave rules is built for Indian law, Indian states and the Indian financial year." },
-  { q: "Can we change rules without a developer?", a: "Yes. Leave types, salary components, approval flows, number formats, custom fields and lists are all settings. Rules that change over time keep their history with effective dates." },
-  { q: "Is our data kept separate from other companies?", a: "Yes. Every company's data is separated at the database level, every change is recorded in an audit trail, and nothing is ever hard-deleted." },
-  { q: "Do employees need to install anything?", a: "No. It works in any browser on phone or computer. Employees sign in from your company's own web address." },
-  { q: "Do we get our own website?", a: "Yes. Your company address opens your own organisation website with your values, life at work, leadership, offices and open jobs, in one of four designs you choose." },
-  { q: "How long is the free trial?", a: "The trial length is shown in the pricing section above. No card is needed to start." },
+  { q: "Does Campusly work for a college as well as a school?", a: "Yes. You choose your institution type when you sign up, and Campusly uses your words on every screen: Class and Section for a school, Programme, Batch and Semester for a college, Course and Batch for a coaching centre. Everything can still be renamed in settings." },
+  { q: "Can we use our own grading system?", a: "Yes. Percentages with grades, CBSE-style scholastic and co-scholastic grades, GPA on a 4 or 10 point scale, descriptive notes for preschool or competency sign-offs for training. Report cards follow the grading you set." },
+  { q: "How do parents and students sign in?", a: "They open your institution's own web address on any phone or computer and sign in with their email or the username you give them. On first sign-in they set their own password." },
+  { q: "Is our data kept separate from other institutions?", a: "Yes. Every institution's data is separated at the database level, every change is recorded in an audit trail, and records are archived, never deleted." },
+  { q: "We have more than one campus. Is that extra?", a: "No. Multi-campus is included in every paid plan. You see all campuses together, and each campus head sees only their own." },
+  { q: "How is the price worked out?", a: "By the number of active learners you have, billed monthly or yearly. Staff accounts, parent accounts and every module are included. There is a free trial and no card is needed to start." },
+  { q: "Can we bring our existing data?", a: "Yes. Import students, parents, staff and fee balances from spreadsheets. Our team helps you with the first import at no charge." },
 ];
+
+const TIERS = [
+  {
+    name: "Starter", rate: 12, cap: 250, range: "Up to 250 learners",
+    blurb: "For preschools, tuition centres and small schools.",
+    features: ["Admissions, attendance and timetable", "Exams and report cards", "Fees with online payment", "Parent and student app", "Email support"],
+  },
+  {
+    name: "Growth", rate: 10, cap: 1000, range: "Up to 1,000 learners", badge: "Most chosen",
+    blurb: "For schools, colleges and coaching chains.",
+    features: ["Everything in Starter", "Learning and live classes", "Library, transport and hostel", "Staff HR and payroll", "Priority support and onboarding help"],
+  },
+  {
+    name: "Campus", rate: 8, cap: 3000, range: "Up to 3,000 learners",
+    blurb: "For universities and multi-campus groups.",
+    features: ["Everything in Growth", "Multiple campuses in one account", "Single sign-on and custom roles", "Dedicated success manager", "Data import and training on site"],
+  },
+];
+
+/* ── Small building blocks ───────────────────────────────────────── */
 
 function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
-    <motion.div className={className} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}>
+    <motion.div className={className} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}>
       {children}
     </motion.div>
   );
 }
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="text-[13px] uppercase tracking-[0.2em]" style={{ color: P }}>{children}</p>;
+function Eyebrow({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+  return (
+    <p className="inline-flex items-center gap-2 text-[12.5px] uppercase tracking-[0.22em]" style={{ color: light ? "#a5b4fc" : P }}>
+      <span className="h-px w-6" style={{ background: light ? "#a5b4fc" : P }} />{children}
+    </p>
+  );
 }
 
+function H2({ children, light = false, className = "" }: { children: React.ReactNode; light?: boolean; className?: string }) {
+  return (
+    <h2 className={`font-[family-name:var(--font-outfit)] mt-4 text-[34px] font-extralight leading-[1.1] tracking-tight sm:text-[44px] ${className}`}
+      style={{ color: light ? "#fff" : INK }}>{children}</h2>
+  );
+}
+
+const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;
+
+/* ── Page ─────────────────────────────────────────────────────────── */
+
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const f = () => setScrolled(window.scrollY > 16);
-    f(); window.addEventListener("scroll", f, { passive: true });
-    return () => window.removeEventListener("scroll", f);
+    const on = () => setScrolled(window.scrollY > 12);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
   }, []);
 
   return (
-    <div className={`${outfit.variable} min-h-screen bg-[#fbfbfd] font-[family-name:var(--font-outfit)] font-light text-[#14171f] antialiased`}>
-      {/* ── Header ─────────────────────────── */}
-      <header className={`fixed inset-x-0 top-0 z-40 transition-[background,box-shadow] ${scrolled ? "bg-white/85 shadow-[0_1px_0_#ebedf2] backdrop-blur-md" : ""}`}>
-        <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-5 lg:px-8">
+    <div className={`${outfit.variable} min-h-screen overflow-x-hidden font-light`} style={{ background: PAPER, color: INK }}>
+      {/* Header */}
+      <header className={`sticky top-0 z-40 transition-colors ${scrolled ? "border-b border-[#e4e3dc] bg-[#f6f5f0]/90 backdrop-blur" : "border-b border-transparent"}`}>
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-small.svg" alt="" className="h-9 w-9" />
-            <span className="text-[17px] tracking-tight">Next Gen <span className="text-[#8a90a0]">HRMS</span></span>
+            <Logo />
+            <span className="font-[family-name:var(--font-outfit)] text-[20px] font-light tracking-tight">Campusly</span>
           </Link>
-          <nav className="hidden items-center gap-1 text-[14.5px] text-[#5b6170] md:flex">
-            {NAV.map((n) => <a key={n.href} href={n.href} className="rounded-full px-3.5 py-2 transition-colors hover:bg-[#f1f2f6] hover:text-[#14171f]">{n.label}</a>)}
+          <nav className="hidden items-center gap-7 text-[14.5px] lg:flex" style={{ color: MUTED }}>
+            {NAV.map((n) => <a key={n.href} href={n.href} className="transition-colors hover:text-[#16161d]">{n.label}</a>)}
           </nav>
-          <div className="hidden items-center gap-2 md:flex">
-            <Link href="/login" className="rounded-full px-4 py-2 text-[14.5px] text-[#14171f] hover:bg-[#f1f2f6]">Sign in</Link>
-            <Link href="/register" className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[14.5px] text-white transition-opacity hover:opacity-90" style={{ background: P }}>Start free trial</Link>
+          <div className="hidden items-center gap-2 lg:flex">
+            <Link href="/login" className="rounded-full px-4 py-2 text-[14.5px] hover:bg-black/[0.04]">Sign in</Link>
+            <Link href="/register" className="inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[14.5px] text-white transition-opacity hover:opacity-90" style={{ background: P }}>
+              Start free trial
+            </Link>
           </div>
-          <button type="button" onClick={() => setMenu(!menu)} className="flex h-10 w-10 items-center justify-center rounded-full md:hidden" aria-label="Menu">
-            {menu ? <X size={20} strokeWidth={S} /> : <Menu size={20} strokeWidth={S} />}
+          <button className="rounded-full p-2 lg:hidden" onClick={() => setMenu(!menu)} aria-label={menu ? "Close menu" : "Open menu"}>
+            {menu ? <X size={22} strokeWidth={S} /> : <Menu size={22} strokeWidth={S} />}
           </button>
         </div>
         {menu && (
-          <div className="border-t border-[#ebedf2] bg-white px-5 pb-5 pt-2 md:hidden">
-            {NAV.map((n) => <a key={n.href} href={n.href} onClick={() => setMenu(false)} className="block py-3 text-[16px]">{n.label}</a>)}
+          <div className="border-t border-[#e4e3dc] bg-[#f6f5f0] px-4 pb-5 pt-2 lg:hidden">
+            {NAV.map((n) => <a key={n.href} href={n.href} onClick={() => setMenu(false)} className="block py-2.5 text-[15.5px]">{n.label}</a>)}
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <Link href="/login" className="rounded-full border border-[#e3e5ea] py-2.5 text-center text-[15px]">Sign in</Link>
+              <Link href="/login" className="rounded-full border border-[#d3d2ca] py-2.5 text-center text-[15px]">Sign in</Link>
               <Link href="/register" className="rounded-full py-2.5 text-center text-[15px] text-white" style={{ background: P }}>Free trial</Link>
             </div>
           </div>
         )}
       </header>
 
-      {/* ── Hero ───────────────────────────── */}
-      <section className="relative overflow-hidden pt-[68px]">
-        <div className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(60%_50%_at_70%_10%,rgba(79,70,229,0.10),transparent_70%),radial-gradient(40%_40%_at_10%_30%,rgba(16,185,129,0.07),transparent_70%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-14 lg:grid-cols-[1.05fr_1fr] lg:px-8 lg:pb-28 lg:pt-20">
-          <div>
-            <Reveal>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#e3e5ea] bg-white px-3.5 py-1.5 text-[13px] text-[#5b6170]">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Made for Indian companies · 100% browser based
+      <Hero />
+      <Strip />
+      <WhoItsFor />
+      <Modules />
+      <Portal />
+      <MultiCampus />
+      <Security />
+      <Pricing />
+      <Faq />
+      <FinalCta />
+      <Footer />
+    </div>
+  );
+}
+
+function Logo({ size = 30 }: { size?: number }) {
+  return (
+    <span className="grid place-items-center rounded-[9px] text-white" style={{ width: size, height: size, background: P }}>
+      <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M3 9.5 12 5l9 4.5-9 4.5-9-4.5Z" /><path d="M7 11.6V16c0 1.2 2.2 2.6 5 2.6s5-1.4 5-2.6v-4.4" /><path d="M21 9.5V14" />
+      </svg>
+    </span>
+  );
+}
+
+/* ── Hero: a school day at a glance ───────────────────────────────── */
+
+function Hero() {
+  return (
+    <section className="relative">
+      {/* ruled-paper lines */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-60"
+        style={{ backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 39px, #e8e7e0 39px, #e8e7e0 40px)", maskImage: "linear-gradient(to bottom, black, transparent 85%)" }} />
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-[max(16px,calc(50%-560px))] top-0 w-px bg-[#f1c9c9]/70 max-sm:hidden" />
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 sm:pt-20 lg:grid-cols-[1.05fr_1fr] lg:pb-24">
+        <div>
+          <Reveal>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#dcdaf8] bg-white px-3 py-1 text-[13px]" style={{ color: P }}>
+              <Sparkles size={14} strokeWidth={S} /> One platform for the whole institution
+            </span>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <h1 className="font-[family-name:var(--font-outfit)] mt-6 text-[44px] font-extralight leading-[1.02] tracking-[-0.02em] sm:text-[64px]">
+              Run your campus,<br />
+              <span className="relative inline-block">
+                not your paperwork.
+                <svg aria-hidden className="absolute -bottom-2 left-0 w-full" height="10" viewBox="0 0 300 10" preserveAspectRatio="none">
+                  <path d="M2 7 C 80 1, 200 1, 298 6" stroke={P} strokeWidth="2" fill="none" strokeLinecap="round" />
+                </svg>
               </span>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <h1 className="mt-7 text-[46px] font-extralight leading-[1.02] tracking-[-0.03em] sm:text-[62px] lg:text-[74px]">
-                HR and payroll,<br />
-                <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(90deg, ${P}, #7c3aed 60%, #db2777)` }}>done right for India.</span>
-              </h1>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-7 max-w-xl text-[18px] leading-relaxed text-[#5b6170]">
-                One place for people, leave, attendance, payroll, hiring, performance and more. Indian labour and tax law built in, your own rules without code, and a calm, modern design your team will actually enjoy.
-              </p>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/register" className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15.5px] text-white transition-transform hover:-translate-y-0.5" style={{ background: P, boxShadow: `0 14px 30px -12px ${P}` }}>
-                  Start free trial <ArrowRight size={17} strokeWidth={1.6} />
-                </Link>
-                <a href="#product" className="inline-flex items-center gap-2 rounded-full border border-[#e3e5ea] bg-white px-7 py-3.5 text-[15.5px] hover:border-[#c9ccd6]">See what&apos;s inside</a>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[14px] text-[#5b6170]">
-                {["No card needed", "Set up in an afternoon", "Your own company web address"].map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1.5"><Check size={15} strokeWidth={2} className="text-emerald-500" />{t}</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-7 max-w-xl text-[17.5px] leading-relaxed" style={{ color: MUTED }}>
+              Campusly brings admissions, attendance, timetables, exams, online classes, fees, the parent app and staff payroll
+              together for schools, colleges, universities, coaching centres and training institutes.
+            </p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <Link href="/register" className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-[15.5px] text-white transition-opacity hover:opacity-90" style={{ background: P }}>
+                Start free trial <ArrowRight size={17} strokeWidth={1.6} />
+              </Link>
+              <a href="#who" className="inline-flex items-center gap-2 rounded-full border border-[#d3d2ca] bg-white px-6 py-3.5 text-[15.5px] hover:border-[#16161d]">
+                See how it fits you
+              </a>
+            </div>
+            <p className="mt-5 text-[13.5px]" style={{ color: MUTED }}>Free trial · No card needed · Your own web address in a minute</p>
+          </Reveal>
+        </div>
+        <Reveal delay={0.2}><HeroBoard /></Reveal>
+      </div>
+    </section>
+  );
+}
+
+function HeroBoard() {
+  const periods = [
+    { t: "08:40", s: "Mathematics", who: "Grade 8 - A", c: "#eef0ff", b: P },
+    { t: "09:25", s: "Science lab", who: "Grade 8 - A", c: "#e9f7f0", b: "#16a34a" },
+    { t: "10:10", s: "English", who: "Grade 8 - A", c: "#fff4e5", b: "#d97706" },
+  ];
+  return (
+    <div className="relative mx-auto w-full max-w-[520px]">
+      <div className="rounded-[26px] border border-[#e4e3dc] bg-white p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[12px] uppercase tracking-[0.16em]" style={{ color: MUTED }}>Today · Tuesday</p>
+            <p className="font-[family-name:var(--font-outfit)] mt-1 text-[22px] font-light">Good morning, Divya</p>
+          </div>
+          <span className="hidden rounded-full bg-[#eef0ff] px-3 py-1 text-[12.5px] sm:inline" style={{ color: P }}>Class teacher</span>
+        </div>
+        <div className="mt-5 grid grid-cols-3 gap-2.5">
+          {[["38/40", "Present"], ["3", "Fees due"], ["12", "Homework in"]].map(([v, l]) => (
+            <div key={l} className="rounded-2xl bg-[#f7f7f4] px-3 py-3">
+              <p className="font-[family-name:var(--font-outfit)] text-[22px] font-extralight">{v}</p>
+              <p className="text-[12px]" style={{ color: MUTED }}>{l}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 space-y-2">
+          {periods.map((p) => (
+            <div key={p.t} className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ background: p.c }}>
+              <span className="w-12 text-[12.5px] tabular-nums" style={{ color: MUTED }}>{p.t}</span>
+              <span className="h-6 w-[3px] rounded-full" style={{ background: p.b }} />
+              <span className="flex-1 text-[14.5px]">{p.s}</span>
+              <span className="text-[12.5px]" style={{ color: MUTED }}>{p.who}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* floating parent notification */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.5 }}
+        className="absolute -bottom-14 -left-3 w-[250px] rounded-2xl border border-[#e4e3dc] bg-white p-3.5 sm:-left-10">
+        <div className="flex items-start gap-3">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#e9f7f0] text-[#16a34a]"><BellRing size={16} strokeWidth={S} /></span>
+          <div>
+            <p className="text-[13.5px]">Aarav reached school</p>
+            <p className="text-[12px]" style={{ color: MUTED }}>Marked present at 08:32 · Parent app</p>
+          </div>
+        </div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1, duration: 0.5 }}
+        className="absolute -right-2 -top-10 rounded-2xl sm:-top-6 border border-[#e4e3dc] bg-white px-4 py-3 sm:-right-8">
+        <p className="text-[12px]" style={{ color: MUTED }}>Fee received</p>
+        <p className="font-[family-name:var(--font-outfit)] text-[20px] font-extralight">₹18,500 <span className="text-[12px] text-[#16a34a]">UPI</span></p>
+      </motion.div>
+    </div>
+  );
+}
+
+function Strip() {
+  const items = ["CBSE", "ICSE", "State boards", "IB & Cambridge", "Autonomous colleges", "Universities", "JEE / NEET coaching", "Skill & vocational training"];
+  return (
+    <section className="border-y border-[#e4e3dc] bg-white">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-6 text-[14px] sm:px-6" style={{ color: MUTED }}>
+        <span className="text-[12px] uppercase tracking-[0.2em]" style={{ color: INK }}>Built for</span>
+        {items.map((i) => <span key={i}>{i}</span>)}
+      </div>
+    </section>
+  );
+}
+
+/* ── Who it's for ─────────────────────────────────────────────────── */
+
+function WhoItsFor() {
+  const [active, setActive] = useState(KINDS[0].key);
+  const kind = KINDS.find((k) => k.key === active) ?? KINDS[0];
+  return (
+    <section id="who" className="scroll-mt-20 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <Reveal>
+          <Eyebrow>Who it&rsquo;s for</Eyebrow>
+          <H2>Speaks the language<br className="hidden sm:block" /> of your institution.</H2>
+          <p className="mt-5 max-w-2xl text-[16.5px] leading-relaxed" style={{ color: MUTED }}>
+            Pick your institution type once. Every screen, report and message then uses your own words and your own way of running things.
+          </p>
+        </Reveal>
+        <div className="mt-10 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <div role="tablist" className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
+            {KINDS.map((k) => {
+              const on = k.key === active;
+              const Icon = k.icon;
+              return (
+                <button key={k.key} role="tab" aria-selected={on} onClick={() => setActive(k.key)}
+                  className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2.5 text-[14.5px] transition-colors ${on ? "text-white" : "border-[#d3d2ca] bg-white hover:border-[#16161d]"}`}
+                  style={on ? { background: INK, borderColor: INK } : undefined}>
+                  <Icon size={16} strokeWidth={S} /> {k.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div key={kind.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.22 }}
+            className="mt-8 grid gap-6 rounded-[28px] border border-[#e4e3dc] bg-white p-6 sm:p-10 lg:grid-cols-[1.2fr_1fr]">
+            <div>
+              <h3 className="font-[family-name:var(--font-outfit)] text-[26px] font-light leading-tight sm:text-[30px]">{kind.title}</h3>
+              <p className="mt-4 text-[16px] leading-relaxed" style={{ color: MUTED }}>{kind.body}</p>
+              <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                {kind.points.map((p) => (
+                  <li key={p} className="flex items-start gap-2.5 text-[15px]">
+                    <Check size={17} strokeWidth={1.6} className="mt-0.5 shrink-0" style={{ color: P }} /> {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl bg-[#f7f7f4] p-5 sm:p-6">
+              <p className="text-[12px] uppercase tracking-[0.16em]" style={{ color: MUTED }}>On every screen</p>
+              <div className="mt-4 divide-y divide-[#e4e3dc]">
+                {kind.words.map(([w, ex]) => (
+                  <div key={w} className="flex items-center justify-between py-3">
+                    <span className="font-[family-name:var(--font-outfit)] text-[19px] font-light">{w}</span>
+                    <span className="rounded-full bg-white px-3 py-1 text-[13px]" style={{ color: MUTED }}>{ex}</span>
+                  </div>
                 ))}
               </div>
-            </Reveal>
-          </div>
-          <HeroMock />
-        </div>
-      </section>
+              <p className="mt-4 text-[13px]" style={{ color: MUTED }}>Prefer other words? Rename any of them in settings.</p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
 
-      {/* ── Compliance strip ───────────────── */}
-      <section id="compliance" className="border-y border-[#ebedf2] bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <p className="text-center text-[13px] uppercase tracking-[0.2em] text-[#8a90a0]">Indian law, built in and kept up to date</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {LAWS.map((l) => <span key={l} className="rounded-full border border-[#ebedf2] bg-[#fbfbfd] px-3.5 py-1.5 text-[14px] text-[#3c4150]">{l}</span>)}
-          </div>
-        </div>
-      </section>
+/* ── Modules ──────────────────────────────────────────────────────── */
 
-      {/* ── Modules ────────────────────────── */}
-      <section id="product" className="mx-auto max-w-7xl px-5 py-28 lg:px-8">
-        <Reveal className="max-w-2xl">
-          <Eyebrow>Everything in one place</Eyebrow>
-          <h2 className="mt-4 text-[40px] font-extralight leading-[1.08] tracking-tight sm:text-[50px]">From the offer letter to the farewell, every step of work.</h2>
-          <p className="mt-5 text-[17px] leading-relaxed text-[#5b6170]">Twelve connected modules that share one employee record, one approval engine and one audit trail. No more spreadsheets in between.</p>
-        </Reveal>
-        <div className="mt-14 grid gap-px overflow-hidden rounded-[28px] border border-[#ebedf2] bg-[#ebedf2] sm:grid-cols-2 lg:grid-cols-4">
+function Modules() {
+  return (
+    <section id="modules" className="scroll-mt-20 border-t border-[#e4e3dc] bg-white py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <Reveal>
+            <Eyebrow>Modules</Eyebrow>
+            <H2>Everything a campus runs on.<br className="hidden sm:block" /> Switch on what you need.</H2>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <p className="text-[16.5px] leading-relaxed lg:pb-2" style={{ color: MUTED }}>
+              Each module works on its own and better together: attendance feeds report cards, fees show on the parent app, and the timetable knows who is on leave.
+            </p>
+          </Reveal>
+        </div>
+        <div className="mt-14 grid gap-px overflow-hidden rounded-[24px] border border-[#e4e3dc] bg-[#e4e3dc] sm:grid-cols-2 lg:grid-cols-4">
           {MODULES.map((m, i) => (
-            <Reveal key={m.title} delay={(i % 4) * 0.04} className="bg-white">
-              <div className="group h-full p-7 transition-colors hover:bg-[#fafaff]">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f1f0ff] transition-transform group-hover:-translate-y-0.5" style={{ color: P }}><m.icon size={20} strokeWidth={S} /></span>
-                <h3 className="mt-6 text-[18px] font-normal">{m.title}</h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-[#5b6170]">{m.body}</p>
-              </div>
+            <Reveal key={m.title} delay={(i % 4) * 0.04} className="group bg-white p-6 transition-colors hover:bg-[#fafaf7]">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#eef0ff] transition-transform group-hover:-translate-y-0.5" style={{ color: P }}>
+                <m.icon size={19} strokeWidth={S} />
+              </span>
+              <h3 className="mt-5 text-[16.5px] font-normal">{m.title}</h3>
+              <p className="mt-2 text-[14.5px] leading-relaxed" style={{ color: MUTED }}>{m.body}</p>
             </Reveal>
           ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ── Payroll ────────────────────────── */}
-      <section id="payroll" className="bg-[#0f1117] text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 py-28 lg:grid-cols-2 lg:px-8">
+/* ── Parent & student portal ──────────────────────────────────────── */
+
+function Portal() {
+  const features = [
+    { icon: CalendarCheck2, t: "Attendance as it happens", b: "A note the moment a child is marked present, late or absent." },
+    { icon: BookOpen, t: "Homework and classes", b: "Today's timetable, homework, study material and live class links." },
+    { icon: ClipboardCheck, t: "Marks and report cards", b: "Results the day they are published, with the report card to download." },
+    { icon: CreditCard, t: "Pay fees in two taps", b: "Dues, receipts and payment by UPI, card or net banking." },
+  ];
+  return (
+    <section id="portal" className="scroll-mt-20 py-20 sm:py-28">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2">
+        <Reveal className="order-2 lg:order-1"><PhoneMock /></Reveal>
+        <div className="order-1 lg:order-2">
           <Reveal>
-            <p className="text-[13px] uppercase tracking-[0.2em] text-[#a5b4fc]">Payroll</p>
-            <h2 className="mt-4 text-[40px] font-extralight leading-[1.08] tracking-tight sm:text-[50px]">Run payroll in minutes, with the law already worked out.</h2>
-            <ul className="mt-8 space-y-4 text-[16.5px] text-white/75">
-              {[
-                "PF, ESI, professional tax and labour welfare fund worked out by state and date",
-                "TDS under both regimes with declarations, proofs and Form 16 with digital signature",
-                "ECR, ESI return, 24Q and bank files ready to upload",
-                "Arrears, loans, reimbursements and full and final settlement in the same run",
-                "Every rate is a dated setting, so last year's runs stay exactly as they were",
-              ].map((t) => <li key={t} className="flex gap-3"><Check size={18} strokeWidth={1.8} className="mt-1 shrink-0 text-[#a5b4fc]" />{t}</li>)}
-            </ul>
+            <Eyebrow>Parent & student app</Eyebrow>
+            <H2>Families stay close<br className="hidden sm:block" /> without the phone calls.</H2>
+            <p className="mt-5 text-[16.5px] leading-relaxed" style={{ color: MUTED }}>
+              Parents and students sign in on your institution&rsquo;s own address with an email or the username you give them. Parents with more than one child switch between them in a tap.
+            </p>
           </Reveal>
-          <Reveal delay={0.1}><Payslip /></Reveal>
-        </div>
-      </section>
-
-      {/* ── Highlights ─────────────────────── */}
-      <section className="mx-auto max-w-7xl space-y-28 px-5 py-28 lg:px-8">
-        <Feature
-          eyebrow="Approvals your way"
-          title="Every request follows the flow you design."
-          body="Leave, expenses, hiring, offers, salary changes and more go through approval flows you build yourself: by amount, department or anything else. Approvers can act from email, hand work to a colleague when away, and late approvals move up on their own."
-          points={["Multi-level and parallel approvals", "Approve or reject straight from email", "Reminders, escalation and delegation"]}
-          art={<FlowArt />}
-        />
-        <Feature
-          flip
-          eyebrow="Your own website"
-          title="Your company address opens your own website."
-          body="Every company gets yourname.campusly.app with an organisation website and careers page: about you, your values, life at work, leadership, offices and open jobs. Pick one of four designs and edit it in minutes. Employees sign in from the same address."
-          points={["Four designs: Classic, Modern, Serene and Pulse", "Open jobs appear on their own", "Employee sign-in on every page"]}
-          art={<SitesArt />}
-        />
-        <Feature
-          eyebrow="Ask in plain words"
-          title="Get answers without building a report."
-          body="Ask “Who is on leave next week?” or “What did overtime cost last month?” and get the numbers, a table or a chart. Answers only include what that person is allowed to see."
-          points={["Ready reports and custom dashboards", "Export to Excel and PDF", "Respects every permission"]}
-          art={<AskArt />}
-        />
-      </section>
-
-      {/* ── Trust ──────────────────────────── */}
-      <section className="border-y border-[#ebedf2] bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-8">
-          <Reveal className="max-w-2xl"><Eyebrow>Built to be trusted</Eyebrow><h2 className="mt-4 text-[40px] font-extralight tracking-tight">Serious about your people&apos;s data.</h2></Reveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Lock, t: "Separated by design", b: "Each company's data is walled off inside the database itself, not just in the app." },
-              { icon: ScrollText, t: "Every change recorded", b: "Who changed what, when, and the before and after values. Nothing is ever hard-deleted." },
-              { icon: ShieldCheck, t: "Roles and sensitive fields", b: "Fine-grained permissions, data scopes and hidden salary fields for those who shouldn't see them." },
-              { icon: Fingerprint, t: "DPDP ready", b: "Consent, purpose and retention for candidate and employee data, with a grievance contact." },
-              { icon: Globe2, t: "Right time, everywhere", b: "Times are stored once and shown in each person's own time zone." },
-              { icon: Languages, t: "Your language", b: "English, Hindi, Tamil and Malayalam, with more coming." },
-            ].map((x, i) => (
-              <Reveal key={x.t} delay={(i % 3) * 0.05}>
-                <div className="h-full rounded-3xl border border-[#ebedf2] p-7">
-                  <x.icon size={22} strokeWidth={S} style={{ color: P }} />
-                  <h3 className="mt-5 text-[18px] font-normal">{x.t}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-[#5b6170]">{x.b}</p>
-                </div>
+          <div className="mt-9 grid gap-5 sm:grid-cols-2">
+            {features.map((f, i) => (
+              <Reveal key={f.t} delay={i * 0.05}>
+                <f.icon size={20} strokeWidth={S} style={{ color: P }} />
+                <h3 className="mt-3 text-[15.5px] font-normal">{f.t}</h3>
+                <p className="mt-1.5 text-[14.5px] leading-relaxed" style={{ color: MUTED }}>{f.b}</p>
               </Reveal>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* ── How it works ───────────────────── */}
-      <section className="mx-auto max-w-7xl px-5 py-28 lg:px-8">
-        <Reveal className="text-center"><Eyebrow>Getting started</Eyebrow><h2 className="mt-4 text-[40px] font-extralight tracking-tight">Live in three steps.</h2></Reveal>
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {[
-            { n: "01", t: "Create your company", b: "Pick your web address, add your legal entities, locations and departments. Indian defaults are ready for you." },
-            { n: "02", t: "Bring your people", b: "Import employees from Excel, set salary structures and leave balances. We check every row before saving." },
-            { n: "03", t: "Invite and go", b: "Employees sign in from your address. Approvals, payroll and the rest just work from day one." },
-          ].map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.08}>
-              <div className="relative h-full rounded-3xl bg-white p-8 shadow-[0_1px_0_#ebedf2,0_0_0_1px_#ebedf2]">
-                <p className="text-[44px] font-extralight leading-none tracking-tight" style={{ color: P }}>{s.n}</p>
-                <h3 className="mt-6 text-[20px] font-normal">{s.t}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-[#5b6170]">{s.b}</p>
+function PhoneMock() {
+  return (
+    <div className="relative mx-auto w-[290px] sm:w-[310px]">
+      <div aria-hidden className="absolute -inset-10 -z-0 rounded-full bg-[#e6e4ff] blur-3xl" />
+      <div className="relative rounded-[42px] border border-[#d3d2ca] bg-[#16161d] p-2.5">
+        <div className="overflow-hidden rounded-[34px] bg-[#f6f5f0]">
+          <div className="px-5 pb-4 pt-7">
+            <p className="text-[12px]" style={{ color: MUTED }}>Hello, Meera</p>
+            <div className="mt-3 flex gap-2">
+              <span className="rounded-full px-3 py-1.5 text-[12.5px] text-white" style={{ background: P }}>Aarav · 8 A</span>
+              <span className="rounded-full border border-[#d3d2ca] bg-white px-3 py-1.5 text-[12.5px]">Anika · 3 A</span>
+            </div>
+          </div>
+          <div className="space-y-2.5 px-4 pb-6">
+            <div className="rounded-2xl bg-white p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-[13px]" style={{ color: MUTED }}>Attendance this term</p>
+                <span className="text-[12px] text-[#16a34a]">Present today</span>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Pricing ────────────────────────── */}
-      <section id="pricing" className="bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-28 lg:px-8">
-          <Reveal className="text-center">
-            <Eyebrow>Pricing</Eyebrow>
-            <h2 className="mt-4 text-[40px] font-extralight tracking-tight">Simple plans. Every feature included.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-[17px] text-[#5b6170]">Start free, then pick the plan that fits your team.</p>
-          </Reveal>
-          <LivePricing />
-        </div>
-      </section>
-
-      {/* ── FAQ ────────────────────────────── */}
-      <section id="faq" className="mx-auto max-w-3xl px-5 py-28">
-        <Reveal className="text-center"><Eyebrow>Questions</Eyebrow><h2 className="mt-4 text-[40px] font-extralight tracking-tight">Good to know.</h2></Reveal>
-        <div className="mt-12 divide-y divide-[#ebedf2] border-y border-[#ebedf2]">
-          {FAQ.map((f) => <FaqItem key={f.q} {...f} />)}
-        </div>
-      </section>
-
-      {/* ── CTA ────────────────────────────── */}
-      <section className="px-5 pb-24 lg:px-8">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[36px] px-8 py-20 text-center text-white" style={{ background: `linear-gradient(135deg, ${P}, #312e81)` }}>
-          <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10" />
-          <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-white/5" />
-          <h2 className="relative text-[38px] font-extralight leading-tight tracking-tight sm:text-[50px]">Give your people a better place to work.</h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-[17px] text-white/80">Set up your company today. Your team will be signing in by this evening.</p>
-          <div className="relative mt-9 flex flex-wrap justify-center gap-3">
-            <Link href="/register" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15.5px] text-[#14171f] hover:bg-white/90">Start free trial <ArrowRight size={17} strokeWidth={1.6} /></Link>
-            <Link href="/login" className="inline-flex items-center rounded-full border border-white/30 px-7 py-3.5 text-[15.5px] hover:bg-white/10">Sign in</Link>
+              <p className="font-[family-name:var(--font-outfit)] mt-1 text-[28px] font-extralight">96%</p>
+              <div className="mt-2 h-1.5 rounded-full bg-[#eeede7]"><div className="h-full w-[96%] rounded-full" style={{ background: P }} /></div>
+            </div>
+            <div className="rounded-2xl bg-white p-4">
+              <p className="text-[13px]" style={{ color: MUTED }}>Next class</p>
+              <p className="mt-1 text-[15px]">Science · 09:25</p>
+              <p className="text-[12.5px]" style={{ color: MUTED }}>Homework: Chapter 6 questions</p>
+            </div>
+            <div className="flex items-center justify-between rounded-2xl bg-white p-4">
+              <div>
+                <p className="text-[13px]" style={{ color: MUTED }}>Term 2 fees</p>
+                <p className="font-[family-name:var(--font-outfit)] text-[20px] font-extralight">₹18,500</p>
+              </div>
+              <span className="rounded-full px-4 py-2 text-[13px] text-white" style={{ background: INK }}>Pay now</span>
+            </div>
+            <div className="rounded-2xl bg-white p-4">
+              <p className="text-[13px]" style={{ color: MUTED }}>Mid-term results</p>
+              <p className="mt-1 text-[15px]">A1 in Maths, A2 in Science</p>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* ── Footer ─────────────────────────── */}
-      <footer className="border-t border-[#ebedf2] bg-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
-          <div>
-            <div className="flex items-center gap-2.5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-small.svg" alt="" className="h-8 w-8" />
-              <span className="text-[16px]">Campusly</span>
-            </div>
-            <p className="mt-4 max-w-xs text-[14px] leading-relaxed text-[#5b6170]">HR and payroll for Indian companies, from the first hire to the thousandth.</p>
-          </div>
-          {[
-            { h: "Product", l: [["People & leave", "#product"], ["Payroll", "#payroll"], ["Compliance", "#compliance"], ["Pricing", "#pricing"]] },
-            { h: "Company", l: [["FAQ", "#faq"], ["Partner with us", "/partner"]] },
-            { h: "Account", l: [["Sign in", "/login"], ["Start free trial", "/register"], ["Forgot password", "/forgot-password"]] },
-          ].map((c) => (
-            <div key={c.h}>
-              <p className="text-[13px] uppercase tracking-[0.18em] text-[#8a90a0]">{c.h}</p>
-              <ul className="mt-4 space-y-2.5 text-[14.5px]">
-                {c.l.map(([t, h]) => <li key={t}><Link href={h} className="text-[#3c4150] hover:text-[#14171f]">{t}</Link></li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div className="border-t border-[#ebedf2]">
-          <p className="mx-auto max-w-7xl px-5 py-6 text-[13px] text-[#8a90a0] lg:px-8">© {new Date().getFullYear()} Campusly. Made in India.</p>
-        </div>
-      </footer>
-
-      {SHOW_AVATAR && <TalkingAvatar cutout size={210} text={INTRO} hint="Hi! Tap me for a quick introduction." />}
-    </div>
-  );
-}
-
-/* ── Hero product mock: a few live-looking cards ── */
-function HeroMock() {
-  const card = "rounded-[22px] border border-[#ebedf2] bg-white shadow-[0_24px_50px_-28px_rgba(20,23,31,0.35)]";
-  return (
-    <div className="relative mx-auto h-[500px] w-full max-w-[560px]">
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
-        className={`${card} absolute left-0 top-6 w-[78%] p-6`}>
-        <div className="flex items-center justify-between">
-          <p className="text-[14px] text-[#5b6170]">Good morning, Priya</p>
-          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] text-emerald-700">Clocked in 09:12</span>
-        </div>
-        <p className="mt-5 text-[13px] uppercase tracking-[0.16em] text-[#8a90a0]">Leave balance</p>
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          {[["Earned", "14.5"], ["Casual", "6"], ["Sick", "8"]].map(([l, v], i) => (
-            <div key={l} className="rounded-2xl p-3.5" style={{ background: ["#f1f0ff", "#ecfdf5", "#fff7ed"][i] }}>
-              <p className="text-[26px] font-extralight leading-none">{v}</p><p className="mt-1.5 text-[12.5px] text-[#5b6170]">{l}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-5 space-y-2.5">
-          {[["Team stand-up", "10:00"], ["1:1 with Rahul", "15:30"]].map(([t, h]) => (
-            <div key={t} className="flex items-center justify-between rounded-xl bg-[#f7f8fa] px-3.5 py-2.5 text-[13.5px]"><span>{t}</span><span className="text-[#8a90a0]">{h}</span></div>
-          ))}
-        </div>
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.35 }}
-        className={`${card} absolute right-0 top-0 w-[46%] p-4`}>
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#fde68a] text-[13px]">AK</span>
-          <div className="min-w-0"><p className="truncate text-[13.5px]">Arjun Kumar</p><p className="text-[12px] text-[#8a90a0]">Leave · 3 days</p></div>
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-1.5">
-          <span className="rounded-lg py-1.5 text-center text-[12.5px] text-white" style={{ background: P }}>Approve</span>
-          <span className="rounded-lg border border-[#ebedf2] py-1.5 text-center text-[12.5px]">Reject</span>
-        </div>
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.5 }}
-        className={`${card} absolute bottom-6 right-2 w-[60%] p-5`}>
-        <div className="flex items-center justify-between">
-          <p className="text-[13px] text-[#5b6170]">October payroll</p>
-          <span className="rounded-full px-2.5 py-1 text-[12px]" style={{ background: "#f1f0ff", color: P }}>Ready to pay</span>
-        </div>
-        <p className="mt-3 text-[30px] font-extralight leading-none tracking-tight">₹48,62,400</p>
-        <div className="mt-4 flex h-2 overflow-hidden rounded-full">
-          <span className="w-[72%]" style={{ background: P }} /><span className="w-[12%] bg-[#a5b4fc]" /><span className="w-[9%] bg-[#fbbf24]" /><span className="w-[7%] bg-[#34d399]" />
-        </div>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-[#5b6170]">
-          <span>Net pay</span><span>PF</span><span>TDS</span><span>ESI & PT</span>
-        </div>
-      </motion.div>
-
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.7 }}
-        className={`${card} absolute bottom-0 left-4 flex items-center gap-3 px-4 py-3`}>
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff1f2] text-rose-500"><HeartHandshake size={18} strokeWidth={S} /></span>
-        <div><p className="text-[13.5px]">Kudos to Meera for the launch!</p><p className="text-[12px] text-[#8a90a0]">12 cheers on Buzz</p></div>
-      </motion.div>
-    </div>
-  );
-}
-
-function Payslip() {
-  const rows: [string, string][] = [["Basic", "45,000"], ["HRA", "18,000"], ["Special allowance", "22,400"], ["Leave travel", "4,600"]];
-  const ded: [string, string][] = [["Provident fund", "5,400"], ["Professional tax", "200"], ["Income tax (new regime)", "6,850"]];
-  return (
-    <div className="rounded-[28px] bg-white p-7 text-[#14171f] shadow-[0_40px_80px_-40px_rgba(0,0,0,0.6)]">
-      <div className="flex items-start justify-between">
-        <div><p className="text-[13px] text-[#8a90a0]">Payslip · October</p><p className="mt-1 text-[19px]">Priya Sharma</p><p className="text-[13px] text-[#8a90a0]">Senior Designer · Bengaluru</p></div>
-        <FileCheck2 size={22} strokeWidth={S} style={{ color: P }} />
-      </div>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div><p className="text-[12px] uppercase tracking-[0.16em] text-[#8a90a0]">Earnings</p>
-          {rows.map(([l, v]) => <div key={l} className="flex justify-between border-b border-[#f1f2f6] py-2 text-[14px]"><span className="text-[#5b6170]">{l}</span><span className="tabular-nums">₹{v}</span></div>)}
-        </div>
-        <div><p className="text-[12px] uppercase tracking-[0.16em] text-[#8a90a0]">Deductions</p>
-          {ded.map(([l, v]) => <div key={l} className="flex justify-between border-b border-[#f1f2f6] py-2 text-[14px]"><span className="text-[#5b6170]">{l}</span><span className="tabular-nums">₹{v}</span></div>)}
-        </div>
-      </div>
-      <div className="mt-6 flex items-center justify-between rounded-2xl px-5 py-4" style={{ background: "#f1f0ff" }}>
-        <span className="text-[14px] text-[#5b6170]">Net pay</span><span className="text-[26px] font-extralight tabular-nums" style={{ color: P }}>₹77,550</span>
       </div>
     </div>
   );
 }
 
-function Feature({ eyebrow, title, body, points, art, flip = false }: { eyebrow: string; title: string; body: string; points: string[]; art: React.ReactNode; flip?: boolean }) {
-  return (
-    <div className="grid items-center gap-14 lg:grid-cols-2">
-      <Reveal className={flip ? "lg:order-2" : ""}>
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h2 className="mt-4 text-[36px] font-extralight leading-[1.1] tracking-tight sm:text-[44px]">{title}</h2>
-        <p className="mt-5 text-[17px] leading-relaxed text-[#5b6170]">{body}</p>
-        <ul className="mt-7 space-y-3">
-          {points.map((p) => <li key={p} className="flex items-center gap-3 text-[15.5px]"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f1f0ff]" style={{ color: P }}><Check size={14} strokeWidth={2} /></span>{p}</li>)}
-        </ul>
-      </Reveal>
-      <Reveal delay={0.1} className={flip ? "lg:order-1" : ""}>{art}</Reveal>
-    </div>
-  );
-}
+/* ── Multi-campus ─────────────────────────────────────────────────── */
 
-function FlowArt() {
-  const step = (icon: React.ReactNode, t: string, s: string, tone: string) => (
-    <div className="flex items-center gap-3 rounded-2xl border border-[#ebedf2] bg-white px-4 py-3.5 shadow-[0_10px_24px_-18px_rgba(20,23,31,0.4)]">
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: tone }}>{icon}</span>
-      <div><p className="text-[14.5px]">{t}</p><p className="text-[12.5px] text-[#8a90a0]">{s}</p></div>
-    </div>
-  );
-  return (
-    <div className="rounded-[32px] bg-[#f4f4fb] p-8">
-      <div className="mx-auto max-w-sm space-y-3">
-        {step(<MessageSquareText size={17} strokeWidth={S} className="text-[#4f46e5]" />, "Expense claim · ₹18,400", "Raised by Arjun", "#e0e7ff")}
-        <div className="mx-auto h-5 w-px bg-[#c7c9d9]" />
-        {step(<Users size={17} strokeWidth={S} className="text-amber-600" />, "Manager approves", "Approved from email · 2 min", "#fef3c7")}
-        <div className="mx-auto h-5 w-px bg-[#c7c9d9]" />
-        <div className="rounded-2xl border border-dashed border-[#c7c9d9] px-4 py-2 text-center text-[12.5px] text-[#5b6170]">Above ₹10,000? Finance also approves</div>
-        <div className="mx-auto h-5 w-px bg-[#c7c9d9]" />
-        {step(<Workflow size={17} strokeWidth={S} className="text-emerald-600" />, "Added to November payroll", "Automatically", "#d1fae5")}
-      </div>
-    </div>
-  );
-}
-
-function SitesArt() {
-  const designs = [
-    { n: "Classic", bg: "#0c0d10", ink: "#fff", acc: "#4f46e5" },
-    { n: "Modern", bg: "#f6f7f9", ink: "#14171f", acc: "#4f46e5" },
-    { n: "Serene", bg: "#f6f0e7", ink: "#2a241d", acc: "#b45309" },
-    { n: "Pulse", bg: "#eceef1", ink: "#0b0d12", acc: "#db2777" },
+function MultiCampus() {
+  const campuses = [
+    { n: "Main campus · Kochi", l: 1840, s: 112 },
+    { n: "City branch · Ernakulam", l: 920, s: 58 },
+    { n: "Junior school · Aluva", l: 410, s: 31 },
   ];
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {designs.map((d, i) => (
-        <div key={d.n} className="overflow-hidden rounded-[22px] border border-[#ebedf2] shadow-[0_18px_40px_-26px_rgba(20,23,31,0.45)]" style={{ background: d.bg, color: d.ink, transform: `rotate(${[-1.5, 1, 1.2, -1][i]}deg)` }}>
-          <div className="flex items-center justify-between px-4 pt-3 text-[10px] opacity-70"><span>yourcompany</span><span className="rounded-full px-2 py-0.5" style={{ background: d.acc, color: "#fff" }}>Sign in</span></div>
-          <div className="px-4 pb-4 pt-6">
-            <p className="text-[19px] leading-[1.05]" style={{ fontFamily: d.n === "Serene" ? "Georgia, serif" : undefined, fontWeight: d.n === "Pulse" ? 700 : 200, fontStyle: d.n === "Serene" ? "italic" : "normal" }}>People who care,<br />doing work that matters.</p>
-            <div className="mt-4 grid grid-cols-3 gap-1.5">
-              {[0, 1, 2].map((k) => <div key={k} className={`h-10 ${d.n === "Serene" ? "rounded-t-full rounded-b-md" : "rounded-lg"}`} style={{ background: k === 1 ? d.acc : `${d.ink}1a` }} />)}
+    <section className="py-6 sm:py-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="grid gap-10 rounded-[32px] p-7 text-white sm:p-12 lg:grid-cols-2 lg:items-center" style={{ background: INK }}>
+          <Reveal>
+            <Eyebrow light>Multi-campus</Eyebrow>
+            <H2 light>One group. Many campuses.<br className="hidden sm:block" /> One clear view.</H2>
+            <p className="mt-5 text-[16px] leading-relaxed text-white/65">
+              Share fee plans, grading and settings across branches, or let each campus set its own. Management sees totals for the group; each campus head sees only their campus.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-2 text-[13.5px] text-white/80">
+              {["Group dashboard", "Transfer learners between campuses", "Shared staff and payroll", "Campus-level roles"].map((t) => (
+                <span key={t} className="rounded-full border border-white/15 px-3 py-1.5">{t}</span>
+              ))}
             </div>
-          </div>
-          <p className="border-t px-4 py-2 text-[12px]" style={{ borderColor: `${d.ink}1a` }}>{d.n}</p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.04] p-5">
+              <div className="flex items-center gap-2 text-[13px] text-white/60"><Network size={16} strokeWidth={S} /> St. Thomas Group of Schools</div>
+              <div className="mt-4 space-y-2.5">
+                {campuses.map((c) => (
+                  <div key={c.n} className="flex items-center gap-4 rounded-xl bg-white/[0.05] px-4 py-3">
+                    <Building2 size={18} strokeWidth={S} className="text-[#a5b4fc]" />
+                    <span className="flex-1 text-[14.5px]">{c.n}</span>
+                    <span className="text-[13px] tabular-nums text-white/60">{c.l.toLocaleString("en-IN")} learners</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4 text-[14px]">
+                <span className="text-white/60">Group total</span>
+                <span className="font-[family-name:var(--font-outfit)] text-[22px] font-extralight">3,170 learners · 201 staff</span>
+              </div>
+            </div>
+          </Reveal>
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 }
 
-function AskArt() {
+/* ── Security ─────────────────────────────────────────────────────── */
+
+function Security() {
+  const items = [
+    { icon: Layers3, t: "Separate data for every institution", b: "Each institution's records are walled off at the database level, so no one else can ever see them." },
+    { icon: FileClock, t: "A full audit trail", b: "Every change records who made it, when and what it was before. Marks and fees can always be traced." },
+    { icon: KeyRound, t: "The right access for each role", b: "Principal, teacher, accountant, librarian, parent and student each see only what they need." },
+    { icon: Lock, t: "Nothing is ever deleted", b: "Records are archived, never removed, and can be restored by an administrator." },
+    { icon: Fingerprint, t: "Safe sign-in", b: "Strong passwords, lock-out after repeated failures and single sign-on for larger groups." },
+    { icon: ShieldCheck, t: "Consent and privacy", b: "Parent consent, data export and privacy settings in line with India's data protection law." },
+  ];
   return (
-    <div className="rounded-[32px] bg-[#f4f4fb] p-6 sm:p-8">
-      <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm px-4 py-3 text-[14.5px] text-white" style={{ background: P }}>Who is on leave next week in Engineering?</div>
-      <div className="mt-4 max-w-[92%] rounded-2xl rounded-bl-sm bg-white p-4 shadow-[0_10px_24px_-18px_rgba(20,23,31,0.4)]">
-        <p className="flex items-center gap-2 text-[14px] text-[#5b6170]"><Sparkles size={15} strokeWidth={S} style={{ color: P }} />4 people, 11 days in total</p>
-        <div className="mt-3 divide-y divide-[#f1f2f6] text-[13.5px]">
-          {[["Arjun Kumar", "Mon–Wed", "Earned"], ["Meera Nair", "Tue", "Sick"], ["Kabir Shah", "Wed–Fri", "Earned"], ["Neha Rao", "Thu–Fri", "Comp off"]].map(([n, d, t]) => (
-            <div key={n} className="flex justify-between py-2"><span>{n}</span><span className="text-[#8a90a0]">{d} · {t}</span></div>
+    <section id="security" className="scroll-mt-20 py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <Reveal className="max-w-2xl">
+          <Eyebrow>Security & trust</Eyebrow>
+          <H2>Children&rsquo;s data deserves<br className="hidden sm:block" /> the best care.</H2>
+        </Reveal>
+        <div className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((it, i) => (
+            <Reveal key={it.t} delay={(i % 3) * 0.05} className="border-t border-[#d3d2ca] pt-6">
+              <it.icon size={21} strokeWidth={S} style={{ color: P }} />
+              <h3 className="mt-4 text-[16.5px] font-normal">{it.t}</h3>
+              <p className="mt-2 text-[14.5px] leading-relaxed" style={{ color: MUTED }}>{it.b}</p>
+            </Reveal>
           ))}
         </div>
       </div>
-      <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#e3e5ea] bg-white px-4 py-3 text-[14px] text-[#8a90a0]"><BookOpen size={16} strokeWidth={S} />Ask anything about your people…</div>
-    </div>
+    </section>
   );
 }
 
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div>
-      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-4 py-5 text-left text-[17px]">
-        {q}<ChevronDown size={18} strokeWidth={S} className={`shrink-0 text-[#8a90a0] transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && <p className="-mt-1 pb-5 text-[15.5px] leading-relaxed text-[#5b6170]">{a}</p>}
-    </div>
-  );
-}
+/* ── Pricing: per learner ─────────────────────────────────────────── */
 
-/* ── Pricing: the plans and payment choices set in platform admin (same as the Subscription page) ── */
-type PubPlan = { id: string; name: string; tagline: string; price: number; features: string[]; whatsapp: boolean; badge?: string };
-type PubTrial = { id: string; name: string; tagline: string; features: string[]; trial_days: number; badge?: string };
-type PubPeriod = { id: string; label: string; months: number; discount: number };
-const inr = (n: number) => `₹${Math.round(n).toLocaleString("en-IN")}`;
-// same rounding as the server: real prices to the nearest ₹50, tiny ones to the rupee
-const roundPrice = (raw: number) => (raw >= 500 ? Math.round(raw / 50) * 50 : Math.max(1, Math.round(raw)));
-
-function LivePricing() {
-  const [data, setData] = useState<{ trial_days: number; trial: PubTrial | null; plans: PubPlan[]; periods: PubPeriod[] } | null>(null);
-  const [periodId, setPeriodId] = useState("");
+function Pricing() {
+  const [yearly, setYearly] = useState(true);
+  const [learners, setLearners] = useState(600);
+  const [trialDays, setTrialDays] = useState(30);
   useEffect(() => {
     fetch(`${API_BASE}/platform/pricing`).then((r) => (r.ok ? r.json() : null)).then((d) => {
-      if (d) { setData(d); setPeriodId(d.periods[0]?.id || ""); }
+      if (d && typeof d.trial_days === "number" && d.trial_days > 0) setTrialDays(d.trial_days);
     }).catch(() => {});
   }, []);
-
-  if (!data) {
-    return <div className="mt-14 grid gap-6 lg:grid-cols-3">{[0, 1, 2].map((i) => <div key={i} className="h-[420px] animate-pulse rounded-[28px] bg-[#f4f5f8]" />)}</div>;
-  }
-  const period = data.periods.find((p) => p.id === periodId) || data.periods[0];
-  const months = period?.months || 1;
-  const off = period?.discount || 0;
-  const best = [...data.periods].sort((a, b) => b.discount - a.discount)[0];
-  const trial = !!data.trial && data.trial_days > 0;
-  const tp = data.trial;
-  const cards = data.plans.length + (trial ? 1 : 0);
-  const cols = cards >= 3 ? "lg:grid-cols-3" : cards === 2 ? "lg:grid-cols-2 lg:max-w-4xl lg:mx-auto" : "lg:max-w-md lg:mx-auto";
-
-  const Card = ({ name, tagline, badge, price, sub, features, cta }: { name: string; tagline?: string; badge?: string; price: React.ReactNode; sub?: React.ReactNode; features: string[]; cta: string }) => (
-    <div className={`relative flex h-full flex-col rounded-[28px] p-8 transition-transform hover:-translate-y-1 ${badge ? "text-white" : "border border-[#ebedf2] bg-[#fbfbfd]"}`}
-      style={badge ? { background: `linear-gradient(160deg, ${P}, #312e81)` } : undefined}>
-      {badge && <span className="absolute right-6 top-6 rounded-full bg-white/15 px-3 py-1 text-[12px]">{badge}</span>}
-      <h3 className="text-[19px] font-normal">{name}</h3>
-      {tagline && <p className={`mt-1 text-[14px] ${badge ? "text-white/70" : "text-[#5b6170]"}`}>{tagline}</p>}
-      <div className="mt-6">{price}</div>
-      {sub && <p className={`mt-1 text-[13.5px] ${badge ? "text-white/70" : "text-[#5b6170]"}`}>{sub}</p>}
-      <ul className="my-8 flex-1 space-y-3">
-        {features.map((f) => <li key={f} className={`flex items-start gap-2.5 text-[14.5px] ${badge ? "text-white/85" : "text-[#3c4150]"}`}><Check size={16} strokeWidth={2} className={`mt-0.5 shrink-0 ${badge ? "text-white" : "text-emerald-500"}`} />{f}</li>)}
-      </ul>
-      <Link href="/register" className={`block rounded-full py-3 text-center text-[15px] transition-opacity hover:opacity-90 ${badge ? "bg-white text-[#14171f]" : "text-white"}`} style={badge ? undefined : { background: P }}>{cta}</Link>
-    </div>
-  );
+  const off = yearly ? 0.2 : 0;
+  // Same tiers as the platform plans (modules/platform/subscription.py): a flat monthly price
+  // for up to `cap` learners, i.e. `rate` per learner at full use.
+  const tier = TIERS.find((t) => learners <= t.cap) ?? TIERS[TIERS.length - 1];
+  const beyond = learners > TIERS[TIERS.length - 1].cap;
+  const monthly = tier.rate * tier.cap * (1 - off);
 
   return (
-    <>
-      {data.periods.length > 1 && (
-        <div className="mt-10 flex flex-col items-center gap-2">
-          <div className="inline-flex rounded-full border border-[#ebedf2] bg-[#fbfbfd] p-1">
-            {data.periods.map((p) => (
-              <button key={p.id} type="button" onClick={() => setPeriodId(p.id)}
-                className={`flex items-center gap-1.5 rounded-full px-5 py-2 text-[14px] transition-colors ${p.id === period?.id ? "bg-[#14171f] text-white" : "text-[#5b6170] hover:text-[#14171f]"}`}>
-                {p.label}
-                {p.discount > 0 && <span className={`rounded-full px-1.5 py-px text-[11px] ${p.id === period?.id ? "bg-white/15" : "bg-emerald-50 text-emerald-700"}`}>-{p.discount}%</span>}
-              </button>
-            ))}
-          </div>
-          {best && best.discount > 0 && <p className="text-[14px] text-[#5b6170]">Pay {best.label.toLowerCase()} and save {best.discount}%</p>}
+    <section id="pricing" className="scroll-mt-20 border-t border-[#e4e3dc] bg-white py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <Reveal>
+            <Eyebrow>Pricing</Eyebrow>
+            <H2>Pay for learners,<br className="hidden sm:block" /> not for features.</H2>
+            <p className="mt-5 max-w-xl text-[16.5px] leading-relaxed" style={{ color: MUTED }}>
+              One simple price per active learner each month. Staff, parents and every module in your plan are included. Start with a {trialDays}-day free trial.
+            </p>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <div className="inline-flex rounded-full border border-[#e4e3dc] bg-[#f7f7f4] p-1 text-[14px]">
+              {[["Monthly", false], ["Yearly · save 20%", true]].map(([l, v]) => (
+                <button key={String(l)} onClick={() => setYearly(v as boolean)}
+                  className={`rounded-full px-4 py-2 transition-colors ${yearly === v ? "bg-white text-[#16161d] ring-1 ring-[#e4e3dc]" : ""}`}
+                  style={yearly === v ? undefined : { color: MUTED }}>{l as string}</button>
+              ))}
+            </div>
+          </Reveal>
         </div>
-      )}
-      <div className={`mt-10 grid gap-6 ${cols}`}>
-        {trial && tp && (
-          <Reveal><Card name={tp.name} tagline={tp.tagline} badge={tp.badge} features={tp.features} cta={`Start ${tp.trial_days}-day free trial`}
-            price={<span className="text-[44px] font-extralight leading-none tracking-tight">{inr(0)}</span>} sub={`for ${tp.trial_days} days`} /></Reveal>
-        )}
-        {data.plans.map((plan, i) => {
-          const total = off ? roundPrice(plan.price * months * (1 - off / 100)) : plan.price * months;
-          const perMonth = Math.round(total / months);
-          return (
-            <Reveal key={plan.id} delay={i * 0.08}>
-              <Card name={plan.name} tagline={plan.tagline} badge={plan.badge} features={plan.features}
-                cta={trial ? `Start ${data.trial_days}-day free trial` : "Get started"}
-                price={<span className="flex flex-wrap items-baseline gap-2"><span className="text-[44px] font-extralight leading-none tracking-tight">{inr(perMonth)}</span><span className="text-[14px] opacity-70">/ month</span>{perMonth < plan.price && <span className="text-[15px] line-through opacity-50">{inr(plan.price)}</span>}</span>}
-                sub={<>{months === 1 ? "Billed every month" : `${inr(total)} billed ${months === 12 ? "once a year" : `every ${months} months`}`}{total < plan.price * months && <> · save {inr(plan.price * months - total)}</>}</>} />
-            </Reveal>
-          );
-        })}
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {TIERS.map((t, i) => {
+            const dark = !!t.badge;
+            return (
+              <Reveal key={t.name} delay={i * 0.05}>
+                <div className={`relative flex h-full flex-col rounded-[26px] p-7 sm:p-8 ${dark ? "text-white" : "border border-[#e4e3dc] bg-[#fbfbf9]"}`} style={dark ? { background: P } : undefined}>
+                  {t.badge && <span className="absolute right-6 top-6 rounded-full bg-white/15 px-3 py-1 text-[12px]">{t.badge}</span>}
+                  <p className="font-[family-name:var(--font-outfit)] text-[22px] font-light">{t.name}</p>
+                  <p className={`mt-1 text-[14px] ${dark ? "text-white/70" : ""}`} style={dark ? undefined : { color: MUTED }}>{t.blurb}</p>
+                  <div className="mt-7 flex items-end gap-1.5">
+                    <span className="font-[family-name:var(--font-outfit)] text-[46px] font-extralight leading-none tracking-tight">{inr(t.rate * (1 - off))}</span>
+                    <span className={`pb-1 text-[14px] ${dark ? "text-white/70" : ""}`} style={dark ? undefined : { color: MUTED }}>per learner / month</span>
+                  </div>
+                  <p className={`mt-2 text-[13.5px] ${dark ? "text-white/70" : ""}`} style={dark ? undefined : { color: MUTED }}>
+                    {t.range} · {inr(t.rate * t.cap * (1 - off))} a month
+                  </p>
+                  <ul className="mt-7 flex-1 space-y-3">
+                    {t.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2.5 text-[14.5px]">
+                        <Check size={16} strokeWidth={1.6} className="mt-0.5 shrink-0" style={{ color: dark ? "#c7d2fe" : P }} /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/register" className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full py-3 text-[15px] transition-opacity hover:opacity-90 ${dark ? "bg-white text-[#16161d]" : "text-white"}`}
+                    style={dark ? undefined : { background: INK }}>
+                    Start {trialDays}-day free trial <ArrowRight size={16} strokeWidth={1.6} />
+                  </Link>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        {/* estimator */}
+        <Reveal delay={0.1}>
+          <div className="mt-8 grid gap-6 rounded-[26px] border border-[#e4e3dc] bg-[#f7f7f4] p-6 sm:p-8 md:grid-cols-[1.4fr_1fr] md:items-center">
+            <div>
+              <label htmlFor="learners" className="flex items-center justify-between text-[14.5px]">
+                <span className="flex items-center gap-2"><Users size={17} strokeWidth={S} style={{ color: P }} /> How many learners do you have?</span>
+                <span className="font-[family-name:var(--font-outfit)] text-[20px] font-light tabular-nums">{learners.toLocaleString("en-IN")}</span>
+              </label>
+              <input id="learners" type="range" min={50} max={5000} step={50} value={learners} onChange={(e) => setLearners(Number(e.target.value))}
+                className="mt-4 w-full accent-[#4f46e5]" />
+              <div className="mt-1 flex justify-between text-[12px]" style={{ color: MUTED }}><span>50</span><span>5,000+</span></div>
+            </div>
+            <div className="rounded-2xl bg-white p-5">
+              <p className="text-[13px]" style={{ color: MUTED }}>Estimated on {tier.name}{yearly ? ", billed yearly" : ""}</p>
+              <p className="font-[family-name:var(--font-outfit)] mt-1 text-[32px] font-extralight">{inr(monthly)}<span className="text-[15px]" style={{ color: MUTED }}> / month</span></p>
+              <p className="text-[12.5px]" style={{ color: MUTED }}>{beyond ? "More than 3,000 learners? Talk to us for a group quote." : "Plus GST. Larger groups, talk to us for a quote."}</p>
+            </div>
+          </div>
+        </Reveal>
       </div>
-      {trial && <p className="mt-8 text-center text-[14px] text-[#5b6170]">Every plan starts with a {data.trial_days}-day free trial. No card needed.</p>}
-    </>
+    </section>
+  );
+}
+
+/* ── FAQ ──────────────────────────────────────────────────────────── */
+
+function Faq() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="scroll-mt-20 py-20 sm:py-28">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_1.6fr]">
+        <Reveal>
+          <Eyebrow>FAQ</Eyebrow>
+          <H2>Questions we<br className="hidden sm:block" /> hear often.</H2>
+          <p className="mt-5 text-[15.5px] leading-relaxed" style={{ color: MUTED }}>
+            Something else on your mind? Start the free trial and ask us from inside the app.
+          </p>
+        </Reveal>
+        <div className="divide-y divide-[#e4e3dc] border-y border-[#e4e3dc]">
+          {FAQ.map((f, i) => {
+            const on = open === i;
+            return (
+              <div key={f.q}>
+                <button className="flex w-full items-center justify-between gap-6 py-5 text-left" onClick={() => setOpen(on ? null : i)} aria-expanded={on}>
+                  <span className="text-[16.5px]">{f.q}</span>
+                  <ChevronDown size={19} strokeWidth={S} className={`shrink-0 transition-transform ${on ? "rotate-180" : ""}`} style={{ color: MUTED }} />
+                </button>
+                <AnimatePresence initial={false}>
+                  {on && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
+                      <p className="pb-6 pr-8 text-[15px] leading-relaxed" style={{ color: MUTED }}>{f.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Final call to action and footer ──────────────────────────────── */
+
+function FinalCta() {
+  return (
+    <section className="px-4 pb-20 sm:px-6">
+      <Reveal>
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] px-6 py-16 text-center text-white sm:py-20" style={{ background: P }}>
+          <div aria-hidden className="pointer-events-none absolute inset-0 opacity-20"
+            style={{ backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 36px)" }} />
+          <div className="relative">
+            <Smartphone size={26} strokeWidth={S} className="mx-auto text-white/80" />
+            <h2 className="font-[family-name:var(--font-outfit)] mx-auto mt-5 max-w-2xl text-[34px] font-extralight leading-tight tracking-tight sm:text-[46px]">
+              Your institution online, by this afternoon.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-[16px] text-white/75">
+              Sign up, choose your institution type and Campusly sets up your classes, sections and subjects for you. Invite your staff when you&rsquo;re ready.
+            </p>
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
+              <Link href="/register" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15.5px] text-[#16161d] hover:bg-white/90">
+                Start free trial <ArrowRight size={17} strokeWidth={1.6} />
+              </Link>
+              <Link href="/login" className="inline-flex items-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-[15.5px] hover:bg-white/10">Sign in</Link>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Footer() {
+  const cols: { h: string; l: [string, string][] }[] = [
+    { h: "Product", l: [["Who it's for", "#who"], ["Modules", "#modules"], ["Parent app", "#portal"], ["Pricing", "#pricing"]] },
+    { h: "Institutions", l: [["Schools", "#who"], ["Colleges & universities", "#who"], ["Coaching centres", "#who"], ["Training institutes", "#who"]] },
+    { h: "Account", l: [["Sign in", "/login"], ["Start free trial", "/register"], ["Forgot password", "/forgot-password"]] },
+  ];
+  return (
+    <footer className="border-t border-[#e4e3dc] bg-white">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <Logo size={28} />
+            <span className="font-[family-name:var(--font-outfit)] text-[19px] font-light">Campusly</span>
+          </div>
+          <p className="mt-4 max-w-xs text-[14px] leading-relaxed" style={{ color: MUTED }}>
+            The all-in-one platform for schools, colleges, universities, coaching centres and training institutes.
+          </p>
+        </div>
+        {cols.map((c) => (
+          <div key={c.h}>
+            <p className="text-[12.5px] uppercase tracking-[0.18em]" style={{ color: INK }}>{c.h}</p>
+            <ul className="mt-4 space-y-2.5 text-[14.5px]" style={{ color: MUTED }}>
+              {c.l.map(([label, href]) => (
+                <li key={label}>{href.startsWith("/") ? <Link href={href} className="hover:text-[#16161d]">{label}</Link> : <a href={href} className="hover:text-[#16161d]">{label}</a>}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-[#e4e3dc]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-[13px] sm:flex-row sm:items-center sm:justify-between sm:px-6" style={{ color: MUTED }}>
+          <span>© {new Date().getFullYear()} Campusly. Made in India for institutions everywhere.</span>
+          <span>Privacy · Terms</span>
+        </div>
+      </div>
+    </footer>
   );
 }

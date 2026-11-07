@@ -125,12 +125,12 @@ export function PlatformLogin({ role, title, afterLogin }: { role: "admin" | "ex
   const isAdmin = role === "admin";
   const points = isAdmin
     ? [
-        { icon: Building2, text: "Every company, its plan and payment status" },
+        { icon: Building2, text: "Every institution, its plan and payment status" },
         { icon: Wallet, text: "Record payments and pay out partners" },
-        { icon: Settings2, text: "Prices, coupons and where companies pay" },
+        { icon: Settings2, text: "Per-learner prices, coupons and where institutions pay" },
       ]
     : [
-        { icon: Building2, text: "Companies you brought in and their status" },
+        { icon: Building2, text: "Institutions you brought in and their status" },
         { icon: Wallet, text: "Your earnings and payouts" },
         { icon: ShieldCheck, text: "Your referral code to share" },
       ];
@@ -147,7 +147,7 @@ export function PlatformLogin({ role, title, afterLogin }: { role: "admin" | "ex
             <ShieldCheck size={12} strokeWidth={1.5} className="text-[#5b9e8f]" />{isAdmin ? "Platform admin" : "Partner portal"}
           </span>
           <h2 className="mt-5 text-[34px] font-light leading-[1.15] tracking-[-0.02em] text-gray-900">
-            {isAdmin ? <>Run the platform,<br />one company at a time.</> : <>Grow with companies,<br />earn as they grow.</>}
+            {isAdmin ? <>Run the platform,<br />one institution at a time.</> : <>Grow with institutions,<br />earn as they grow.</>}
           </h2>
           <ul className="mt-8 space-y-4">
             {points.map(({ icon: Icon, text }) => (
@@ -206,7 +206,7 @@ export function PlatformLogin({ role, title, afterLogin }: { role: "admin" | "ex
           </form>
 
           <p className="mt-8 text-center text-[12px] font-light text-gray-400">
-            {isAdmin ? "Admin access only. Companies sign in at their own address." : "Forgot your password? Ask the platform admin to reset it."}
+            {isAdmin ? "Admin access only. Institutions sign in at their own address." : "Forgot your password? Ask the platform admin to reset it."}
           </p>
         </div>
       </div>

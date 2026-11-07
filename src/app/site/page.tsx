@@ -1,8 +1,8 @@
 "use client";
 
 /*
- * The company's own address (<slug>.campusly.app/) shows its organisation website.
- * The proxy rewrites "/" here on company addresses. If the website is switched off,
+ * The institution's own address (<slug>.campusly.app/) shows its public website.
+ * The proxy rewrites "/" here on institution addresses. If the website is switched off,
  * people go straight to sign-in.
  */
 import { useEffect, useState } from "react";

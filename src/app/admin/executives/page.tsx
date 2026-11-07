@@ -38,11 +38,11 @@ export default function AdminTeamPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader icon={Users} title="Team" sub="Marketing partners bring companies in with their code. Admins run this area."
+      <PageHeader icon={Users} title="Team" sub="Marketing partners bring institutions in with their code. Admins run this area."
         actions={<button onClick={() => setCreating(true)} className={btn.primary}><UserPlus size={15} strokeWidth={1.5} /> Add person</button>} />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat icon={Users} label="Partners" value={execs.filter((u) => u.is_active).length} hint={`${admins.length} admin${admins.length === 1 ? "" : "s"}`} />
-        <Stat icon={Building2} label="Companies brought in" tone="teal" value={totalCompanies} />
+        <Stat icon={Building2} label="Institutions brought in" tone="teal" value={totalCompanies} />
         <Stat icon={HandCoins} label="Partners earned" tone="amber" value={rupee(totalEarned)} />
         <Stat icon={Wallet} label="Waiting to be paid" tone="blue" value={rupee(totalPending)} />
       </div>
@@ -53,7 +53,7 @@ export default function AdminTeamPage() {
             {execs.length === 0 ? <Empty icon={Users} title="No partners yet" sub="Add a marketing partner to give them a referral code." /> : (
               <div className="overflow-x-auto">
                 <table className="w-full text-[13px]">
-                  <thead className="border-b border-gray-100"><tr><th className={th}>Name</th><th className={th}>Code</th><th className={`${th} text-right`}>Companies</th><th className={`${th} text-right`}>Earned</th><th className={`${th} text-right`}>Pending</th><th className={th}>Last login</th><th className={th}></th></tr></thead>
+                  <thead className="border-b border-gray-100"><tr><th className={th}>Name</th><th className={th}>Code</th><th className={`${th} text-right`}>Institutions</th><th className={`${th} text-right`}>Earned</th><th className={`${th} text-right`}>Pending</th><th className={th}>Last login</th><th className={th}></th></tr></thead>
                   <tbody className="divide-y divide-gray-100">
                     {execs.map((u) => (
                       <tr key={u.id} className="transition hover:bg-gray-50/60">

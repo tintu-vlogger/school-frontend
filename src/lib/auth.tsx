@@ -5,8 +5,9 @@ import { useRouter, usePathname } from "next/navigation";
 import { api } from "./api";
 import { browserTimeZone, sameTimeZone, setViewerTimeZone } from "./datetime";
 import CompanyNotFound from "@/components/company-not-found";
+import { ForcePasswordChange } from "@/components/account/force-password";
 
-interface AuthUser {
+export interface AuthUser {
   email: string;
   role: string;
   company_id: number;
@@ -26,6 +27,12 @@ interface AuthUser {
   timezone?: string;
   timezone_source?: "own" | "company";
   company_timezone?: string;
+  /** Parent / student portal sign-ins (role "parent" or "student"); null for staff. */
+  portal_id?: number | null;
+  student_id?: number | null;
+  guardian_id?: number | null;
+  /** A portal account signed in with the one-time password it was given: it must choose its own. */
+  must_change_password?: boolean;
   subscription?: { plan: string; paid?: boolean; whatsapp?: boolean; status: "active" | "trial" | "grace" | "expired"; trial_ends_at: string | null; paid_until: string | null; days_left: number | null; plan_name?: string } | null;
 }
 
@@ -65,7 +72,7 @@ interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
+  register: (data: RegisterData) => Promise<{ access_token: string; user: AuthUser }>;
   logout: () => void;
   /** Reload the signed-in person (after changing name, timezone, ...). */
   refresh: () => Promise<void>;
@@ -82,6 +89,15 @@ interface RegisterData {
   company_name: string;
   industry?: string;
   ref_code?: string;
+  /** school, preschool, college, university, coaching, training */
+  institution_type?: string;
+  /** approximate number of learners, e.g. "101-500" */
+  learners?: string;
+  country?: string;
+  timezone?: string;
+  phone?: string;
+  /** the web address (sub-domain) asked for */
+  slug?: string;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -170,6 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const res = await api.post<{ access_token: string; user: AuthUser }>("/auth/register", data);
     api.setToken(res.access_token);
     setUser(res.user);
+    return res;
   };
 
   const logout = () => {
@@ -198,9 +215,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   if (blocked) return <CompanyNotFound variant={blocked} />;
 
+  // Parents and students given a one-time password choose their own before anything else.
+  const mustChange = !!(user?.must_change_password && pathname?.startsWith("/dashboard"));
+
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout, refresh, timezoneSuggestion, dismissTimezoneSuggestion }}>
-      {children}
+      {mustChange ? <ForcePasswordChange /> : children}
     </AuthContext.Provider>
   );
 }

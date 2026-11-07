@@ -2,10 +2,11 @@
 
 /* Modern: bright and friendly. Split hero with floating cards, soft rounded sections, job cards. */
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Briefcase, Check, Mail, MapPin, Phone, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Briefcase, Check, GraduationCap, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 import {
-  Logo, Paragraphs, SignIn, Socials, aboutImage, heroImage, initials, jobMeta, lifeImages, navLinks, on, useScrolled, year,
-  type ThemeProps,
+  AdmissionsBlock, Logo, NoticesBlock, Paragraphs, ProgramsBlock, SIGN_IN_LABEL, SignIn, Socials, aboutImage, admissionHref,
+  admissionLabel, heroImage, highlightsTitle, initials, jobMeta, lifeImages, navLinks, on, showsAdmissions, useScrolled, word, year,
+  type Skin, type ThemeProps,
 } from "./shared";
 
 export default function Modern({ data, signedIn }: ThemeProps) {
@@ -14,6 +15,13 @@ export default function Modern({ data, signedIn }: ThemeProps) {
   const scrolled = useScrolled();
   const links = navLinks(data);
   const soft = `${a}14`;
+  const skin: Skin = {
+    tone: "light", accent: a, muted: "#5b6170", line: "#eceef2",
+    heading: "mt-3 text-[36px] font-light leading-tight tracking-tight",
+    card: "rounded-3xl p-6", cardBg: "#ffffff",
+    wrap: "mx-auto max-w-6xl px-5 py-24",
+    label: (c) => <Eyebrow a={a}>{c}</Eyebrow>,
+  };
 
   return (
     <div className="min-h-screen bg-[#f6f7f9] font-[family-name:var(--font-outfit)] font-light text-[#14171f] antialiased">
@@ -33,8 +41,9 @@ export default function Modern({ data, signedIn }: ThemeProps) {
           <h1 className="mt-6 text-[42px] font-light leading-[1.08] tracking-[-0.02em] sm:text-[56px]">{site.hero.headline}</h1>
           <p className="mt-6 max-w-lg text-[17.5px] leading-relaxed text-[#5b6170]">{site.hero.subline}</p>
           <div className="mt-9 flex flex-wrap gap-3">
-            {on(site, "jobs") && <a href="#careers" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[15px] text-white shadow-[0_8px_24px_-8px] transition-transform hover:-translate-y-0.5" style={{ background: a, boxShadow: `0 10px 24px -10px ${a}` }}>View open roles <ArrowRight size={16} strokeWidth={1.6} /></a>}
-            {on(site, "about") && <a href="#about" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md">About us</a>}
+            {showsAdmissions(site) && <a href={admissionHref(data)} className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[15px] text-white shadow-[0_8px_24px_-8px] transition-transform hover:-translate-y-0.5" style={{ background: a, boxShadow: `0 10px 24px -10px ${a}` }}>{admissionLabel(data)} <ArrowRight size={16} strokeWidth={1.6} /></a>}
+            {on(site, "programs") ? <a href="#programs" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md">Explore {word(data, "programs").toLowerCase()}</a>
+              : on(site, "about") && <a href="#about" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] shadow-[0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-md">About us</a>}
           </div>
         </div>
         <div className="relative">
@@ -46,11 +55,11 @@ export default function Modern({ data, signedIn }: ThemeProps) {
               <p className="mt-1.5 text-[13px] text-[#5b6170]">{site.stats[0].label}</p>
             </div>
           )}
-          {on(site, "jobs") && (
-            <div className="absolute -right-3 top-8 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_18px_40px_-18px_rgba(20,23,31,0.35)] sm:-right-6">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: soft, color: a }}><Briefcase size={17} strokeWidth={1.5} /></span>
-              <div><p className="text-[15px]">{jobs.length} open role{jobs.length === 1 ? "" : "s"}</p><p className="text-[12.5px] text-[#8a90a0]">We&apos;re hiring</p></div>
-            </div>
+          {showsAdmissions(site) && site.admissions.open && (
+            <a href={admissionHref(data)} className="absolute -right-3 top-8 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_18px_40px_-18px_rgba(20,23,31,0.35)] sm:-right-6">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: soft, color: a }}><GraduationCap size={17} strokeWidth={1.5} /></span>
+              <div><p className="text-[15px]">Admissions open</p><p className="text-[12.5px] text-[#8a90a0]">{data.programs?.length ? `${data.programs.length} ${word(data, "programs").toLowerCase()}` : "Apply online"}</p></div>
+            </a>
           )}
         </div>
       </section>
@@ -80,10 +89,12 @@ export default function Modern({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "programs") && <ProgramsBlock data={data} skin={skin} />}
+
       {on(site, "values") && site.values.length > 0 && (
         <section id="values" className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5">
-            <div className="max-w-xl"><Eyebrow a={a}>Our values</Eyebrow><h2 className="mt-3 text-[36px] font-light tracking-tight">How we work together</h2></div>
+            <div className="max-w-xl"><Eyebrow a={a}>Why us</Eyebrow><h2 className="mt-3 text-[36px] font-light tracking-tight">{highlightsTitle(data)}</h2></div>
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {site.values.map((v, i) => (
                 <div key={i} className="rounded-3xl border border-[#eceef2] p-7 transition-[border-color,transform] hover:-translate-y-1 hover:border-transparent hover:shadow-[0_20px_40px_-24px_rgba(20,23,31,0.3)]">
@@ -101,7 +112,7 @@ export default function Modern({ data, signedIn }: ThemeProps) {
         <section id="life" className="mx-auto max-w-6xl px-5 py-24">
           <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr]">
             <div>
-              <Eyebrow a={a}>Life here</Eyebrow>
+              <Eyebrow a={a}>Campus life</Eyebrow>
               <h2 className="mt-3 text-[36px] font-light leading-tight tracking-tight">{site.life.title}</h2>
               <p className="mt-4 text-[16.5px] leading-relaxed text-[#5b6170]">{site.life.body}</p>
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -141,10 +152,18 @@ export default function Modern({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "notices") && <NoticesBlock data={data} skin={skin} />}
+
+      {showsAdmissions(site) && (
+        <div className="mx-auto max-w-6xl px-5 pb-24">
+          <AdmissionsBlock data={data} skin={skin} className="rounded-[32px] p-8 text-white lg:p-12" style={{ background: `linear-gradient(135deg, ${a}, #14171f 160%)` }} />
+        </div>
+      )}
+
       {on(site, "jobs") && (
         <section id="careers" className="mx-auto max-w-6xl px-5 py-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div><Eyebrow a={a}>Careers</Eyebrow><h2 className="mt-3 text-[36px] font-light tracking-tight">{jobs.length ? "Open roles" : "No openings right now"}</h2></div>
+            <div><Eyebrow a={a}>Careers</Eyebrow><h2 className="mt-3 text-[36px] font-light tracking-tight">{jobs.length ? "Staff vacancies" : "No vacancies right now"}</h2></div>
             <Link href="/careers" className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[14px] hover:shadow-md">See all <ArrowUpRight size={15} strokeWidth={1.5} /></Link>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -157,7 +176,7 @@ export default function Modern({ data, signedIn }: ThemeProps) {
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f6f7f9] transition-colors group-hover:text-white" style={{}}><ArrowUpRight size={16} strokeWidth={1.5} /></span>
               </Link>
             ))}
-            {!jobs.length && <p className="rounded-3xl bg-white p-8 text-[15.5px] text-[#5b6170] md:col-span-2">We are not hiring right now. Follow us to hear when new roles open.</p>}
+            {!jobs.length && <p className="rounded-3xl bg-white p-8 text-[15.5px] text-[#5b6170] md:col-span-2">There are no staff vacancies right now. Please check back soon.</p>}
           </div>
         </section>
       )}
@@ -167,7 +186,7 @@ export default function Modern({ data, signedIn }: ThemeProps) {
           <div className="grid gap-4 overflow-hidden rounded-[32px] p-8 text-white lg:grid-cols-2 lg:p-12" style={{ background: `linear-gradient(135deg, ${a}, #14171f 140%)` }}>
             {on(site, "contact") && (
               <div>
-                <h2 className="text-[34px] font-light leading-tight">Get in touch</h2>
+                <h2 className="text-[34px] font-light leading-tight">Visit or get in touch</h2>
                 <div className="mt-8 space-y-4 text-[16px] text-white/85">
                   {site.contact.email && <a href={`mailto:${site.contact.email}`} className="flex items-center gap-3"><Mail size={18} strokeWidth={1.4} />{site.contact.email}</a>}
                   {site.contact.phone && <a href={`tel:${site.contact.phone}`} className="flex items-center gap-3"><Phone size={18} strokeWidth={1.4} />{site.contact.phone}</a>}
@@ -180,7 +199,7 @@ export default function Modern({ data, signedIn }: ThemeProps) {
               <div className="grid content-start gap-3 sm:grid-cols-2">
                 {site.offices.filter((o) => o.city).map((o, i) => (
                   <div key={i} className="rounded-2xl bg-white/10 p-5 backdrop-blur">
-                    <p className="text-[12.5px] text-white/60">{o.head_office ? "Head office" : "Office"}</p>
+                    <p className="text-[12.5px] text-white/60">{o.head_office ? "Main campus" : "Campus"}</p>
                     <p className="mt-1 text-[19px]">{o.city}</p>
                     {o.address && <p className="mt-2 text-[13.5px] leading-relaxed text-white/75">{o.address}</p>}
                     {o.phone && <p className="mt-1 text-[13.5px] text-white/75">{o.phone}</p>}
@@ -195,7 +214,7 @@ export default function Modern({ data, signedIn }: ThemeProps) {
       <footer className="border-t border-[#e7e9ee] bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-[13.5px] text-[#8a90a0] sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2.5"><Logo company={company} accent={a} size={26} /><span>© {year()} {company.name}</span></div>
-          <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-[#14171f]">Careers</Link>}<Link href="/login" className="hover:text-[#14171f]">Employee sign in</Link></div>
+          <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-[#14171f]">Careers</Link>}<Link href="/login" className="hover:text-[#14171f]">{SIGN_IN_LABEL}</Link></div>
         </div>
       </footer>
     </div>

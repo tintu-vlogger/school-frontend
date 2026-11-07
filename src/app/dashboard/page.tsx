@@ -8,9 +8,13 @@
  * - HR and admins: KPI strip, payroll status, hiring, onboarding/probation/exits,
  *   compliance due soon and headcount by department.
  * Admin calls are made only when /roles/my-permissions grants them, so nobody sees a refusal.
+ * Parents and students get the portal home instead (child switcher and module cards); staff
+ * see the institution KPIs and the school modules' cards above the HR cards.
  */
 import type React from "react";
 import { Skeleton } from "@/components/ui-kit";
+import { useAccess } from "@/lib/access";
+import { PortalHome, SchoolStaffHome } from "@/components/home/school-home";
 import { TimezoneSuggestion } from "@/components/account/timezone";
 import { EngagementOverview } from "@/components/engagement/home-overview";
 import { HOME_STYLES, useHomeAccess } from "@/components/home/kit";
@@ -25,6 +29,11 @@ import {
 const SPAN: Record<number, string> = { 1: "lg:col-span-12", 2: "lg:col-span-6", 3: "lg:col-span-4" };
 
 export default function OverviewPage() {
+  const { portalRole } = useAccess();
+  return portalRole ? <PortalHome /> : <StaffOverview />;
+}
+
+function StaffOverview() {
   const access = useHomeAccess();
   const { can, isEmployee, isManager, isHr, ready } = access;
   const seesEveryone = can("time.attendance.manage");
@@ -46,6 +55,8 @@ export default function OverviewPage() {
       <HomeGreeting />
       <TimezoneSuggestion showProfileLink />
       <AskBox isHr={isHr} />
+
+      <SchoolStaffHome />
 
       {!ready ? <Skeleton className="h-[104px] w-full rounded-2xl" /> : isHr && <KpiStrip access={access} delay={60} />}
 

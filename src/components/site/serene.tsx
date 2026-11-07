@@ -4,8 +4,9 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import {
-  Logo, Paragraphs, SignIn, Socials, aboutImage, heroImage, initials, jobMeta, lifeImages, navLinks, on, useScrolled, year,
-  type ThemeProps,
+  AdmissionsBlock, Logo, NoticesBlock, Paragraphs, ProgramsBlock, SIGN_IN_LABEL, SignIn, Socials, aboutImage, admissionHref,
+  admissionLabel, heroImage, highlightsTitle, initials, jobMeta, lifeImages, navLinks, on, showsAdmissions, useScrolled, word, year,
+  type Skin, type ThemeProps,
 } from "./shared";
 
 const INK = "#2a241d", MUTED = "#6f6457", PAPER = "#f6f0e7", CARD = "#fbf7f1", LINE = "#e6dccd";
@@ -17,6 +18,13 @@ export default function Serene({ data, signedIn }: ThemeProps) {
   const scrolled = useScrolled();
   const links = navLinks(data);
   const [first, ...rest] = site.hero.headline.split(/(?<=[,.;:])\s+/);
+  const skin: Skin = {
+    tone: "light", accent: a, muted: MUTED, line: LINE,
+    heading: `${SERIF} mt-4 text-[46px] leading-[1.05]`,
+    card: "rounded-[24px] border p-6 border-[#e6dccd]", cardBg: CARD,
+    wrap: "mx-auto max-w-6xl px-5 py-28",
+    label: (c) => <Kicker>{c}</Kicker>,
+  };
 
   return (
     <div className="min-h-screen font-[family-name:var(--font-outfit)] font-light antialiased" style={{ background: PAPER, color: INK }}>
@@ -37,8 +45,9 @@ export default function Serene({ data, signedIn }: ThemeProps) {
         </h1>
         <p className="mx-auto mt-8 max-w-xl text-[18px] leading-relaxed" style={{ color: MUTED }}>{site.hero.subline}</p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          {on(site, "jobs") && <a href="#careers" className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] text-[#f6f0e7] transition-transform hover:-translate-y-0.5" style={{ background: INK }}>Work with us <ArrowRight size={16} strokeWidth={1.5} /></a>}
-          {on(site, "about") && <a href="#about" className="inline-flex items-center rounded-full border px-7 py-3.5 text-[15px]" style={{ borderColor: LINE }}>Our story</a>}
+          {showsAdmissions(site) && <a href={admissionHref(data)} className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] text-[#f6f0e7] transition-transform hover:-translate-y-0.5" style={{ background: INK }}>{admissionLabel(data)} <ArrowRight size={16} strokeWidth={1.5} /></a>}
+          {on(site, "programs") ? <a href="#programs" className="inline-flex items-center rounded-full border px-7 py-3.5 text-[15px]" style={{ borderColor: LINE }}>Explore {word(data, "programs").toLowerCase()}</a>
+            : on(site, "about") && <a href="#about" className="inline-flex items-center rounded-full border px-7 py-3.5 text-[15px]" style={{ borderColor: LINE }}>Our story</a>}
         </div>
         <div className="relative mx-auto mt-16 grid max-w-5xl grid-cols-3 items-end gap-4 sm:gap-6">
           {[lifeImages(site)[0], heroImage(site), lifeImages(site)[1] ?? aboutImage(site)].map((src, i) => (
@@ -73,10 +82,12 @@ export default function Serene({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "programs") && <div className="border-t" style={{ borderColor: LINE }}><ProgramsBlock data={data} skin={skin} /></div>}
+
       {on(site, "values") && site.values.length > 0 && (
         <section id="values" style={{ background: CARD }}>
           <div className="mx-auto max-w-6xl px-5 py-28">
-            <div className="text-center"><Kicker>What we believe</Kicker><h2 className={`${SERIF} mt-4 text-[48px]`}>Our values</h2></div>
+            <div className="text-center"><Kicker>Why us</Kicker><h2 className={`${SERIF} mt-4 text-[48px]`}>{highlightsTitle(data)}</h2></div>
             <div className="mt-16 grid gap-x-12 gap-y-14 sm:grid-cols-2">
               {site.values.map((v, i) => (
                 <div key={i} className="flex gap-6">
@@ -102,7 +113,7 @@ export default function Serene({ data, signedIn }: ThemeProps) {
               ))}
             </div>
             <div className="self-center">
-              <Kicker>Life here</Kicker>
+              <Kicker>Campus life</Kicker>
               <h2 className={`${SERIF} mt-4 text-[46px] leading-[1.05]`}>{site.life.title}</h2>
               <p className="mt-5 text-[17px] leading-relaxed" style={{ color: MUTED }}>{site.life.body}</p>
               <div className="mt-8 flex flex-wrap gap-2.5">
@@ -134,9 +145,17 @@ export default function Serene({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "notices") && <NoticesBlock data={data} skin={skin} />}
+
+      {showsAdmissions(site) && (
+        <div className="mx-auto max-w-6xl px-5 pb-24">
+          <AdmissionsBlock data={data} skin={skin} className="rounded-t-[120px] rounded-b-[36px] px-8 pb-12 pt-16 text-[#f6f0e7] lg:px-14" style={{ background: `linear-gradient(160deg, ${a}, ${INK} 130%)` }} />
+        </div>
+      )}
+
       {on(site, "jobs") && (
         <section id="careers" className="mx-auto max-w-4xl px-5 py-28">
-          <div className="text-center"><Kicker>Careers</Kicker><h2 className={`${SERIF} mt-4 text-[48px]`}>{jobs.length ? <>Come <em className="italic" style={{ color: a }}>grow</em> with us</> : "No openings right now"}</h2></div>
+          <div className="text-center"><Kicker>Careers</Kicker><h2 className={`${SERIF} mt-4 text-[48px]`}>{jobs.length ? <>Come <em className="italic" style={{ color: a }}>teach</em> with us</> : "No vacancies right now"}</h2></div>
           <div className="mt-12 border-t" style={{ borderColor: LINE }}>
             {jobs.map((j) => (
               <Link key={j.uuid} href={`/careers/${j.slug}`} className="group flex items-center justify-between gap-6 border-b py-7" style={{ borderColor: LINE }}>
@@ -144,9 +163,9 @@ export default function Serene({ data, signedIn }: ThemeProps) {
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors group-hover:bg-[#2a241d] group-hover:text-[#f6f0e7]" style={{ borderColor: LINE }}><ArrowUpRight size={18} strokeWidth={1.3} /></span>
               </Link>
             ))}
-            {!jobs.length && <p className="py-10 text-center text-[16px]" style={{ color: MUTED }}>We are not hiring at the moment. Please check back soon.</p>}
+            {!jobs.length && <p className="py-10 text-center text-[16px]" style={{ color: MUTED }}>There are no staff vacancies at the moment. Please check back soon.</p>}
           </div>
-          {jobs.length > 0 && <p className="mt-8 text-center"><Link href="/careers" className="text-[15px] underline decoration-[#e6dccd] underline-offset-4 hover:decoration-current">All openings</Link></p>}
+          {jobs.length > 0 && <p className="mt-8 text-center"><Link href="/careers" className="text-[15px] underline decoration-[#e6dccd] underline-offset-4 hover:decoration-current">All vacancies</Link></p>}
         </section>
       )}
 
@@ -168,7 +187,7 @@ export default function Serene({ data, signedIn }: ThemeProps) {
               <div className="grid content-start gap-8 sm:grid-cols-2">
                 {site.offices.filter((o) => o.city).map((o, i) => (
                   <div key={i} className="border-t border-[#f6f0e7]/20 pt-5">
-                    <p className="text-[12px] uppercase tracking-[0.22em] text-[#f6f0e7]/50">{o.head_office ? "Head office" : "Office"}</p>
+                    <p className="text-[12px] uppercase tracking-[0.22em] text-[#f6f0e7]/50">{o.head_office ? "Main campus" : "Campus"}</p>
                     <p className={`${SERIF} mt-2 text-[30px]`}>{o.city}</p>
                     {o.address && <p className="mt-2 text-[14.5px] leading-relaxed text-[#f6f0e7]/70">{o.address}</p>}
                     {o.phone && <p className="mt-1 text-[14.5px] text-[#f6f0e7]/70">{o.phone}</p>}
@@ -180,13 +199,13 @@ export default function Serene({ data, signedIn }: ThemeProps) {
           <div className="border-t border-[#f6f0e7]/10">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-[13.5px] text-[#f6f0e7]/50 sm:flex-row sm:justify-between">
               <p>© {year()} {company.name}</p>
-              <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-white">Careers</Link>}<Link href="/login" className="hover:text-white">Employee sign in</Link></div>
+              <div className="flex gap-6">{on(site, "jobs") && <Link href="/careers" className="hover:text-white">Careers</Link>}<Link href="/login" className="hover:text-white">{SIGN_IN_LABEL}</Link></div>
             </div>
           </div>
         </section>
       )}
       {!(on(site, "contact") || on(site, "offices")) && (
-        <footer className="border-t py-8 text-center text-[13.5px]" style={{ borderColor: LINE, color: MUTED }}>© {year()} {company.name} · <Link href="/login">Employee sign in</Link></footer>
+        <footer className="border-t py-8 text-center text-[13.5px]" style={{ borderColor: LINE, color: MUTED }}>© {year()} {company.name} · <Link href="/login">{SIGN_IN_LABEL}</Link></footer>
       )}
     </div>
   );

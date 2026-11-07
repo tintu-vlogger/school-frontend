@@ -184,8 +184,8 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5">
         <Kpi icon={Repeat} label="Monthly recurring" value={rupee(k.mrr)} spark={months.map((m) => m.revenue)} foot={<span className="text-[12px] font-light text-gray-400">From periods running today</span>} />
         <Kpi icon={IndianRupee} label="Collected this month" value={rupee(k.revenue_this_month)} foot={<Delta now={k.revenue_this_month} before={k.revenue_last_month} />} />
-        <Kpi icon={Building2} label="Companies" value={k.companies} spark={months.map((m) => m.total_companies)} foot={<span className="text-[12px] font-light text-gray-400"><span className="text-emerald-600">+{k.new_this_month}</span> this month</span>} />
-        <Kpi icon={BadgeCheck} label="Paying companies" value={k.paying}
+        <Kpi icon={Building2} label="Institutions" value={k.companies} spark={months.map((m) => m.total_companies)} foot={<span className="text-[12px] font-light text-gray-400"><span className="text-emerald-600">+{k.new_this_month}</span> this month</span>} />
+        <Kpi icon={BadgeCheck} label="Paying institutions" value={k.paying}
           foot={<div><div className="h-1.5 overflow-hidden rounded-full bg-gray-100"><div className="h-full rounded-full" style={{ width: `${k.conversion}%`, background: TEAL }} /></div><p className="mt-1.5 text-[12px] font-light text-gray-400">{k.conversion}% have paid at least once</p></div>} />
         <Kpi icon={BellRing} label="Needs attention" value={attention} foot={<span className="text-[12px] font-light text-gray-400">{k.pending_codes} unpaid codes · {k.pending_payouts} payouts</span>} />
       </div>
@@ -193,11 +193,11 @@ export default function AdminDashboardPage() {
       <CostStrip infra={infra} mrr={k.mrr} revenueMonth={k.revenue_this_month} />
       <InfraSection infra={infra} busy={infraBusy} onRefresh={() => loadInfra(true)} />
 
-      <h2 className="pt-4 text-[17px] font-light tracking-[-0.01em] text-gray-900">Companies and money</h2>
+      <h2 className="pt-4 text-[17px] font-light tracking-[-0.01em] text-gray-900">Institutions and money</h2>
 
       {/* Revenue + status */}
       <div className="grid gap-3 xl:grid-cols-[1.75fr_1fr]">
-        <Panel icon={IndianRupee} title="Revenue" sub={`${rupee(k.revenue_total)} collected in total · ${rupee(k.arpc)} per paying company`}
+        <Panel icon={IndianRupee} title="Revenue" sub={`${rupee(k.revenue_total)} collected in total · ${rupee(k.arpc)} per paying institution`}
           action={<Segmented size="sm" value={revView} onChange={setRevView} options={[{ value: "revenue", label: "Amount" }, { value: "payments", label: "Payments" }]} />}>
           <div className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -222,14 +222,14 @@ export default function AdminDashboardPage() {
             </ResponsiveContainer>
           </div>
         </Panel>
-        <Panel icon={Layers} title="Companies by status" sub={k.disabled ? `${k.disabled} disabled` : "Where every company stands today"}>
-          <Donut data={statusData} center={k.companies} sub="companies" />
+        <Panel icon={Layers} title="Institutions by status" sub={k.disabled ? `${k.disabled} disabled` : "Where every institution stands today"}>
+          <Donut data={statusData} center={k.companies} sub="institutions" />
         </Panel>
       </div>
 
       {/* Growth */}
       <div className="grid gap-3">
-        <Panel icon={TrendingUp} title="Company growth" sub={`${k.new_this_month} new this month · ${k.new_last_month} last month`}>
+        <Panel icon={TrendingUp} title="Institution growth" sub={`${k.new_this_month} new this month · ${k.new_last_month} last month`}>
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={months} margin={{ top: 8, right: 0, left: -20, bottom: 0 }}>
@@ -238,8 +238,8 @@ export default function AdminDashboardPage() {
                 <YAxis yAxisId="l" {...axis} allowDecimals={false} />
                 <YAxis yAxisId="r" orientation="right" {...axis} allowDecimals={false} width={30} />
                 <Tooltip content={<Tip />} cursor={{ fill: "#f6f7f8" }} />
-                <Bar yAxisId="l" dataKey="signups" name="New companies" fill="#c3ddd6" radius={[6, 6, 0, 0]} maxBarSize={22} />
-                <Line yAxisId="r" type="monotone" dataKey="total_companies" name="Total companies" stroke={INK} strokeWidth={1.5} dot={{ r: 2.5, fill: "#fff", stroke: INK, strokeWidth: 1.2 }} />
+                <Bar yAxisId="l" dataKey="signups" name="New institutions" fill="#c3ddd6" radius={[6, 6, 0, 0]} maxBarSize={22} />
+                <Line yAxisId="r" type="monotone" dataKey="total_companies" name="Total institutions" stroke={INK} strokeWidth={1.5} dot={{ r: 2.5, fill: "#fff", stroke: INK, strokeWidth: 1.2 }} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -248,7 +248,7 @@ export default function AdminDashboardPage() {
 
       {/* Plans and payment choices */}
       <div className="grid gap-3">
-        <Panel icon={Layers} title="Plans and payment choices" sub="What paying companies chose">
+        <Panel icon={Layers} title="Plans and payment choices" sub="What paying institutions chose">
           {a.revenue_by_plan.length === 0 && a.plan_mix.length === 0 ? <Empty icon={Layers} title="No payments yet" /> : (
             <div className="space-y-6">
               <Bars rows={a.revenue_by_plan.map((p) => ({ label: p.plan, value: p.revenue }))} money />
@@ -265,7 +265,7 @@ export default function AdminDashboardPage() {
               )}
               {a.plan_mix.length > 0 && (
                 <div>
-                  <p className="mb-2 text-[12px] font-light text-gray-400">Paying companies by plan</p>
+                  <p className="mb-2 text-[12px] font-light text-gray-400">Paying institutions by plan</p>
                   <div className="flex flex-wrap gap-2">{a.plan_mix.map((p) => <Pill key={p.plan} tone="green">{p.plan} · {p.count}</Pill>)}</div>
                 </div>
               )}
@@ -276,11 +276,11 @@ export default function AdminDashboardPage() {
 
       {/* Lists */}
       <div className="grid gap-3 lg:grid-cols-2">
-        <Panel icon={MapPin} title="Cities" sub="Where companies are">
+        <Panel icon={MapPin} title="Cities" sub="Where institutions are">
           <Bars rows={a.cities.map((c) => ({ label: c.city, value: c.count }))} />
         </Panel>
         <Panel icon={BellRing} title="Ending soon" sub="Trials and paid periods ending in 14 days"
-          action={<Link href="/admin/companies" className="inline-flex items-center gap-1 text-[12px] font-light text-gray-500 hover:text-gray-900">All companies <ArrowUpRight size={13} /></Link>}>
+          action={<Link href="/admin/companies" className="inline-flex items-center gap-1 text-[12px] font-light text-gray-500 hover:text-gray-900">All institutions <ArrowUpRight size={13} /></Link>}>
           {a.expiring.length === 0 ? <Empty icon={BadgeCheck} title="Nothing ending soon" /> : (
             <ul className="-my-1 divide-y divide-gray-100">
               {a.expiring.map((c) => (
@@ -295,13 +295,13 @@ export default function AdminDashboardPage() {
         </Panel>
       </div>
 
-      <Panel icon={Users} title="Partners" sub="Companies each partner brought in and the money those companies paid" pad={false}
+      <Panel icon={Users} title="Partners" sub="Institutions each partner brought in and the money they paid" pad={false}
         action={<Link href="/admin/executives" className="inline-flex items-center gap-1 text-[12px] font-light text-gray-500 hover:text-gray-900">Team <ArrowUpRight size={13} /></Link>}>
         {a.partners.length === 0 ? <Empty icon={Users} title="No partners yet" /> : (
           <div className="overflow-x-auto">
             <table className="w-full text-[13px]">
               <thead className="border-b border-gray-100"><tr className="text-left text-[11px] font-normal uppercase tracking-[0.06em] text-gray-400">
-                <th className="px-5 py-3 font-normal">Partner</th><th className="px-4 py-3 text-right font-normal">Companies</th><th className="px-4 py-3 font-normal">Paying</th><th className="px-4 py-3 text-right font-normal">Companies paid</th><th className="px-5 py-3 text-right font-normal">Partner earned</th>
+                <th className="px-5 py-3 font-normal">Partner</th><th className="px-4 py-3 text-right font-normal">Institutions</th><th className="px-4 py-3 font-normal">Paying</th><th className="px-4 py-3 text-right font-normal">Institutions paid</th><th className="px-5 py-3 text-right font-normal">Partner earned</th>
               </tr></thead>
               <tbody className="divide-y divide-gray-100">
                 {a.partners.map((p, i) => (
@@ -345,7 +345,7 @@ function CostStrip({ infra, mrr, revenueMonth }: { infra: Infra | null; mrr: num
         foot={last ? <Delta now={month} before={last} /> : <span className="text-[12px] font-light text-gray-400">≈ {rupee(month * rate)} so far</span>} />
       <Kpi icon={TrendingUp} label="Projected this month" value={usd(est)} foot={<span className="text-[12px] font-light text-gray-400">≈ {rupee(estInr)} at ₹{rate}/$</span>} />
       <Kpi icon={Repeat} label="Last month" value={usd(last)} foot={<span className="text-[12px] font-light text-gray-400">≈ {rupee(last * rate)}</span>} />
-      <Kpi icon={IndianRupee} label="Company income vs servers" value={mrr ? `${Math.max(0, Math.round(mrr / Math.max(1, estInr)))}×` : rupee(revenueMonth)}
+      <Kpi icon={IndianRupee} label="Institution income vs servers" value={mrr ? `${Math.max(0, Math.round(mrr / Math.max(1, estInr)))}×` : rupee(revenueMonth)}
         foot={<span className="text-[12px] font-light text-gray-400">{mrr ? <>{rupee(mrr)} in, {rupee(estInr)} out{margin != null ? ` · ${margin}% margin` : ""}</> : "collected this month"}</span>} />
     </div>
   );

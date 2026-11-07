@@ -4,8 +4,9 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import {
-  Logo, Paragraphs, SignIn, Socials, aboutImage, heroImage, initials, jobMeta, lifeImages, navLinks, on, useScrolled, year,
-  type ThemeProps,
+  AdmissionsBlock, Logo, NoticesBlock, Paragraphs, ProgramsBlock, SIGN_IN_LABEL, SignIn, Socials, aboutImage, admissionHref,
+  admissionLabel, heroImage, highlightsTitle, initials, jobMeta, lifeImages, navLinks, on, showsAdmissions, useScrolled, word, year,
+  type Skin, type ThemeProps,
 } from "./shared";
 
 export default function Classic({ data, signedIn }: ThemeProps) {
@@ -15,6 +16,13 @@ export default function Classic({ data, signedIn }: ThemeProps) {
   const links = navLinks(data);
   let n = 0;
   const num = () => String(++n).padStart(2, "0");
+  const skin = (label: string): Skin => ({
+    tone: "dark", accent: a, muted: "rgba(255,255,255,0.6)", line: "rgba(255,255,255,0.1)",
+    heading: "mt-6 text-[40px] font-extralight leading-[1.08] tracking-tight lg:text-[52px]",
+    card: "rounded-sm border border-white/10 p-6", cardBg: "#111318",
+    wrap: "mx-auto max-w-7xl px-5 py-28 lg:px-10",
+    label: (c) => <Chapter n={label} a={a}>{c}</Chapter>,
+  });
 
   return (
     <div className="min-h-screen bg-[#0c0d10] font-[family-name:var(--font-outfit)] font-light text-white antialiased">
@@ -39,8 +47,9 @@ export default function Classic({ data, signedIn }: ThemeProps) {
           <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <p className="max-w-xl text-[17px] leading-relaxed text-white/75">{site.hero.subline}</p>
             <div className="flex flex-wrap gap-3">
-              {on(site, "jobs") && <a href="#careers" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[15px] text-white transition-transform hover:-translate-y-0.5" style={{ background: a }}>See open roles <ArrowRight size={16} strokeWidth={1.6} /></a>}
-              {on(site, "about") && <a href="#about" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">Our story</a>}
+              {showsAdmissions(site) && <a href={admissionHref(data)} className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-[15px] text-white transition-transform hover:-translate-y-0.5" style={{ background: a }}>{admissionLabel(data)} <ArrowRight size={16} strokeWidth={1.6} /></a>}
+              {on(site, "programs") ? <a href="#programs" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">Explore {word(data, "programs").toLowerCase()}</a>
+                : on(site, "about") && <a href="#about" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-[15px] hover:bg-white/10">Our story</a>}
             </div>
           </div>
         </div>
@@ -74,10 +83,12 @@ export default function Classic({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "programs") && <div className="border-t border-white/10"><ProgramsBlock data={data} skin={skin(num())} /></div>}
+
       {on(site, "values") && site.values.length > 0 && (
         <section id="values" className="border-t border-white/10">
           <div className="mx-auto max-w-7xl px-5 py-28 lg:px-10">
-            <Chapter n={num()} a={a}>What we value</Chapter>
+            <Chapter n={num()} a={a}>{highlightsTitle(data)}</Chapter>
             <div className="mt-14 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
               {site.values.map((v, i) => (
                 <div key={i} className="bg-[#0c0d10] p-8 transition-colors hover:bg-[#121419]">
@@ -96,7 +107,7 @@ export default function Classic({ data, signedIn }: ThemeProps) {
           <div className="mx-auto max-w-7xl px-5 py-28 lg:px-10">
             <div className="grid gap-10 lg:grid-cols-2">
               <div>
-                <Chapter n={num()} a={a}>Life here</Chapter>
+                <Chapter n={num()} a={a}>Campus life</Chapter>
                 <h2 className="mt-6 text-[40px] font-extralight leading-tight lg:text-[52px]">{site.life.title}</h2>
                 <p className="mt-6 max-w-lg text-[17px] leading-relaxed text-white/65">{site.life.body}</p>
               </div>
@@ -137,15 +148,23 @@ export default function Classic({ data, signedIn }: ThemeProps) {
         </section>
       )}
 
+      {on(site, "notices") && <div className="border-t border-white/10"><NoticesBlock data={data} skin={skin(num())} /></div>}
+
+      {showsAdmissions(site) && (
+        <div className="mx-auto max-w-7xl px-5 pb-6 lg:px-10">
+          <AdmissionsBlock data={data} skin={skin("")} className="rounded-sm p-8 text-white lg:p-14" style={{ background: `linear-gradient(120deg, ${a}, #1b1d24 120%)` }} />
+        </div>
+      )}
+
       {on(site, "jobs") && (
         <section id="careers" className="border-t border-white/10">
           <div className="mx-auto max-w-7xl px-5 py-28 lg:px-10">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
                 <Chapter n={num()} a={a}>Careers</Chapter>
-                <h2 className="mt-6 text-[40px] font-extralight lg:text-[52px]">{jobs.length ? "Join us" : "No openings right now"}</h2>
+                <h2 className="mt-6 text-[40px] font-extralight lg:text-[52px]">{jobs.length ? "Teach and work with us" : "No vacancies right now"}</h2>
               </div>
-              <Link href="/careers" className="inline-flex items-center gap-2 text-[15px] text-white/70 hover:text-white">All openings <ArrowUpRight size={16} strokeWidth={1.5} /></Link>
+              <Link href="/careers" className="inline-flex items-center gap-2 text-[15px] text-white/70 hover:text-white">All vacancies <ArrowUpRight size={16} strokeWidth={1.5} /></Link>
             </div>
             <div className="mt-12 divide-y divide-white/10 border-y border-white/10">
               {jobs.map((j) => (
@@ -157,7 +176,7 @@ export default function Classic({ data, signedIn }: ThemeProps) {
                   <ArrowUpRight size={22} strokeWidth={1.2} className="shrink-0 text-white/40 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white" />
                 </Link>
               ))}
-              {!jobs.length && <p className="py-8 text-[16px] text-white/50">We are not hiring for any role at the moment. Check back soon.</p>}
+              {!jobs.length && <p className="py-8 text-[16px] text-white/50">There are no staff vacancies at the moment. Check back soon.</p>}
             </div>
           </div>
         </section>
@@ -169,7 +188,7 @@ export default function Classic({ data, signedIn }: ThemeProps) {
             {on(site, "contact") && (
               <div>
                 <Chapter n={num()} a={a}>Contact</Chapter>
-                <h2 className="mt-6 text-[40px] font-extralight lg:text-[52px]">Let&apos;s talk.</h2>
+                <h2 className="mt-6 text-[40px] font-extralight lg:text-[52px]">Visit or write to us.</h2>
                 <div className="mt-10 space-y-4 text-[17px] text-white/75">
                   {site.contact.email && <a href={`mailto:${site.contact.email}`} className="flex items-center gap-3 hover:text-white"><Mail size={18} strokeWidth={1.3} />{site.contact.email}</a>}
                   {site.contact.phone && <a href={`tel:${site.contact.phone}`} className="flex items-center gap-3 hover:text-white"><Phone size={18} strokeWidth={1.3} />{site.contact.phone}</a>}
@@ -182,7 +201,7 @@ export default function Classic({ data, signedIn }: ThemeProps) {
               <div className="grid content-start gap-px bg-white/10 sm:grid-cols-2">
                 {site.offices.filter((o) => o.city).map((o, i) => (
                   <div key={i} className="bg-[#0c0d10] p-6">
-                    <p className="text-[12px] uppercase tracking-[0.2em] text-white/40">{o.head_office ? "Head office" : "Office"}</p>
+                    <p className="text-[12px] uppercase tracking-[0.2em] text-white/40">{o.head_office ? "Main campus" : "Campus"}</p>
                     <p className="mt-3 text-[22px] font-light">{o.city}</p>
                     {o.address && <p className="mt-2 text-[14px] leading-relaxed text-white/55">{o.address}</p>}
                     {o.phone && <p className="mt-2 text-[14px] text-white/55">{o.phone}</p>}
@@ -199,7 +218,7 @@ export default function Classic({ data, signedIn }: ThemeProps) {
           <p>© {year()} {company.name}</p>
           <div className="flex gap-6">
             {on(site, "jobs") && <Link href="/careers" className="hover:text-white">Careers</Link>}
-            <Link href="/login" className="hover:text-white">Employee sign in</Link>
+            <Link href="/login" className="hover:text-white">{SIGN_IN_LABEL}</Link>
           </div>
         </div>
       </footer>

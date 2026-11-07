@@ -25,7 +25,7 @@ const niceDate = (d: string | null) => (d ? formatDate(d.slice(0, 10)) : "—");
 type Filter = "all" | "trial" | "active" | "expired" | "disabled";
 type Sort = "newest" | "name" | "employees" | "paid" | "ending";
 const SORTS: { id: Sort; label: string }[] = [
-  { id: "newest", label: "Newest first" }, { id: "ending", label: "Ending soonest" }, { id: "employees", label: "Most employees" }, { id: "paid", label: "Most paid" }, { id: "name", label: "Name A–Z" },
+  { id: "newest", label: "Newest first" }, { id: "ending", label: "Ending soonest" }, { id: "employees", label: "Most staff" }, { id: "paid", label: "Most paid" }, { id: "name", label: "Name A–Z" },
 ];
 const tc = "px-3 py-3 text-left text-[11.5px] font-normal uppercase tracking-[0.06em] text-gray-400";
 const cell = "px-3 py-3 align-middle";
@@ -70,10 +70,10 @@ function MoreMenu({ c, onExtend, onHistory, onToggle, onRemove, onOpen }: { c: C
             <button onClick={run(onOpen)} className={item}><PanelRight size={14} strokeWidth={1.5} /> Open details</button>
             <button onClick={run(onHistory)} className={item}><History size={14} strokeWidth={1.5} /> Payment history</button>
             <button onClick={run(onExtend)} className={item}><CalendarPlus size={14} strokeWidth={1.5} /> Extend trial by 14 days</button>
-            {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={item}><ExternalLink size={14} strokeWidth={1.5} /> Open company website</a>}
+            {url && <a href={url} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className={item}><ExternalLink size={14} strokeWidth={1.5} /> Open institution website</a>}
             <div className="my-1 border-t border-gray-100" />
-            <button onClick={run(onToggle)} className={`${item} ${c.active ? "" : "text-emerald-700"}`}><Power size={14} strokeWidth={1.5} /> {c.active ? "Disable company" : "Enable company"}</button>
-            <button onClick={run(onRemove)} className={`${item} text-rose-600 hover:bg-rose-50`}><Trash2 size={14} strokeWidth={1.5} /> Remove company…</button>
+            <button onClick={run(onToggle)} className={`${item} ${c.active ? "" : "text-emerald-700"}`}><Power size={14} strokeWidth={1.5} /> {c.active ? "Disable institution" : "Enable institution"}</button>
+            <button onClick={run(onRemove)} className={`${item} text-rose-600 hover:bg-rose-50`}><Trash2 size={14} strokeWidth={1.5} /> Remove institution…</button>
           </div>
         </>
       )}
@@ -142,12 +142,12 @@ export default function AdminCompaniesPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader icon={Building2} title="Companies" sub="Every company on the platform. Record UPI payments here; each payment extends the paid period and credits the partner who brought the company in."
-        actions={<button onClick={() => setCreating(true)} className={btn.primary}><Plus size={15} strokeWidth={1.5} /> New company</button>} />
+      <PageHeader icon={Building2} title="Institutions" sub="Every school, college and institute on the platform. Record UPI payments here; each payment extends the paid period and credits the partner who brought the institution in."
+        actions={<button onClick={() => setCreating(true)} className={btn.primary}><Plus size={15} strokeWidth={1.5} /> New institution</button>} />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-        <Stat icon={Building2} label="Companies" value={totals.companies} hint={`${totalEmployees} employees in total`} />
-        <Stat icon={BadgeCheck} label="Paying" tone="teal" value={totals.active} bar={totals.companies ? (totals.active / totals.companies) * 100 : 0} hint={totals.companies ? `${Math.round((totals.active / totals.companies) * 100)}% of companies` : undefined} />
+        <Stat icon={Building2} label="Institutions" value={totals.companies} hint={`${totalEmployees} staff in total`} />
+        <Stat icon={BadgeCheck} label="Paying" tone="teal" value={totals.active} bar={totals.companies ? (totals.active / totals.companies) * 100 : 0} hint={totals.companies ? `${Math.round((totals.active / totals.companies) * 100)}% of institutions` : undefined} />
         <Stat icon={Hourglass} label="On trial" tone="blue" value={totals.trial} hint="Free trial running" />
         <Stat icon={BellRing} label="Ending in 7 days" tone="amber" value={endingSoon} hint={endingSoon ? "Worth a call" : "Nothing urgent"} />
         <Stat icon={IndianRupee} label="Collected" value={rupee(totals.revenue)} hint="All payments so far" />
@@ -181,11 +181,11 @@ export default function AdminCompaniesPage() {
           </div>
         </div>
 
-        {loading && rows.length === 0 ? <Loading /> : shown.length === 0 ? <Empty icon={Search} title="No companies match" sub="Try another search or filter." /> : view === "table" ? (
+        {loading && rows.length === 0 ? <Loading /> : shown.length === 0 ? <Empty icon={Search} title="No institutions match" sub="Try another search or filter." /> : view === "table" ? (
           <div className="overflow-x-auto">
             <table className="w-full text-[13px]">
               <thead className="border-b border-gray-100 bg-gray-50/40">
-                <tr><th className={th}>Company</th><th className={tc}>Plan</th><th className={tc}>Status</th><th className={`${tc} text-right`}>Employees</th><th className={`${tc} text-right`}>Paid</th><th className={`${tc} hidden xl:table-cell`}>Partner</th><th className={tc}></th></tr>
+                <tr><th className={th}>Institution</th><th className={tc}>Plan</th><th className={tc}>Status</th><th className={`${tc} text-right`}>Staff</th><th className={`${tc} text-right`}>Paid</th><th className={`${tc} hidden xl:table-cell`}>Partner</th><th className={tc}></th></tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {shown.map((c) => (
@@ -215,7 +215,7 @@ export default function AdminCompaniesPage() {
                     <td className={`${cell} whitespace-nowrap pr-4 text-right`} onClick={(e) => e.stopPropagation()}>
                       <div className="inline-flex items-center gap-1">
                         {!c.active
-                          ? <button onClick={() => setActive(c, true)} title="Enable this company again" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700"><Power size={13} /></button>
+                          ? <button onClick={() => setActive(c, true)} title="Enable this institution again" className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700"><Power size={13} /></button>
                           : <button onClick={() => setPaying(c)} title="Record payment" aria-label="Record payment" className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-white transition hover:bg-gray-800"><IndianRupee size={13} /></button>}
                         <MoreMenu c={c} {...actions(c)} />
                       </div>
@@ -240,7 +240,7 @@ export default function AdminCompaniesPage() {
                 <div className="mt-4 flex flex-wrap gap-1.5">{c.demo && <Pill>demo</Pill>}{!c.active && <Pill tone="red" dot>Disabled</Pill>}</div>
                 <StatusCell c={c} wide />
                 <div className="mt-4 grid grid-cols-3 gap-2 border-t border-gray-100 pt-3">
-                  {[["Employees", c.employees, "on record"], ["Plan", c.subscription.plan_name || c.subscription.plan, "current"], ["Paid", rupee(c.paid_total), "so far"]].map(([l, v, h]) => (
+                  {[["Staff", c.employees, "on record"], ["Plan", c.subscription.plan_name || c.subscription.plan, "current"], ["Paid", rupee(c.paid_total), "so far"]].map(([l, v, h]) => (
                     <div key={String(l)}><p className="text-[11px] font-light text-gray-400">{l}</p><p className="text-[17px] font-light tabular-nums text-gray-900">{v}</p><p className="text-[10.5px] font-light text-gray-400">{h}</p></div>
                   ))}
                 </div>
@@ -254,7 +254,7 @@ export default function AdminCompaniesPage() {
             ))}
           </div>
         )}
-        {shown.length > 0 && <p className="border-t border-gray-100 px-5 py-2.5 text-[12px] font-light text-gray-400">Showing {shown.length} of {rows.length} companies</p>}
+        {shown.length > 0 && <p className="border-t border-gray-100 px-5 py-2.5 text-[12px] font-light text-gray-400">Showing {shown.length} of {rows.length} institutions</p>}
       </div>
 
       {detail && <DetailDrawer c={detail} onClose={() => setDetail(null)} onPay={() => setPaying(detail)} {...actions(detail)} />}
@@ -292,7 +292,7 @@ function DetailDrawer({ c, onClose, onPay, onExtend, onToggle, onRemove }: { c: 
     [sub.status === "active" ? "Paid until" : "Trial ends", niceDate(sub.paid_until || sub.trial_ends_at)],
     ["WhatsApp self-service", sub.whatsapp ? "Included" : "Not included"],
     ["Joined", niceDate(c.created_at)],
-    ["Employees", c.employees],
+    ["Staff", c.employees],
     ["Brought in by", c.referred_by ? `${c.referred_by.name} (${c.referred_by.ref_code})` : "Signed up directly"],
   ];
   return (
@@ -311,7 +311,7 @@ function DetailDrawer({ c, onClose, onPay, onExtend, onToggle, onRemove }: { c: 
 
         <div className="space-y-6 p-6">
           <div className="grid grid-cols-3 gap-2">
-            {[["Employees", c.employees, "on record"], ["Joined", niceDate(c.created_at), "date"], ["Paid", rupee(c.paid_total), "in total"]].map(([l, v, h]) => (
+            {[["Staff", c.employees, "on record"], ["Joined", niceDate(c.created_at), "date"], ["Paid", rupee(c.paid_total), "in total"]].map(([l, v, h]) => (
               <div key={String(l)} className="rounded-2xl bg-gray-50 px-3 py-3"><p className="text-[11px] font-light text-gray-400">{l}</p><p className="mt-0.5 text-[20px] font-light tabular-nums text-gray-900">{v}</p><p className="text-[10.5px] font-light text-gray-400">{h}</p></div>
             ))}
           </div>
@@ -350,7 +350,7 @@ function DetailDrawer({ c, onClose, onPay, onExtend, onToggle, onRemove }: { c: 
                     <span className="absolute -left-[25px] top-3 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#5b9e8f]" />
                     <div className="rounded-2xl border border-gray-200/80 px-3.5 py-2.5">
                       <div className="flex items-center justify-between gap-3 text-[13px]">
-                        <span className="font-normal text-gray-900">{p.details?.plan?.name || (p.plan === "standard_whatsapp" ? "Standard + WhatsApp" : "Standard")} · {p.details?.period?.label || `${p.months}m`}</span>
+                        <span className="font-normal text-gray-900">{p.details?.plan?.name || ({ standard_whatsapp: "Growth", campus: "Campus" } as Record<string, string>)[p.plan] || "Starter"} · {p.details?.period?.label || `${p.months}m`}</span>
                         <span className="tabular-nums text-gray-900">{rupee(p.amount)}</span>
                       </div>
                       <p className="mt-0.5 text-[11.5px] font-light text-gray-500">Paid {niceDate(p.paid_at)} · {niceDate(p.period_start)} → {niceDate(p.period_end)}{p.details?.coupon ? ` · ${p.details.coupon.code}` : ""}</p>
@@ -451,7 +451,7 @@ function HistoryModal({ company, onClose }: { company: Company; onClose: () => v
               <span className="absolute -left-[25px] top-3 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#5b9e8f]" />
               <div className="rounded-2xl border border-gray-200/80 px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-[13.5px] font-normal text-gray-900">{p.details?.plan?.name || (p.plan === "standard_whatsapp" ? "Standard + WhatsApp" : "Standard")} · {p.details?.period?.label || `${p.months}m`}{p.details?.coupon ? ` · ${p.details.coupon.code}` : ""}</span>
+                  <span className="text-[13.5px] font-normal text-gray-900">{p.details?.plan?.name || ({ standard_whatsapp: "Growth", campus: "Campus" } as Record<string, string>)[p.plan] || "Starter"} · {p.details?.period?.label || `${p.months}m`}{p.details?.coupon ? ` · ${p.details.coupon.code}` : ""}</span>
                   <span className="text-[15px] font-normal tabular-nums text-gray-900">{rupee(p.amount)}</span>
                 </div>
                 <p className="mt-1 text-[12px] font-light text-gray-500">Paid {niceDate(p.paid_at)} · covers {niceDate(p.period_start)} → {niceDate(p.period_end)}{p.reference ? ` · ref ${p.reference}` : ""}</p>
@@ -479,7 +479,7 @@ function RemoveModal({ company, onClose, onDone }: { company: Company; onClose: 
     } catch (e: unknown) { setErr(e instanceof Error ? e.message : "Failed"); setBusy(false); }
   }
   return (
-    <Modal title="Remove company" sub={step === 1 ? "Step 1 of 2" : "Step 2 of 2 · last check"} icon={AlertTriangle} tone="red" onClose={onClose}
+    <Modal title="Remove institution" sub={step === 1 ? "Step 1 of 2" : "Step 2 of 2 · last check"} icon={AlertTriangle} tone="red" onClose={onClose}
       footer={step === 1 ? <>
         <button onClick={onClose} className={btn.ghost}>Cancel</button>
         <button onClick={() => setStep(2)} className={btn.danger}>Yes, continue</button>
@@ -489,13 +489,13 @@ function RemoveModal({ company, onClose, onDone }: { company: Company; onClose: 
       </>}>
       {step === 1 ? (
         <div className="space-y-3 text-[13.5px] font-light leading-relaxed text-gray-700">
-          <p>This permanently deletes <b className="font-normal text-gray-900">{name}</b> and everything in it: employees, attendance, leave, payroll, payments and settings.</p>
-          <p>It cannot be undone. Use this only for test companies.</p>
-          {company.paid_total > 0 && <p className="rounded-2xl border border-amber-200 bg-amber-50/60 px-4 py-2.5 text-[12.5px] text-amber-800">This company has paid {rupee(company.paid_total)}. Make sure it really is a test company.</p>}
+          <p>This permanently deletes <b className="font-normal text-gray-900">{name}</b> and everything in it: students, parents, staff, attendance, exams, fees, payroll, payments and settings.</p>
+          <p>It cannot be undone. Use this only for test institutions.</p>
+          {company.paid_total > 0 && <p className="rounded-2xl border border-amber-200 bg-amber-50/60 px-4 py-2.5 text-[12.5px] text-amber-800">This institution has paid {rupee(company.paid_total)}. Make sure it really is a test company.</p>}
         </div>
       ) : (
         <div>
-          <p className="text-[13.5px] font-light text-gray-700">To confirm, type the company name: <b className="select-all font-normal text-gray-900">{name}</b></p>
+          <p className="text-[13.5px] font-light text-gray-700">To confirm, type the institution name: <b className="select-all font-normal text-gray-900">{name}</b></p>
           <input autoFocus value={typed} onChange={(e) => { setTyped(e.target.value); setErr(""); }} placeholder={name}
             className={`mt-3 ${inputCls} focus:border-rose-400 focus:ring-rose-100`} />
           {err && <p className="mt-2 text-[12px] text-rose-600">{err}</p>}
@@ -558,10 +558,10 @@ function NewCompanyModal({ onClose, onDone }: { onClose: () => void; onDone: () 
       <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-[26px] bg-white p-6 border border-gray-200 sm:rounded-[26px]" onClick={(e) => e.stopPropagation()}>
         {!made ? (
           <>
-            <h2 className="flex items-center gap-3 text-[17px] font-normal text-gray-900"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100"><Building2 size={18} strokeWidth={1.5} className="text-[#3a4557]" /></span>New company</h2>
+            <h2 className="flex items-center gap-3 text-[17px] font-normal text-gray-900"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100"><Building2 size={18} strokeWidth={1.5} className="text-[#3a4557]" /></span>New institution</h2>
             <p className="mt-2 text-[12.5px] font-light text-gray-500">For an owner who can&apos;t sign up themselves. They get the 30-day free trial and finish the rest of the setup after logging in.</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <label className="col-span-2 block text-[12px] font-light text-gray-500">Company name *<input value={f.company_name} onChange={(e) => set("company_name", e.target.value)} placeholder="e.g. Green Valley Foods" className={`mt-1 ${inp}`} /></label>
+              <label className="col-span-2 block text-[12px] font-light text-gray-500">Institution name *<input value={f.company_name} onChange={(e) => set("company_name", e.target.value)} placeholder="e.g. Green Valley Foods" className={`mt-1 ${inp}`} /></label>
               <label className="col-span-2 block text-[12px] font-light text-gray-500">Web address *
                 <div className={`mt-1 flex items-center overflow-hidden rounded-xl border ${check.state === "bad" ? "border-red-300" : check.state === "ok" ? "border-green-300" : "border-gray-200"}`}>
                   <span className="bg-gray-50 px-2.5 py-2.5 text-xs text-gray-400">https://</span>
@@ -588,7 +588,7 @@ function NewCompanyModal({ onClose, onDone }: { onClose: () => void; onDone: () 
             {err && <p className="mt-3 text-xs text-red-600">{err}</p>}
             <div className="mt-5 flex justify-end gap-2">
               <button onClick={onClose} className={btn.ghost}>Cancel</button>
-              <button onClick={create} disabled={!ready || busy} className={btn.primary}>{busy ? "Creating…" : "Create company"}</button>
+              <button onClick={create} disabled={!ready || busy} className={btn.primary}>{busy ? "Creating…" : "Create institution"}</button>
             </div>
           </>
         ) : (

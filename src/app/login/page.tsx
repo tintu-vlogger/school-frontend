@@ -3,10 +3,10 @@
 import { useState, useEffect, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Eye, EyeOff, Mail, Lock, Users, Fingerprint, Wallet, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff, User, Lock, Users, GraduationCap, HeartHandshake, ShieldCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useToast } from '@/lib/toast-context'
-import { API_BASE } from '@/lib/api'
+import { API_BASE, resolveImageUrl } from '@/lib/api'
 
 const ROOT_DOMAINS = (
   process.env.NEXT_PUBLIC_ROOT_DOMAINS ?? "campusly.app,lvh.me,localhost"
@@ -30,12 +30,12 @@ function companySlug(): string | null {
 }
 
 const SSO_ERRORS: Record<string, string> = {
-  no_account: "We couldn't find an account with that email. Ask your HR team to add you, or sign in with your password.",
-  not_enabled: "Your company hasn't switched on this sign-in option. Sign in with your password.",
-  domain_not_allowed: "Your company only allows sign-in with its own email domain. Use your work account.",
+  no_account: "We couldn't find an account with that email. Ask your institution's office to add you, or sign in with your password.",
+  not_enabled: "Your institution hasn't switched on this sign-in option. Sign in with your password.",
+  domain_not_allowed: "Your institution only allows sign-in with its own email domain. Use your institution account.",
   email_not_verified: "That account's email address isn't verified. Use another account or your password.",
-  many_companies: "This email is used at more than one company. Sign in from your company's own address.",
-  company_disabled: "This company account has been disabled. Contact support.",
+  many_companies: "This email is used at more than one institution. Sign in from your institution's own address.",
+  company_disabled: "This institution's account has been disabled. Contact support.",
   guest_account: "Guest accounts can't sign in. Use your own organisation's Microsoft account.",
   not_configured: "This sign-in option isn't available yet.",
   expired: "The sign-in took too long or was started elsewhere. Please try again.",
@@ -68,6 +68,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [onSubdomain, setOnSubdomain] = useState(false)
+  const [inst, setInst] = useState<{ company_name: string; logo_url: string } | null>(null)
   const toast = useToast()
 
   const [sso, setSso] = useState<{ google: boolean; microsoft: boolean }>({ google: false, microsoft: false })
@@ -81,6 +82,7 @@ export default function LoginPage() {
       setError((SSO_ERRORS[code] ?? 'Sign-in did not work. Please try again.') + (code === 'many_companies' && names ? ` (${names})` : ''))
     }
     const slug = companySlug()
+    if (slug) fetch(`${API_BASE}/public/companies/${slug}`).then((r) => (r.ok ? r.json() : null)).then((r) => { if (r) setInst(r) }).catch(() => {})
     fetch(`${API_BASE}/auth/sso/options`, { headers: slug ? { 'X-Company-Slug': slug } : {} })
       .then((r) => (r.ok ? r.json() : null)).then((r) => { if (r) setSso(r) }).catch(() => {})
   }, [])
@@ -95,8 +97,8 @@ export default function LoginPage() {
 
   function validate() {
     const errors: Record<string, string> = {}
-    if (!email.trim()) errors.email = 'Email is required'
-    if (!password) errors.password = 'Password is required'
+    if (!email.trim()) errors.email = 'Enter your email or username'
+    if (!password) errors.password = 'Enter your password'
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -111,12 +113,12 @@ export default function LoginPage() {
       router.push('/dashboard')
     } catch (err) {
       const message = err instanceof Error ? err.message : ''
-      if (/does not exist|has been disabled|company's address|company's url/i.test(message)) {
+      if (/does not exist|has been disabled|company's address|company's url|institution's own address|more than one institution/i.test(message)) {
         setError(message)
       } else if (message.toLowerCase().includes('network') || message.toLowerCase().includes('fetch')) {
         setError('Unable to connect to server. Please check your connection and try again.')
       } else {
-        setError('Invalid email or password. Please try again.')
+        setError('That sign-in or password is not right. Check them and try again.')
       }
     } finally {
       setIsSubmitting(false)
@@ -128,7 +130,7 @@ export default function LoginPage() {
       {/* Common top bar */}
       <div className="bg-white px-8 py-3 flex items-center justify-between border-b border-gray-100">
         <Link href="/"><img src="/logo.svg" alt="Campusly" className="h-10" /></Link>
-        <span className="text-xs text-gray-400 hidden sm:block">HR and payroll for Indian companies</span>
+        <span className="text-xs text-gray-400 hidden sm:block">One place for your whole institution</span>
       </div>
 
       <div className="flex flex-1">
@@ -136,15 +138,15 @@ export default function LoginPage() {
       <div className="hidden flex-col justify-between bg-[#16161d] p-12 lg:flex lg:w-1/2">
         <div>
           <p className="text-[12px] uppercase tracking-[0.1em] text-indigo-300/80">Campusly</p>
-          <h2 className="mt-3 max-w-md text-[34px] font-extralight leading-tight text-white">Welcome back</h2>
-          <p className="mt-3 max-w-sm text-[15px] font-light text-white/50">Sign in to manage your people, attendance, leave and payroll.</p>
+          <h2 className="mt-3 max-w-md text-[34px] font-extralight leading-tight text-white">{inst ? <>Welcome to <span className="text-indigo-300">{inst.company_name}</span></> : 'Welcome back'}</h2>
+          <p className="mt-3 max-w-sm text-[15px] font-light text-white/50">Staff, parents and students all sign in here. Everyone sees just what is meant for them.</p>
         </div>
         <ul className="grid max-w-lg gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
           {[
-            { icon: Users, title: "People", text: "Records, documents and history" },
-            { icon: Fingerprint, title: "Time", text: "Attendance, shifts and leave" },
-            { icon: Wallet, title: "Payroll", text: "Payslips, PF, ESI, PT and TDS" },
-            { icon: ShieldCheck, title: "Compliance", text: "Indian law built in" },
+            { icon: Users, title: "Staff", text: "Classes, attendance, marks and the office" },
+            { icon: HeartHandshake, title: "Parents", text: "Attendance, fees, results and messages" },
+            { icon: GraduationCap, title: "Students", text: "Timetable, homework, classes and results" },
+            { icon: ShieldCheck, title: "Private", text: "Each institution's data kept apart" },
           ].map((h) => (
             <li key={h.title} className="bg-[#16161d] p-5">
               <h.icon size={20} strokeWidth={1.3} className="text-indigo-300" />
@@ -160,9 +162,13 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-6 sm:p-10 bg-white overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="mb-6">
-            <h2 className="text-[28px] font-extralight text-gray-900">Sign in</h2>
-            <p className="mt-1 text-sm text-gray-400">
-              Access your Campusly dashboard
+            {inst?.logo_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={resolveImageUrl(inst.logo_url)} alt="" className="mb-4 h-12 w-12 rounded-xl object-contain" />
+            )}
+            <h2 className="text-[28px] font-extralight text-gray-900">Sign in{inst ? <span className="text-gray-400"> to {inst.company_name}</span> : null}</h2>
+            <p className="mt-1 text-sm font-light text-gray-400">
+              Staff, parents and students sign in here.
             </p>
           </div>
 
@@ -175,17 +181,18 @@ export default function LoginPage() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-1">Email</label>
+              <label htmlFor="email" className="block text-xs font-medium text-gray-500 mb-1">Email or username</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                 <input
-                  id="email" type="email" value={email}
+                  id="email" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} value={email}
                   onChange={(e) => { setEmail(e.target.value); setFieldErrors((prev) => ({ ...prev, email: '' })); }}
-                  placeholder="you@yourcompany.com"
+                  placeholder="you@example.com or your username"
                   className={`w-full pl-9 pr-3 py-2.5 border rounded-lg bg-gray-50 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:bg-white transition-all ${fieldErrors.email ? 'border-error focus:ring-error/20' : 'border-gray-200 focus:ring-primary/20 focus:border-primary'}`}
                 />
               </div>
-              {fieldErrors.email && <p className="mt-0.5 text-[11px] text-error">{fieldErrors.email}</p>}
+              {fieldErrors.email ? <p className="mt-0.5 text-[11px] text-error">{fieldErrors.email}</p>
+                : <p className="mt-1 text-[11.5px] font-light text-gray-400">Parents and students can use the username the institution gave them.</p>}
             </div>
 
             {/* Password */}
@@ -194,7 +201,7 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                 <input
-                  id="password" type={showPassword ? 'text' : 'password'} value={password}
+                  id="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password}
                   onChange={(e) => { setPassword(e.target.value); setFieldErrors((prev) => ({ ...prev, password: '' })); }}
                   placeholder="Enter your password"
                   className={`w-full pl-9 pr-9 py-2.5 border rounded-lg bg-gray-50 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:bg-white transition-all ${fieldErrors.password ? 'border-error focus:ring-error/20' : 'border-gray-200 focus:ring-primary/20 focus:border-primary'}`}
@@ -217,7 +224,7 @@ export default function LoginPage() {
                 <span className="text-xs text-gray-500">Remember me</span>
               </label>
               <Link href="/forgot-password" className="text-xs font-medium text-primary hover:text-primary-dark transition-colors">
-                Forgot password?
+                Forgot your password?
               </Link>
             </div>
 
@@ -232,10 +239,10 @@ export default function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Signing In...
+                  Signing in…
                 </span>
               ) : (
-                'Sign In'
+                'Sign in'
               )}
             </button>
           </form>
@@ -277,13 +284,17 @@ export default function LoginPage() {
           </div>
           </>)}
 
-          {/* Sign up link: main site only (employees can't create a company from a company address) */}
-          {!onSubdomain && (
-            <p className="text-center text-sm text-gray-400 mt-5">
-              Don&apos;t have an account?{' '}
+          {/* Sign up link: main site only (people can't create an institution from an institution's address) */}
+          {!onSubdomain ? (
+            <p className="text-center text-sm font-light text-gray-400 mt-5">
+              New to Campusly?{' '}
               <Link href="/register" className="text-primary hover:text-primary-dark transition-colors">
-                Sign up
+                Set up your institution
               </Link>
+            </p>
+          ) : (
+            <p className="text-center text-[12.5px] font-light text-gray-400 mt-5">
+              No sign-in yet? Ask your institution&apos;s office for your username and first password.
             </p>
           )}
         </div>

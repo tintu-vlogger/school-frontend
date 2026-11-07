@@ -8,7 +8,7 @@ import { Loader2, Ticket, X, CheckCircle2, MessageCircle, QrCode, Phone, Copy, C
 import { api } from "@/lib/api";
 import { PageHeader } from "@/components/shell/page";
 
-type Plan = { id: string; name: string; tagline: string; price: number; features: string[]; whatsapp: boolean; badge?: string };
+type Plan = { id: string; name: string; tagline: string; price: number; per_learner?: number; max_learners?: number; features: string[]; whatsapp: boolean; badge?: string };
 type Period = { id: string; label: string; months: number; discount: number; coupons: boolean };
 type Deal = { plan: { id: string; name: string; price: number; features: string[]; whatsapp: boolean }; period: { id: string; label: string; months: number; discount: number }; coupon: { code: string; percent: number } | null; amount: number; period_start?: string; period_end?: string };
 type Sub = { plan: string; plan_name?: string; plan_details?: Deal | null; paid: boolean; whatsapp: boolean; status: "active" | "trial" | "grace" | "expired"; trial_ends_at: string | null; paid_until: string | null; days_left: number | null; plans: Plan[]; periods: Period[]; has_coupons?: boolean; trial_days?: number; pay_to: { upi_id: string; name: string; support_phone: string; note: string } };
@@ -123,7 +123,7 @@ export default function SubscriptionPage() {
 
   return (
     <div className="max-w-5xl space-y-5">
-      <PageHeader eyebrow="Settings" title="Subscription" description="Your plan, how long it runs, and how to pay." />
+      <PageHeader eyebrow="Settings" title="Subscription" description="Your plan, how long it runs, and how to pay. Plans are priced by the number of learners you have." />
 
       {/* Status */}
       <div className="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-6 sm:flex-row sm:items-center">

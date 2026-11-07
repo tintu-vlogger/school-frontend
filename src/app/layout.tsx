@@ -38,9 +38,9 @@ const notoSansTamil = Noto_Sans_Tamil({
 });
 
 export const metadata: Metadata = {
-  title: "Campusly - AI-first HR platform",
+  title: "Campusly - run your school, college or institute in one place",
   description:
-    "AI-first HR management: people, attendance, leave, payroll and hiring in one place.",
+    "Admissions, attendance, timetables, exams and report cards, online classes, fees, parent app, library, transport, hostel and staff payroll for schools, colleges, universities, coaching and training institutes.",
 };
 
 export default function RootLayout({

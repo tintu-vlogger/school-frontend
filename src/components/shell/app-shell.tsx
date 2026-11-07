@@ -55,7 +55,7 @@ function initials(name?: string | null) {
 }
 
 const CREATE_ACTIONS: { label: string; href: string; icon: typeof Plus; need?: string[]; self?: boolean }[] = [
-  { label: "Add employee", href: "/dashboard/staff/new", icon: UserPlus, need: ["people.employees.manage"] },
+  { label: "Add staff", href: "/dashboard/staff/new", icon: UserPlus, need: ["people.employees.manage"] },
   { label: "Apply for leave", href: "/dashboard/leave", icon: Plane, self: true },
   { label: "New expense claim", href: "/dashboard/payroll/me?tab=expenses", icon: Receipt, self: true },
   { label: "New job opening", href: "/dashboard/recruitment", icon: Briefcase, need: ["talent.hiring.manage"] },
@@ -67,7 +67,7 @@ function NoAccess() {
   return (
     <Paper>
       <EmptyState icon={Lock} title="You don't have access to this page"
-        hint="Your role doesn't include it. If you need it, ask your HR admin."
+        hint="Your role doesn't include it. If you need it, ask your administrator."
         action={<Link href="/dashboard" className={btn.ghost}>Go to overview</Link>} />
     </Paper>
   );
@@ -158,7 +158,12 @@ function Shell({ children }: { children: React.ReactNode }) {
 
   const sub = user?.subscription;
   const trialLeft = sub?.status === "trial" ? Math.max(0, sub.days_left ?? 0) : null;
-  const roleLabel = access.isOwner ? "Owner" : ({ admin: "HR admin", hr: "HR", manager: "Manager", employee: "Employee" } as Record<string, string>)[user?.role || ""] ?? (user?.role || "");
+  const roleLabel = access.isOwner ? "Owner" : ({
+    admin: "Administrator", principal: "Principal", hr: "Office", manager: "Head of department", teacher: "Teacher",
+    accountant: "Accountant", librarian: "Librarian", employee: "Staff", parent: "Parent", student: "Student",
+  } as Record<string, string>)[user?.role || ""] ?? (user?.role || "");
+  // Parents and students get a lighter shell: no staff search, quick-create, assistant or HR help.
+  const portal = !!access.portalRole;
 
   /* ── Rail ─────────────────────────────────────────── */
   const railButton = (s: HrSection) => {
@@ -274,12 +279,13 @@ function Shell({ children }: { children: React.ReactNode }) {
             <span className="hidden text-line-strong sm:inline">/</span>
             <span className="truncate text-ink">{current.label}</span>
           </>
-        ) : <span className="text-ink">Campusly</span>}
+        ) : <span className="text-ink">{portal ? user?.company_name || "Campusly" : "Campusly"}</span>}
       </div>
 
-      <div className="flex flex-1 justify-center"><UniversalSearch /></div>
+      <div className="flex flex-1 justify-center">{!portal && <UniversalSearch />}</div>
 
       <div className="flex items-center gap-1">
+        {!portal && <>
         <Link href="/dashboard/assistant" className="hidden h-9 items-center gap-2 rounded-lg border border-line px-3 text-[13.5px] text-ink transition-colors hover:border-primary/40 hover:text-primary md:flex">
           <Sparkles size={16} strokeWidth={STROKE} className="text-primary" /> Ask
         </Link>
@@ -298,11 +304,14 @@ function Shell({ children }: { children: React.ReactNode }) {
             </div>
           )}
         </div>
+        </>}
 
         <NotificationBell className={iconBtn} />
 
+        {!portal && <>
         <button onClick={() => setHelp(true)} className={`${iconBtn} hidden sm:flex`} aria-label="Help"><HelpCircle size={18} strokeWidth={STROKE} /></button>
         <AvatarToggle on={avatarOn} busy={avatarOn && !avatarReady} onToggle={() => { setAvatarReady(false); setAvatarAutoPlay(!avatarOn); setAvatarOn(!avatarOn); }} className="hidden sm:flex" />
+        </>}
 
         <div ref={langRef} className="relative hidden sm:block">
           <button onClick={() => setMenu(menu === "lang" ? null : "lang")} className={iconBtn} aria-label="Language" title="Language"><Languages size={18} strokeWidth={STROKE} /></button>
@@ -330,8 +339,8 @@ function Shell({ children }: { children: React.ReactNode }) {
                 <p className="truncate text-[12.5px] text-faint">{user?.email}</p>
               </div>
               <div className="py-1.5">
-                <Link href="/dashboard/profile" onClick={closeMenu} className="flex items-center gap-3 px-4 py-2 text-[14px] text-ink hover:bg-sunken"><User size={16} strokeWidth={STROKE} className="text-muted" /> My profile</Link>
-                {access.can("settings.company.manage") && <Link href="/dashboard/settings" onClick={closeMenu} className="flex items-center gap-3 px-4 py-2 text-[14px] text-ink hover:bg-sunken"><Settings2 size={16} strokeWidth={STROKE} className="text-muted" /> Company settings</Link>}
+                <Link href={portal ? "/dashboard/my/profile" : "/dashboard/profile"} onClick={closeMenu} className="flex items-center gap-3 px-4 py-2 text-[14px] text-ink hover:bg-sunken"><User size={16} strokeWidth={STROKE} className="text-muted" /> My profile</Link>
+                {access.can("settings.company.manage") && <Link href="/dashboard/settings" onClick={closeMenu} className="flex items-center gap-3 px-4 py-2 text-[14px] text-ink hover:bg-sunken"><Settings2 size={16} strokeWidth={STROKE} className="text-muted" /> Institution settings</Link>}
                 <button onClick={() => { closeMenu(); setMobileLogin(true); }} className="flex w-full items-center gap-3 px-4 py-2 text-[14px] text-ink hover:bg-sunken"><Smartphone size={16} strokeWidth={STROKE} className="text-muted" /> Log in on mobile</button>
               </div>
               <div className="border-t border-line py-1.5">
@@ -381,9 +390,9 @@ function Shell({ children }: { children: React.ReactNode }) {
 
       <HelpPortal open={help} onClose={() => setHelp(false)} initial={help ? topicForPath(pathname) : undefined} />
       <MobileLoginModal open={mobileLogin} onClose={() => setMobileLogin(false)} />
-      {avatarOn && <TalkingAvatar size={84} autoPlay={avatarAutoPlay} onReady={setAvatarReady} onHide={() => { setAvatarReady(false); setAvatarOn(false); }} hint={`Hi ${user?.full_name?.split(" ")[0] ?? "there"}! Tap me for a quick tour.`}
-        text={`Hello ${user?.full_name?.split(" ")[0] ?? ""}, welcome to Campusly. Use the dark bar on the left to move between sections: Home, People, Time, Talent, Engage and Insights. ` +
-          "Click a section to see its pages. Apply for leave, check your payslips and approve requests from your inbox. " +
+      {avatarOn && !portal && <TalkingAvatar size={84} autoPlay={avatarAutoPlay} onReady={setAvatarReady} onHide={() => { setAvatarReady(false); setAvatarOn(false); }} hint={`Hi ${user?.full_name?.split(" ")[0] ?? "there"}! Tap me for a quick tour.`}
+        text={`Hello ${user?.full_name?.split(" ")[0] ?? ""}, welcome to Campusly. Use the dark bar on the left to move between sections such as Home, Academics, Students and Staff. ` +
+          "Click a section to see its pages. Take attendance, check your timetable and approve requests from your inbox. " +
           "Use Create at the top for quick actions, and Ask to get answers in plain words. Have a great day!"} />}
     </div>
   );
